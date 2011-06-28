@@ -61,10 +61,8 @@ public class Webservice {
 			e.printStackTrace();
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
-			Log.d("tieto", "XmlPullParserException");
 			return new SoapObject("", "");
 		}
-		Log.d("tieto", "Null");
 		return null;
 	}
 
