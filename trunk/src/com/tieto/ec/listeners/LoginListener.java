@@ -36,10 +36,12 @@ public class LoginListener implements OnClickListener, Runnable{
 
 	public void run(){
 		service = new PwelDayStatusService(username.getText().toString(), password.getText().toString(), namespace, url);
-//		if(service.validate(username.getText().toString(), password.getText().toString())){
-//			login.toastFromOtherThreads("True");			
-//		}else{
-//			login.toastFromOtherThreads("False");
-//		}
+		
+		try{
+			service.findByPK("", "");
+			login.toastFromOtherThreads("Not valid username/password");
+		}catch(java.lang.NullPointerException e){
+			login.toastFromOtherThreads("Logging in");
+		}
 	}
 }
