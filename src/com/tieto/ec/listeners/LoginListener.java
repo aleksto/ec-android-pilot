@@ -1,9 +1,10 @@
 package com.tieto.ec.listeners;
 
-
 import com.tieto.ec.activities.LogIn;
+import com.tieto.ec.activities.Main;
 import com.tieto.ec.webServices.PwelDayStatusService;
 
+import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -41,7 +42,14 @@ public class LoginListener implements OnClickListener, Runnable{
 			service.findByPK("", "");
 			login.toastFromOtherThreads("Not valid username/password");
 		}catch(java.lang.NullPointerException e){
-			login.toastFromOtherThreads("Logging in");
+			loggin(username.getText().toString(), password.getText().toString());
 		}
+	}
+
+	private void loggin(String username, String password) {
+		Intent intent = new Intent(login, Main.class);
+		intent.putExtra("username", username);
+		intent.putExtra("password", password);
+		login.startActivity(intent);
 	}
 }
