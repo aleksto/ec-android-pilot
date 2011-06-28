@@ -9,8 +9,8 @@ import android.graphics.Color;
 import android.os.Bundle;	
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ImageView.ScaleType;
@@ -39,8 +39,8 @@ public class LogIn extends Activity{
     	relativ.setBackgroundColor(Color.WHITE);
     	
     	//Username & Password 
-    	TextView usernameLabel = (TextView) findViewById(R.id.usernameLabel);
-    	TextView passwordLabel = (TextView) findViewById(R.id.passwordLabel);
+    	TextView usernameLabel = (TextView) findViewById(R.id.usernamelabel);
+    	TextView passwordLabel = (TextView) findViewById(R.id.passwordlabel);
     	EditText username = (EditText) findViewById(R.id.username);
     	EditText password = (EditText) findViewById(R.id.password);
     	
@@ -52,8 +52,8 @@ public class LogIn extends Activity{
     	password.setBackgroundResource(R.drawable.border);
     	
     	//Buttons
-    	ImageButton login = (ImageButton) findViewById(R.id.ok);
-    	ImageButton exit = (ImageButton) findViewById(R.id.cancel);
+    	Button login = (Button) findViewById(R.id.login);
+    	Button exit = (Button) findViewById(R.id.exit);
     	
     	login.setOnClickListener(new LoginListener(username, password, this));
     	exit.setOnClickListener(new ExitListener(this));
