@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <RelativeLayout 
+    android:layout_width="match_parent" 
+    android:id="@+id/relativeLayout2" 
+    android:layout_height="match_parent">
+        <ImageView 
+        android:layout_width="match_parent" 
+        android:layout_height="match_parent" 
+        android:id="@+id/background" 
+        android:src="@drawable/tieto">
+        </ImageView>
+        <RelativeLayout 
+        android:layout_width="match_parent" 
+        android:id="@+id/relativeLayout1" 
+        android:layout_height="match_parent" android:gravity="center|center_horizontal">
+            <LinearLayout 
+            android:layout_height="wrap_content" 
+            android:id="@+id/linearLayout1" 
+            android:orientation="vertical" 
+            android:layout_width="200dip">
+                <TextView 
+                android:layout_width="wrap_content" 
+                android:layout_height="wrap_content" 
+                android:id="@+id/usernameLabel" 
+                android:text="Username:">
+                </TextView>
+                <EditText 
+                android:layout_height="wrap_content" 
+                android:id="@+id/username" 
+                android:layout_width="match_parent">
+                    <requestFocus>
+                    </requestFocus>
+                </EditText>
+                <TextView 
+                android:layout_width="wrap_content" 
+                android:layout_height="wrap_content" 
+                android:id="@+id/passwordLabel" 
+                android:text="Password:">
+                </TextView>
+                <EditText 
+                android:layout_width="match_parent" 
+                android:layout_height="wrap_content" 
+                android:inputType="textPassword" 
+                android:id="@+id/password">
+                </EditText>
+            </LinearLayout>
+        </RelativeLayout>
+        <RelativeLayout 
+        android:layout_height="match_parent" 
+        android:id="@+id/relativeLayout3" 
+        android:layout_width="match_parent" 
+        android:gravity="bottom|right" android:layout_margin="150dip">
+            <ImageButton 
+            android:layout_height="wrap_content" 
+            android:layout_width="wrap_content" 
+            android:id="@+id/cancel" android:src="@drawable/exit">
+            </ImageButton>
+        </RelativeLayout>
+        <RelativeLayout 
+        android:layout_width="match_parent" 
+        android:id="@+id/relativeLayout4" 
+        android:layout_height="match_parent" 
+        android:gravity="bottom|left" android:layout_margin="150dip">
+            <ImageButton 
+            android:layout_height="wrap_content" 
+            android:layout_width="wrap_content" 
+            android:id="@+id/ok" android:src="@drawable/login">
+            </ImageButton>
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>
