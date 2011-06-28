@@ -4,7 +4,6 @@ import com.tieto.R;
 import com.tieto.ec.listeners.ExitListener;
 import com.tieto.ec.listeners.LoginListener;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;	
@@ -51,10 +50,6 @@ public class LogIn extends Activity{
     	password.setTextColor(Color.BLACK);
     	username.setBackgroundResource(R.drawable.border);
     	password.setBackgroundResource(R.drawable.border);
-    	
-    	//Action Bar
-    	ActionBar bar = getActionBar();
-    	bar.hide();
     	
     	//Buttons
     	ImageButton login = (ImageButton) findViewById(R.id.ok);
