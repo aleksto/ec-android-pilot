@@ -41,6 +41,15 @@ public class Webservice {
 
 		return map;
 	}
+	
+	private ArrayList<HashMap<String, String>> soapObjectsToArrayList(SoapObject soap) {
+		ArrayList<HashMap<String, String>> valueList = new ArrayList<HashMap<String, String>>();
+		for (int i = 0; i < soap.getPropertyCount(); i++) {
+			SoapObject returnValue = (SoapObject) soap.getProperty(i);
+			valueList.add(soapObjectToHashMap(returnValue));
+		}
+		return valueList;
+	}
 
 	protected ArrayList<HashMap<String, String>> executeWebservice(String method, String ... args){
 		//Init
@@ -60,15 +69,10 @@ public class Webservice {
 
 			SoapObject soap = (SoapObject) envelope.bodyIn;
 
-			ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-
-			for (int i = 0; i < soap.getPropertyCount(); i++) {
-				SoapObject returnValue = (SoapObject) soap.getProperty(i);
-				list.add(soapObjectToHashMap(returnValue));
-			}
+			ArrayList<HashMap<String, String>> valueList = soapObjectsToArrayList(soap);
 			
 
-			return list;
+			return valueList;
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (XmlPullParserException e) {
@@ -77,6 +81,8 @@ public class Webservice {
 		}
 		return null;
 	}
+
+	
 
 
 
@@ -100,8 +106,7 @@ public class Webservice {
 			e.printStackTrace();
 		}
 
-		if(envelope.headerIn != null){
-			Log.d("tieto", envelope.headerIn.length+"");			
+		if(envelope.headerIn != null){		
 			for (int i = 0; i < envelope.headerIn.length; i++) {
 				Log.d("tieto", envelope.headerIn[i]+"");			
 			}

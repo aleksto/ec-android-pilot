@@ -31,39 +31,26 @@ public class Main extends Activity
     private String url;
     private PwelDayStatusService webservice;
     private ArrayList<HashMap<String, String>>  valueList;
-    private TextView view;
-	private LineAndPointFormatter format;
-    
+    private TextView data;
+	
+    private SimpleXYSeries gasLine;
+    private LineAndPointFormatter gasLineformat;
+    private SimpleXYSeries oilLine;
+    private LineAndPointFormatter oilLineformat;
+    private SimpleXYSeries waterLine;
+    private LineAndPointFormatter waterLineformat;
     
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
     	super.onCreate(savedInstanceState);
-    	setContentView(R.layout.main);
+    	setContentView(R.layout.graph_view_landscape);
     	
     	username = getIntent().getExtras().getString("username");
     	password = getIntent().getExtras().getString("password");
     	testWebservice();
-    	printInformation();
-    	
-    	format = new LineAndPointFormatter(Color.BLACK, Color.YELLOW, Color.MAGENTA);
-    	graph = (XYPlot) findViewById(R.id.graph);
-    	
-    	
-    	graph.addSeries(simpleSeries(1.0, 2.0, 3.0, 4.0, 5.0, 6.0), format);
-      
-	}
-
-	private SimpleXYSeries simpleSeries(Double ... values) {
-		SimpleXYSeries graphLine = new SimpleXYSeries("");
-		
-		for (int i = 0; i < values.length; i+=2) {
-			graphLine.addLast(values[i], values[i+1]);
-		}
-		
-		return graphLine;
-		
-		
+    	printInformation("opProductionunitCode", "opAreaCode", "opFcty1Code", "objectCode");
+    	testGraph(); 	
 	}
 
 	private void testWebservice() {
@@ -71,50 +58,64 @@ public class Main extends Activity
     	url = "http://wv001927.eu.tieto.com/com.ec.frmw.ws.generated/PwelDayStatusWspService?";
     	webservice = new PwelDayStatusService(username , password, namespace, url);
     	valueList = webservice.findByPKTimeRange("9FB4E1510D033B19E040340A2B4042D7", "2003-01-01", "2003-01-31");					 
-    	view = (TextView) findViewById(R.id.webservice);
+    	data = (TextView) findViewById(R.id.data);
 	}
 
-    private void printInformation() {
+    private void printInformation(String ... args) {
     	StringBuilder builder = new StringBuilder();
-    	Log.d("tieto", valueList.size()+"");
-    	for (HashMap<String, String> map : valueList) {
-			Log.d("tieto", map.toString());
-	        Set<String> keySet = map.keySet();
-	        
-	        for(String key: keySet)
-	        {
-	        	builder.append(key + ":" + map.get(key));
-	        	builder.append("\n");
-	        }
-	       	        	
-    	}
-    	view.setText(builder);
+        Set<String> keySet = valueList.get(0).keySet();
+        String indent = "";
+        for(String key: args)
+        {
+        	if(keySet.contains(key)){
+        		builder.append("\n");
+        		builder.append(indent + key + ":");
+        		builder.append("\n");
+        		builder.append(indent + valueList.get(0).get(key));
+        		indent += "--";
+        	}
+			
+			
+        	
+        }
+        data.setText(builder);
+    	
 	}
 
-    
-    
-    
-	private class MyDateFormat extends Format {
- 
- 
-            // create a simple date format that draws on the year portion of our timestamp.
-            // see http://download.oracle.com/javase/1.4.2/docs/api/java/text/SimpleDateFormat.html
-            // for a full description of SimpleDateFormat.
-            private SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yyyy");
- 
- 
-            @Override
-            public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
-                long timestamp = ((Number) obj).longValue();
-                Date date = new Date(timestamp);
-                return dateFormat.format(date, toAppendTo, pos);
-            }
- 
-            @Override
-            public Object parseObject(String source, ParsePosition pos) {
-                return null;
- 
-            }
-        }
+    private void testGraph() {
+		gasLineformat = new LineAndPointFormatter(Color.BLACK, Color.DKGRAY, Color.MAGENTA);
+    	oilLineformat = new LineAndPointFormatter(Color.BLACK, Color.DKGRAY, Color.BLUE);
+    	waterLineformat = new LineAndPointFormatter(Color.BLACK, Color.DKGRAY, Color.YELLOW);
+    	
+    	graph = (XYPlot) findViewById(R.id.graph);
+	
+    	int counter = 0;
+    	for (HashMap<String,String> map : valueList){
+    		counter++;
+    		gasLine = simpleSeries("Gas", gasLine, Double.valueOf(counter), Double.valueOf(map.get("theorGasVol")), gasLineformat);
+    		
+    	} 	
+    	counter = 0;
+    	for (HashMap<String,String> map : valueList){
+    		counter++;	
+    		oilLine = simpleSeries("Oil", oilLine, Double.valueOf(counter), Double.valueOf(map.get("theorOilVol")), oilLineformat);
+    	} 	
+    	counter = 0;
+    	for (HashMap<String,String> map : valueList){
+    		counter++;
+    		waterLine = simpleSeries("Water", waterLine, Double.valueOf(counter), Double.valueOf(map.get("theorWaterVol")), waterLineformat);
+    	}
+	}
+
+	private SimpleXYSeries simpleSeries(String name, SimpleXYSeries graphLine, Double x, Double y, LineAndPointFormatter format) {	
+		if(graphLine == null)
+		{
+			graphLine = new SimpleXYSeries(name);
+			graph.addSeries(graphLine, format);
+		}
+		Log.d("tieto", graphLine.toString());
+		graphLine.addLast(x, y);
+		return graphLine;	
+	}
     
 }
