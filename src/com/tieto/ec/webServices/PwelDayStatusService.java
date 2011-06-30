@@ -1,7 +1,7 @@
 package com.tieto.ec.webServices;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import org.ksoap2.serialization.SoapObject;
 
 public class PwelDayStatusService extends Webservice{
 
@@ -10,66 +10,60 @@ public class PwelDayStatusService extends Webservice{
 		super(username, password, namespace, url);
 	}
 
-	public HashMap<String, String> findByPK(String daytime, String objectID){
-		SoapObject soapObject = executeWebservice("findByPK",	"daytime", daytime,
+	public ArrayList<HashMap<String, String>> findByPK(String daytime, String objectID){
+		ArrayList<HashMap<String, String>> list = executeWebservice("findByPK", "daytime", daytime,
 				"objectid", objectID);
-		HashMap<String, String> hashMap = soapObjectToHashMap(soapObject);
-		return hashMap;
+
+		return list;
 	}
 
-	public HashMap<String, String> findByPKCode(String daytime, String objectcode){
-		SoapObject soapObject = executeWebservice("findByPKCode",	"daytime", daytime, 
+	public ArrayList<HashMap<String, String>> findByPKCode(String daytime, String objectcode){
+		ArrayList<HashMap<String, String>> list = executeWebservice("findByPKCode",	"daytime", daytime, 
 				"objectcode", objectcode);
-		HashMap<String, String> hashMap = soapObjectToHashMap(soapObject);
-		return hashMap;
+		return list;
 	}
 
-	public HashMap<String, String> findByPKCodeTimeRange(String daytime, String objectcode, String fromDate, String toDate){
-		SoapObject soapObject = executeWebservice("findByPKCodeTimeRange",	"daytime", daytime, 
+	public ArrayList<HashMap<String, String>> findByPKCodeTimeRange(String daytime, String objectcode, String fromDate, String toDate){
+		ArrayList<HashMap<String, String>> list = executeWebservice("findByPKCodeTimeRange",	"daytime", daytime, 
 				"objectcode", objectcode,
 				"fromdate", fromDate,
 				"todate", toDate);
-		HashMap<String, String> hashMap = soapObjectToHashMap(soapObject);
-		return hashMap;
+		return list;
 	}
 
-	public HashMap<String, String> findByPKLatest(String objectID, String before){
-		SoapObject soapObject = executeWebservice("findByPKLatest", "objectid", objectID,
+	public ArrayList<HashMap<String, String>> findByPKLatest(String objectID, String before){
+		ArrayList<HashMap<String, String>> list = executeWebservice("findByPKLatest", "objectid", objectID,
 				"before", before);
-		HashMap<String, String> hashMap = soapObjectToHashMap(soapObject);
-		return hashMap;
+		return list;
 	}
 
-	public HashMap<String, String> findByPKTimeRange(String objectid, String fromDate, String toDate){
-		SoapObject soapObject = executeWebservice("findByPKTimeRange",	"objectid", objectid,
+	public ArrayList<HashMap<String, String>> findByPKTimeRange(String objectid, String fromDate, String toDate){
+		ArrayList<HashMap<String, String>> list = executeWebservice("findByPKTimeRange",	"objectid", objectid,
 				"fromdate", fromDate,
 				"todate", toDate);
-		HashMap<String, String> hashMap = soapObjectToHashMap(soapObject);
-		return hashMap;
+		return list;
 	}
 
-	public HashMap<String, String> findLatestByPKCode(String daytime, String objectcode, String before){
-		SoapObject soapObject = executeWebservice("findByPKLatest", "daytime", daytime,
+	public ArrayList<HashMap<String, String>> findLatestByPKCode(String daytime, String objectcode, String before){
+		ArrayList<HashMap<String, String>> list = executeWebservice("findByPKLatest", "daytime", daytime,
 				"objectcode", objectcode,
 				"before", before);
-		HashMap<String, String> hashMap = soapObjectToHashMap(soapObject);
-		return hashMap;
+		return list;
 	}
 
-	public HashMap<String, String> getMetaData(){
-		SoapObject soapObject = executeWebservice("getMetaData");
-		HashMap<String, String> hashMap = soapObjectToHashMap(soapObject);
-		return hashMap;
+	public ArrayList<HashMap<String, String>> getMetaData(){
+		ArrayList<HashMap<String, String>> list = executeWebservice("getMetaData");
+		return list;
 	}
 
-	public HashMap<String, String> insert(String acFrequency, String allocCondFactor, String allocGasEnergy, String allocGasFactor, 
+	public ArrayList<HashMap<String, String>> insert(String acFrequency, String allocCondFactor, String allocGasEnergy, String allocGasFactor, 
 			String allocGasVol, String allocOilFactor, String allocOilVol, String allocWaterFactor, String allocWaterVol, String avgBhPress, 
 			String avgBhTemp, String avgChokeSize, String avgDhPumpPower, String avgDhPumpSpeed, String avgGasEnergy, String avgGasGcv, 
 			String avgGasRate, String avgGlRate, String avgLiqVol, String avgOilRate, String avgWaterRate, String avgWhPress, String avgWhTemp, 
 			String calcOnStreamHrs, String chokeUom, String dataClassName, String daytime, String intakePress, String intakeTemp, 
 			String objectCode, String objectId, String onStreamHrs, String outletPress, String outletTemp, String phaseCurrent, 
 			String phaseVoltage, String sortOrder, String theorGasEnergy, String theorGasVol, String theorOilVol, String theorWaterVol){
-		SoapObject soapObject = executeWebservice("insert", "acFrequency", acFrequency,
+		ArrayList<HashMap<String, String>> list = executeWebservice("insert", "acFrequency", acFrequency,
 															"allocCondFactor", allocCondFactor,
 															"allocGasEnergy",allocGasEnergy,
 															"allocGasFactor",allocGasFactor,
@@ -110,18 +104,17 @@ public class PwelDayStatusService extends Webservice{
 															"theorGasVol",theorGasVol,
 															"theorOilVol",theorOilVol,
 															"theorWaterVol",theorWaterVol);
-		HashMap<String, String> hashMap = soapObjectToHashMap(soapObject);
-		return hashMap;
+		return list;
 	}
 	
-	public HashMap<String, String> remove(String acFrequency, String allocCondFactor, String allocGasEnergy, String allocGasFactor, 
+	public ArrayList<HashMap<String, String>> remove(String acFrequency, String allocCondFactor, String allocGasEnergy, String allocGasFactor, 
 			String allocGasVol, String allocOilFactor, String allocOilVol, String allocWaterFactor, String allocWaterVol, String avgBhPress, 
 			String avgBhTemp, String avgChokeSize, String avgDhPumpPower, String avgDhPumpSpeed, String avgGasEnergy, String avgGasGcv, 
 			String avgGasRate, String avgGlRate, String avgLiqVol, String avgOilRate, String avgWaterRate, String avgWhPress, String avgWhTemp, 
 			String calcOnStreamHrs, String chokeUom, String dataClassName, String daytime, String intakePress, String intakeTemp, 
 			String objectCode, String objectId, String onStreamHrs, String outletPress, String outletTemp, String phaseCurrent, 
 			String phaseVoltage, String sortOrder, String theorGasEnergy, String theorGasVol, String theorOilVol, String theorWaterVol){
-		SoapObject soapObject = executeWebservice("remove", "acFrequency", acFrequency,
+		ArrayList<HashMap<String, String>> list = executeWebservice("remove", "acFrequency", acFrequency,
 															"allocCondFactor", allocCondFactor,
 															"allocGasEnergy",allocGasEnergy,
 															"allocGasFactor",allocGasFactor,
@@ -162,7 +155,6 @@ public class PwelDayStatusService extends Webservice{
 															"theorGasVol",theorGasVol,
 															"theorOilVol",theorOilVol,
 															"theorWaterVol",theorWaterVol);
-		HashMap<String, String> hashMap = soapObjectToHashMap(soapObject);
-		return hashMap;
+		return list;
 	}
 }

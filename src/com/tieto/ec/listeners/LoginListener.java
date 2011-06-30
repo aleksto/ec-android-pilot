@@ -26,8 +26,8 @@ public class LoginListener implements OnClickListener, Runnable{
 		this.login = login;
 		this.password = password;
 		this.username = username;
-		namespace = "http://pweldaystatus.service.generated.ws.frmw.ec.com/";
-		url = "http://wv001927.eu.tieto.com/com.ec.frmw.ws.generated/PwelDayStatusService?wsdl";
+		namespace = "http://pweldaystatuswsp.service.generated.ws.frmw.ec.com/";
+		url = "http://wv001927.eu.tieto.com/com.ec.frmw.ws.generated/PwelDayStatusWspService?";
 	}
 
 	public void onClick(View v){
@@ -36,6 +36,8 @@ public class LoginListener implements OnClickListener, Runnable{
 	}
 
 	public void run(){
+		
+		/*
 		service = new PwelDayStatusService(username.getText().toString(), password.getText().toString(), namespace, url);
 		
 		try{
@@ -44,6 +46,8 @@ public class LoginListener implements OnClickListener, Runnable{
 		}catch(java.lang.NullPointerException e){
 			loggin(username.getText().toString(), password.getText().toString());
 		}
+		*/
+		loggin("sysadmin", "sysadmin");
 	}
 
 	private void loggin(String username, String password) {

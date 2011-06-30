@@ -1,6 +1,7 @@
 package com.tieto.ec.webServices;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.ksoap2.SoapEnvelope;
@@ -27,7 +28,7 @@ public class Webservice {
 		httpTransport = new HttpTransportBasicAuth(url, username, password);
 	}
 
-	protected HashMap<String, String> soapObjectToHashMap(SoapObject soap){
+	private HashMap<String, String> soapObjectToHashMap(SoapObject soap){
 		//Init
 		HashMap<String, String> map = new HashMap<String, String>();
 
@@ -41,7 +42,7 @@ public class Webservice {
 		return map;
 	}
 
-	protected SoapObject executeWebservice(String method, String ... args){
+	protected ArrayList<HashMap<String, String>> executeWebservice(String method, String ... args){
 		//Init
 		SoapObject request = new SoapObject(namespace, method); 		
 
@@ -56,15 +57,28 @@ public class Webservice {
 		//Submiting
 		try {
 			httpTransport.call(namespace + "/" + method, envelope);
-			return (SoapObject) envelope.getResponse();
+
+			SoapObject soap = (SoapObject) envelope.bodyIn;
+
+			ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+
+			for (int i = 0; i < soap.getPropertyCount(); i++) {
+				SoapObject returnValue = (SoapObject) soap.getProperty(i);
+				list.add(soapObjectToHashMap(returnValue));
+			}
+			
+
+			return list;
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
-			return new SoapObject("", "");
+			return new ArrayList<HashMap<String, String>>();
 		}
 		return null;
 	}
+
+
 
 	protected boolean validate(String username, String password) {
 		//Init
@@ -73,7 +87,7 @@ public class Webservice {
 
 		//Envelope
 		envelope.setOutputSoapObject(request);
-		
+
 		request.addProperty("daytime", "");
 		request.addProperty("objectid", "");
 
