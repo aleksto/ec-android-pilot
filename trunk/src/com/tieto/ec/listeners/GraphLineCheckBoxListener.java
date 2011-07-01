@@ -3,28 +3,29 @@ package com.tieto.ec.listeners;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
+import com.tieto.ec.gui.Graph;
 
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class GraphLineCheckBoxListener implements OnCheckedChangeListener {
 
-	private XYPlot graph;
-	private SimpleXYSeries graphLine;
-	private LineAndPointFormatter format;
+	private Graph graph;
+	private int lineNr;
 	
-	public GraphLineCheckBoxListener(XYPlot graph, SimpleXYSeries graphLine, LineAndPointFormatter format){
+	public GraphLineCheckBoxListener(Graph graph, int lineNr){
 		this.graph = graph;
-		this.graphLine = graphLine;
-		this.format = format;
+		this.lineNr = lineNr;
 	}
 	
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		int size = graph.getSeriesSet().size();
 		if(isChecked){
-			graph.addSeries(graphLine, format);
+			graph.show(lineNr);
 		}
 		else{
-			graph.removeSeries(graphLine);
+			graph.hide(lineNr);
 		}	
 	}
 }
