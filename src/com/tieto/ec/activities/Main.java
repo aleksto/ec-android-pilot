@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.*;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.androidplot.Plot;
@@ -13,6 +14,7 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.series.XYSeries;
 import com.androidplot.xy.*;
 import com.tieto.R;
+import com.tieto.ec.listeners.GraphLineCheckBoxListener;
 import com.tieto.ec.webServices.PwelDayStatusService;
  
 import java.text.*;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
  
 public class Main extends Activity
@@ -48,9 +51,25 @@ public class Main extends Activity
     	
     	username = getIntent().getExtras().getString("username");
     	password = getIntent().getExtras().getString("password");
+    	 
+    	
+    	oilLineformat = new LineAndPointFormatter(Color.BLACK, Color.DKGRAY, Color.BLUE);
+    	gasLineformat = new LineAndPointFormatter(Color.BLACK, Color.DKGRAY, Color.MAGENTA);
+    	waterLineformat = new LineAndPointFormatter(Color.BLACK, Color.DKGRAY, Color.YELLOW);
+    	graph = (XYPlot) findViewById(R.id.graph);
+    	
     	testWebservice();
     	printInformation("opProductionunitCode", "opAreaCode", "opFcty1Code", "objectCode");
-    	testGraph(); 	
+    	initializeGraphs(); 	
+    	
+    	CheckBox oilBox = (CheckBox) findViewById(R.id.oilBox);
+    	CheckBox gasBox = (CheckBox) findViewById(R.id.gasBox);
+    	CheckBox waterBox = (CheckBox) findViewById(R.id.waterBox);
+    	
+    	oilBox.setOnCheckedChangeListener(new GraphLineCheckBoxListener(graph, gasLine, oilLineformat));
+    	gasBox.setOnCheckedChangeListener(new GraphLineCheckBoxListener(graph, oilLine, gasLineformat));
+    	waterBox.setOnCheckedChangeListener(new GraphLineCheckBoxListener(graph, waterLine, waterLineformat));
+
 	}
 
 	private void testWebservice() {
@@ -73,49 +92,42 @@ public class Main extends Activity
         		builder.append("\n");
         		builder.append(indent + valueList.get(0).get(key));
         		indent += "--";
-        	}
-			
-			
-        	
+        	} 	
         }
-        data.setText(builder);
-    	
+        data.setText(builder);    	
 	}
 
-    private void testGraph() {
-		gasLineformat = new LineAndPointFormatter(Color.BLACK, Color.DKGRAY, Color.MAGENTA);
-    	oilLineformat = new LineAndPointFormatter(Color.BLACK, Color.DKGRAY, Color.BLUE);
-    	waterLineformat = new LineAndPointFormatter(Color.BLACK, Color.DKGRAY, Color.YELLOW);
+    private void initializeGraphs() {
+    	graph.addSeries(oilLine, oilLineformat);
+    	graph.addSeries(gasLine, gasLineformat);
+    	graph.addSeries(waterLine, waterLineformat);
     	
-    	graph = (XYPlot) findViewById(R.id.graph);
-	
     	int counter = 0;
     	for (HashMap<String,String> map : valueList){
-    		counter++;
-    		gasLine = simpleSeries("Gas", gasLine, Double.valueOf(counter), Double.valueOf(map.get("theorGasVol")), gasLineformat);
-    		
-    	} 	
-    	counter = 0;
-    	for (HashMap<String,String> map : valueList){
     		counter++;	
-    		oilLine = simpleSeries("Oil", oilLine, Double.valueOf(counter), Double.valueOf(map.get("theorOilVol")), oilLineformat);
+       		addPointToLine(1, counter, Double.valueOf(map.get("theorOilVol")));
     	} 	
     	counter = 0;
     	for (HashMap<String,String> map : valueList){
     		counter++;
-    		waterLine = simpleSeries("Water", waterLine, Double.valueOf(counter), Double.valueOf(map.get("theorWaterVol")), waterLineformat);
+    		addPointToLine(2, counter, Double.valueOf(map.get("theorGasVol")));
+    	} 	
+    	counter = 0;
+    	for (HashMap<String,String> map : valueList){
+    		counter++;
+    		addPointToLine(3, counter, Double.valueOf(map.get("theorWaterVol")));
     	}
 	}
 
-	private SimpleXYSeries simpleSeries(String name, SimpleXYSeries graphLine, Double x, Double y, LineAndPointFormatter format) {	
-		if(graphLine == null)
-		{
-			graphLine = new SimpleXYSeries(name);
-			graph.addSeries(graphLine, format);
-		}
-		Log.d("tieto", graphLine.toString());
-		graphLine.addLast(x, y);
-		return graphLine;	
-	}
+    private void addPointToLine(int lineNr, double x, double y){
+        SimpleXYSeries line = null;
+        Iterator<XYSeries> iterator = graph.getSeriesSet().iterator();
+        for (int i = 0; i < lineNr; i++) {
+                    line = (SimpleXYSeries) iterator.next();
+              }
+        Log.d("tieto", line.getTitle() + " X: " + x + " Y: " + y); 
+        line.addLast(x, y);
+      }
+
     
 }
