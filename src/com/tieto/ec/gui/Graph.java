@@ -112,6 +112,32 @@ public class Graph extends XYPlot{
 		invalidate();
 	}
 
+	public void clearGraphLine(String title){
+		for (SimpleXYSeries line : graphLines) {
+			if(line.getTitle().equalsIgnoreCase(title)){
+				int idx = graphLines.indexOf(line);
+				graphLines.set(idx, new SimpleXYSeries(title));
+			}
+		}
+	}
+	
+	public void clearGraphLine(int nr){
+		SimpleXYSeries line = graphLines.get(nr);
+
+		for (int i = 0; i < line.size(); i++) {
+			line.removeFirst();
+		}
+	}
+	
+	public void clearAllGraphLines(){
+		if(graphLines != null)
+		{
+			for (SimpleXYSeries line : graphLines) {
+				clearGraphLine(graphLines.indexOf(line));
+			}
+		}
+	}
+	
 	private int idxFromTitle(String title){
 		for (SimpleXYSeries line : graphLines) {
 			if(line.getTitle().equalsIgnoreCase(title)){
