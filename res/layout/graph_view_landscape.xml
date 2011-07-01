@@ -6,31 +6,31 @@
     android:background="#ffffff">
 
 	    <RelativeLayout
-	    android:id="@+id/relativeLayout2" 
+	    android:id="@+id/relativeLayout" 
 	    android:layout_width="match_parent" 
 	    android:layout_height="match_parent">
 	    	<Button
-	    	android:id="@+id/dates"
+	    	android:id="@+id/dateButton_landscape"
 	    	android:text="Select period"
 	    	android:layout_width="wrap_content"
 			android:layout_height="wrap_content">
 	    	</Button>
 	    	<Button
-	    	android:id="@+id/id"
+	    	android:id="@+id/objectIDButton_landscape"
 	    	android:text="Select Object ID"
-	    	android:layout_toRightOf="@id/dates"
+	    	android:layout_toRightOf="@id/dateButton_landscape"
 	    	android:layout_width="wrap_content"
 			android:layout_height="wrap_content">
 	    	</Button>
 	    	<TextView
-	    	android:id="@+id/data"
-	    	android:layout_below="@id/dates"
+	    	android:id="@+id/data_landscape"
+	    	android:layout_below="@id/dateButton_landscape"
 	    	android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textColor="#000000">
 	    	</TextView>
 	    	<TextView
-	    	android:id="@+id/oilText"
+	    	android:id="@+id/oilLabel_landscape"
 	    	android:text="Oil"
 	    	android:layout_centerHorizontal="true"
 	    	android:layout_width="wrap_content"
@@ -38,49 +38,49 @@
 			android:textColor="#000000">
 	    	</TextView>
 			<CheckBox
-			android:id="@+id/oilBox"
-			android:layout_below="@id/oilText"
+			android:id="@+id/oilBox_landscape"
+			android:layout_below="@id/oilLabel_landscape"
 			android:layout_centerHorizontal="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content">>
 			</CheckBox>
 	    	<TextView
-	    	android:id="@+id/gasText"
+	    	android:id="@+id/gasLabel_landscape"
 	    	android:text="Gas"
-	    	android:layout_below="@id/oilBox"
+	    	android:layout_below="@id/oilBox_landscape"
 	    	android:layout_centerHorizontal="true"
 	    	android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textColor="#000000">
 	    	</TextView>
 			<CheckBox
-			android:id="@+id/gasBox"
-			android:layout_below="@id/gasText"
+			android:id="@+id/gasBox_landscape"
+			android:layout_below="@id/gasLabel_landscape"
 			android:layout_centerHorizontal="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content">>
 			</CheckBox>
 			<TextView
-	    	android:id="@+id/waterText"
+	    	android:id="@+id/waterLabel_landscape"
 	    	android:text="Water"
-	    	android:layout_below="@id/gasBox"
+	    	android:layout_below="@id/gasBox_landscape"
 	    	android:layout_centerHorizontal="true"
 	    	android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textColor="#000000">
 	    	</TextView>
 			<CheckBox
-			android:id="@+id/waterBox"
-			android:layout_below="@id/waterText"
+			android:id="@+id/waterBox_landscape"
+			android:layout_below="@id/waterLabel_landscape"
 			android:layout_centerHorizontal="true"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content">>
 			</CheckBox>
 	    	<RelativeLayout
-	   	   	android:id="@+id/graphLayout"
+	   	   	android:id="@+id/graphLayout_landscape"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"				
-			android:layout_toRightOf="@id/oilBox">
+			android:layout_toRightOf="@id/oilBox_landscape">
 		    </RelativeLayout>
 	    </RelativeLayout>
 	</LinearLayout>
