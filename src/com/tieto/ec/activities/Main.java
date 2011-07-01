@@ -113,7 +113,7 @@ public class Main extends Activity
 				indent += "--";
 			} 	
 		}
-		data.setText(builder);    	
+		data.setText(builder);  
 	}
 
 	public void runWebservice(String objectID, String fromDate, String toDate) {
@@ -126,8 +126,8 @@ public class Main extends Activity
 		if(!toDate.equalsIgnoreCase("")){
 			this.toDate = toDate;
 		}
-		valueList = webservice.findByPKTimeRange(this.objectID, this.fromDate, this.toDate);				
-		Log.d("tieto", valueList+"");
+		valueList = webservice.findByPKTimeRange(this.objectID, this.fromDate, this.toDate);	
+		Log.d("tieto", valueList.size()+"");
 
 		graph.clearAllGraphLines();
 		graph.addValuesToExistingLines(valueList, "theorOilVol", "theorGasVol", "theorWaterVol");
