@@ -76,12 +76,11 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content">>
 			</CheckBox>
-	    	<com.androidplot.xy.XYPlot
-	   	   	android:id="@+id/graph"
+	    	<RelativeLayout
+	   	   	android:id="@+id/graphLayout"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"				
-			android:layout_toRightOf="@id/oilBox"
-		    title="well">
-		    </com.androidplot.xy.XYPlot>
+			android:layout_toRightOf="@id/oilBox">
+		    </RelativeLayout>
 	    </RelativeLayout>
 	</LinearLayout>
