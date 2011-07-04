@@ -11,14 +11,12 @@ public class WebserviceThread implements Runnable{
 	private Thread thread;
 	private ArrayList<HashMap<String, String>> valueList;
 	private PwelDayStatusService webservice;
-	private Graph graph;
 	private String objectID;
 	private String fromDate;
 	private String toDate;
 	
-	public WebserviceThread(PwelDayStatusService webservice, Graph graph){
+	public WebserviceThread(PwelDayStatusService webservice){
 		this.webservice = webservice;
-		this.graph = graph;
 	}
 	
 	public synchronized ArrayList<HashMap<String, String>> startThread(String objectID, String fromDate, String toDate){

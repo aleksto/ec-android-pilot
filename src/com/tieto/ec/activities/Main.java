@@ -105,6 +105,7 @@ public class Main extends Activity
 		
 		MenuItem selectPeriod = menu.findItem(R.id.selectPeriod);
 		MenuItem selectObjectID = menu.findItem(R.id.selectObjectID);
+		MenuItem data = menu.findItem(R.id.data);
 		selectPeriod.setOnMenuItemClickListener(new SelectPeriodListener(this));
 		selectObjectID.setOnMenuItemClickListener(new SelectObjectIDListener(this));
 		return super.onCreateOptionsMenu(menu);
