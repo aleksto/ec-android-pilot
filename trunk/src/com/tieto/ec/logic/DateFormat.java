@@ -17,4 +17,9 @@ public class DateFormat {
 		Date date = new Date(year, (month-1), day, hour, min, sec);
 		return date.getTime();
 	}
+	
+	public static String parse(double daytime){
+		Date date = new Date((long) daytime);
+		return date.toString();
+	}
 }

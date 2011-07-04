@@ -23,17 +23,25 @@ public class WebserviceThread implements Runnable{
 	
 	public synchronized ArrayList<HashMap<String, String>> startThread(String objectID, String fromDate, String toDate){
 		thread = new Thread(this);
-		thread.start();
+		
 		this.objectID = objectID;
 		this.fromDate = fromDate;
 		this.toDate = toDate;
 		
+		thread.start();
+		try {
+			wait();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return valueList;
 		
 	}
 	
-	public void run() {
+	public synchronized void run() {
 		valueList = webservice.findByPKTimeRange(objectID, fromDate, toDate);	
+		notify();
 	}
 
 }
