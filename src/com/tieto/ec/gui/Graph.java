@@ -19,7 +19,7 @@ public class Graph extends XYPlot{
 
 	private ArrayList<SimpleXYSeries> graphLines;
 	private ArrayList<LineAndPointFormatter> formats;
-
+	
 	public Graph(Context context, String title){
 		super(context, title);
 
@@ -76,6 +76,7 @@ public class Graph extends XYPlot{
 			if(line.getTitle().equalsIgnoreCase(title)){
 				addSeries(line, formats.get(graphLines.indexOf(line)));
 				invalidate();
+				
 			}
 		}
 		
@@ -132,20 +133,19 @@ public class Graph extends XYPlot{
 	}
 
 	public void addPointToLine(String title, double x, double y){
-		SimpleXYSeries graphLine = null;
-		for (SimpleXYSeries line : graphLines) {
-			if(line.getTitle().equalsIgnoreCase(title)){
-				graphLine = line;
+		for (int i = 0; i<graphLines.size(); i++) {
+			if(graphLines.get(i).getTitle().equalsIgnoreCase(title)){
+				addPointToLine(i, x, y);
 			}
 		}
-		graphLine.addLast(x, y);
 		invalidate();
 	}
 
-	public void addPointToLine(int lineNr, double x, double y){
+	private void addPointToLine(int lineNr, double x, double y){
 		SimpleXYSeries line = graphLines.get(lineNr);
 		line.addLast(x, y);
 		invalidate();
+		
 	}
 
 	public void clearGraphLine(String title){
