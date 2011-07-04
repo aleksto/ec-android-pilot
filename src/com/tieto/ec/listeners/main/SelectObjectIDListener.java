@@ -4,10 +4,12 @@ import com.tieto.ec.activities.Main;
 import com.tieto.ec.gui.PickObjectIDDialog;
 import com.tieto.ec.webServices.PwelDayStatusService;
 
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class SelectObjectIDListener implements OnClickListener {
+public class SelectObjectIDListener implements OnMenuItemClickListener {
 
 	private PickObjectIDDialog dialog;
 	
@@ -15,7 +17,8 @@ public class SelectObjectIDListener implements OnClickListener {
 		dialog = new PickObjectIDDialog(main);
 	}
 
-	public void onClick(View v) {
+	public boolean onMenuItemClick(MenuItem item) {
 		dialog.show();
+		return false;
 	}
 }

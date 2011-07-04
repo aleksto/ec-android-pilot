@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.graphics.*;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.Surface;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 
 import com.tieto.R;
 import com.tieto.ec.gui.Graph;
+import com.tieto.ec.listeners.GraphListener;
 import com.tieto.ec.listeners.main.GraphLineCheckBoxListener;
 import com.tieto.ec.listeners.main.SelectObjectIDListener;
 import com.tieto.ec.listeners.main.SelectPeriodListener;
@@ -29,13 +33,10 @@ public class Main extends Activity
 	private String objectID, fromDate, toDate;
 	private PwelDayStatusService webservice;
 	private ArrayList<HashMap<String, String>>  valueList;
-	private TextView data;
 	private RelativeLayout relative;
 	private CheckBox oilBox;
 	private CheckBox gasBox;
 	private CheckBox waterBox;
-	private Button selectPeriod;
-	private Button selectObjectID;
 	private WebserviceThread webserviceThread;
 	
 	@Override
@@ -58,18 +59,12 @@ public class Main extends Activity
 			oilBox = (CheckBox) findViewById(R.id.oilBox_portrait);
 			gasBox = (CheckBox) findViewById(R.id.gasBox_portrait);
 			waterBox = (CheckBox) findViewById(R.id.waterBox_portrait);
-			selectPeriod = (Button) findViewById(R.id.dateButton_portrait);
-			selectObjectID = (Button) findViewById(R.id.objectIDButton_portrait);
-			data = (TextView) findViewById(R.id.data_portrait);
 		}else{
 			setContentView(R.layout.graph_view_landscape);
 			relative = (RelativeLayout) findViewById(R.id.graphLayout_landscape);
 			oilBox = (CheckBox) findViewById(R.id.oilBox_landscape);
 			gasBox = (CheckBox) findViewById(R.id.gasBox_landscape);
 			waterBox = (CheckBox) findViewById(R.id.waterBox_landscape);
-			selectPeriod = (Button) findViewById(R.id.dateButton_landscape);
-			selectObjectID = (Button) findViewById(R.id.objectIDButton_landscape);
-			data = (TextView) findViewById(R.id.data_landscape);
 		}
 
 
@@ -97,13 +92,24 @@ public class Main extends Activity
 		waterBox.setChecked(true);
 
 		//Buttons/CheckBoxes Listeners
-		selectPeriod.setOnClickListener(new SelectPeriodListener(this));
-		selectObjectID.setOnClickListener(new SelectObjectIDListener(this));
 		oilBox.setOnCheckedChangeListener(new GraphLineCheckBoxListener(graph, 0));
 		gasBox.setOnCheckedChangeListener(new GraphLineCheckBoxListener(graph, 1));
 		waterBox.setOnCheckedChangeListener(new GraphLineCheckBoxListener(graph, 2));
+		graph.setOnTouchListener(new GraphListener());
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater menuInflator = new MenuInflater(this);
+		menuInflator.inflate(R.menu.main_menu, menu);
+		
+		MenuItem selectPeriod = menu.findItem(R.id.selectPeriod);
+		MenuItem selectObjectID = menu.findItem(R.id.selectObjectID);
+		selectPeriod.setOnMenuItemClickListener(new SelectPeriodListener(this));
+		selectObjectID.setOnMenuItemClickListener(new SelectObjectIDListener(this));
+		return super.onCreateOptionsMenu(menu);
+	}
+	
 	private void printInformation(String ... args) {
 		StringBuilder builder = new StringBuilder();
 		Set<String> keySet = valueList.get(0).keySet();
@@ -118,7 +124,6 @@ public class Main extends Activity
 				indent += "--";
 			} 	
 		}
-		data.setText(builder);  
 	}
 
 	public void runWebservice(String objectID, String fromDate, String toDate) {
