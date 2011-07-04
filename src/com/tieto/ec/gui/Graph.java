@@ -1,26 +1,23 @@
 package com.tieto.ec.gui;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
-import android.util.Log;
 
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYStepMode;
-import com.tieto.ec.listeners.main.GraphListener;
 import com.tieto.ec.logic.DateFormat;
+import com.androidplot.xy.XYStepMode;
+
 
 public class Graph extends XYPlot{
 
@@ -39,6 +36,8 @@ public class Graph extends XYPlot{
 		setDomainValueFormat(new SimpleDateFormat());
 		setDomainStep(XYStepMode.SUBDIVIDE, 4);
 		setBorderStyle(BorderStyle.SQUARE, null, null);
+		setDomainValueFormat(new SimpleDateFormat());
+		setDomainStepValue(5);
 		getBorderPaint().setStrokeWidth(1);
 		getBorderPaint().setAntiAlias(false);
 		getBorderPaint().setColor(Color.WHITE);
@@ -51,6 +50,8 @@ public class Graph extends XYPlot{
 		widget.getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1,1}, 1));
 		widget.getDomainOriginLinePaint().setColor(Color.BLACK);
 		widget.getRangeOriginLinePaint().setColor(Color.BLACK);
+        
+        
 	}
 
 	public void addEmptyGraphLine(String title, int color){
@@ -113,6 +114,7 @@ public class Graph extends XYPlot{
 		for (HashMap<String,String> map : values){
 			addPointToLine(lineNr, DateFormat.parse(map.get("daytime")), Double.valueOf(map.get(key).replace(",", ".")));
 		} 
+		
 	}
 
 	public void addValuesToExistingLines(ArrayList<HashMap<String, String>> values, String ... key){
