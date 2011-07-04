@@ -1,6 +1,6 @@
 package com.tieto.ec.listeners.main.pickPeriodDialog;
 
-import com.tieto.ec.activities.Main;
+import com.tieto.ec.activities.WellPeriod;
 
 import android.app.Dialog;
 import android.util.Log;
@@ -10,12 +10,12 @@ import android.widget.DatePicker;
 
 public class OkListener implements OnClickListener{
 
-	private Main main;
+	private WellPeriod main;
 	private Dialog parent;
 	private DatePicker fromDate;
 	private DatePicker toDate;
 	
-	public OkListener(Main main, DatePicker fromDate, DatePicker toDate, Dialog parent) {
+	public OkListener(WellPeriod main, DatePicker fromDate, DatePicker toDate, Dialog parent) {
 		this.fromDate = fromDate;
 		this.toDate = toDate; 
 		this.main = main;

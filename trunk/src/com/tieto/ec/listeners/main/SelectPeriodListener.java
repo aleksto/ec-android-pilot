@@ -1,6 +1,6 @@
 package com.tieto.ec.listeners.main;
 
-import com.tieto.ec.activities.Main;
+import com.tieto.ec.activities.WellPeriod;
 import com.tieto.ec.gui.PickPeriodDialog;
 import com.tieto.ec.webServices.PwelDayStatusService;
 
@@ -13,7 +13,7 @@ public class SelectPeriodListener implements OnMenuItemClickListener {
 	
 	private PickPeriodDialog dialog;	
 	
-	public SelectPeriodListener(Main main) {
+	public SelectPeriodListener(WellPeriod main) {
 		dialog = new PickPeriodDialog(main);
 	}
 
