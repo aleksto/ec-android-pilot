@@ -78,7 +78,7 @@ public class Main extends Activity
 		relative.addView(graph);
 
 		//Thread for webservice
-		webserviceThread = new WebserviceThread(webservice, graph);
+		webserviceThread = new WebserviceThread(webservice);
 		
 		//Initialize webservice
 		runWebservice("9FB4E1510D033B19E040340A2B4042D7", "2003-01-01", "2003-01-31");
@@ -108,6 +108,7 @@ public class Main extends Activity
 		MenuItem data = menu.findItem(R.id.data);
 		selectPeriod.setOnMenuItemClickListener(new SelectPeriodListener(this));
 		selectObjectID.setOnMenuItemClickListener(new SelectObjectIDListener(this));
+
 		return super.onCreateOptionsMenu(menu);
 	}
 	
