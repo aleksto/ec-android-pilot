@@ -17,6 +17,7 @@ import com.tieto.R;
 import com.tieto.ec.gui.Graph;
 import com.tieto.ec.listeners.GraphListener;
 import com.tieto.ec.listeners.main.GraphLineCheckBoxListener;
+import com.tieto.ec.listeners.main.SelectDataListener;
 import com.tieto.ec.listeners.main.SelectObjectIDListener;
 import com.tieto.ec.listeners.main.SelectPeriodListener;
 import com.tieto.ec.logic.WebserviceThread;
@@ -82,10 +83,7 @@ public class Main extends Activity
 		
 		//Initialize webservice
 		runWebservice("9FB4E1510D033B19E040340A2B4042D7", "2003-01-01", "2003-01-31");
-
-		//Print well data
-		printInformation("opProductionunitCode", "opAreaCode", "opFcty1Code", "objectCode");
-
+		
 		//CheckBoxes
 		oilBox.setChecked(true);
 		gasBox.setChecked(true);
@@ -108,11 +106,11 @@ public class Main extends Activity
 		MenuItem data = menu.findItem(R.id.data);
 		selectPeriod.setOnMenuItemClickListener(new SelectPeriodListener(this));
 		selectObjectID.setOnMenuItemClickListener(new SelectObjectIDListener(this));
-
+		data.setOnMenuItemClickListener(new SelectDataListener(this));
 		return super.onCreateOptionsMenu(menu);
 	}
 	
-	private void printInformation(String ... args) {
+	public String getData(String ... args) {
 		StringBuilder builder = new StringBuilder();
 		Set<String> keySet = valueList.get(0).keySet();
 		String indent = "";
@@ -126,6 +124,7 @@ public class Main extends Activity
 				indent += "--";
 			} 	
 		}
+		return builder.toString();
 	}
 
 	public void runWebservice(String objectID, String fromDate, String toDate) {
