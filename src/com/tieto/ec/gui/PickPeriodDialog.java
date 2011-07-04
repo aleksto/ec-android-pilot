@@ -1,6 +1,6 @@
 package com.tieto.ec.gui;
 
-import com.tieto.ec.activities.Main;
+import com.tieto.ec.activities.WellPeriod;
 import com.tieto.ec.listeners.main.pickPeriodDialog.CancelListener;
 import com.tieto.ec.listeners.main.pickPeriodDialog.OkListener;
 
@@ -13,7 +13,7 @@ import android.widget.TableRow;
 
 public class PickPeriodDialog extends Dialog{
 
-	public PickPeriodDialog(Main main) {
+	public PickPeriodDialog(WellPeriod main) {
 		super(main);
 		TableLayout layout = new TableLayout(main);
 		TableRow row1 = new TableRow(main);

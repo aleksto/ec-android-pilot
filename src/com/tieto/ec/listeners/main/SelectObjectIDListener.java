@@ -1,6 +1,6 @@
 package com.tieto.ec.listeners.main;
 
-import com.tieto.ec.activities.Main;
+import com.tieto.ec.activities.WellPeriod;
 import com.tieto.ec.gui.PickObjectIDDialog;
 import com.tieto.ec.webServices.PwelDayStatusService;
 
@@ -13,7 +13,7 @@ public class SelectObjectIDListener implements OnMenuItemClickListener {
 
 	private PickObjectIDDialog dialog;
 	
-	public SelectObjectIDListener(Main main) {
+	public SelectObjectIDListener(WellPeriod main) {
 		dialog = new PickObjectIDDialog(main);
 	}
 

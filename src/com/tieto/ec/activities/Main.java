@@ -1,56 +1,43 @@
 package com.tieto.ec.activities;
 
-import android.app.Activity;
-import android.graphics.*;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.Surface;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.tieto.R;
 import com.tieto.ec.gui.Graph;
 import com.tieto.ec.listeners.GraphListener;
 import com.tieto.ec.listeners.main.GraphLineCheckBoxListener;
-import com.tieto.ec.listeners.main.SelectDataListener;
-import com.tieto.ec.listeners.main.SelectObjectIDListener;
-import com.tieto.ec.listeners.main.SelectPeriodListener;
-import com.tieto.ec.logic.WebserviceThread;
 import com.tieto.ec.webServices.PwelDayStatusService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
+import android.app.Activity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.Surface;
+import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 
-public class Main extends Activity
-{
-	private Graph graph;
-	private String username, password, namespace, url;
-	private String objectID, fromDate, toDate;
-	private PwelDayStatusService webservice;
-	private ArrayList<HashMap<String, String>>  valueList;
-	private RelativeLayout relative;
-	private CheckBox oilBox;
-	private CheckBox gasBox;
-	private CheckBox waterBox;
-	private WebserviceThread webserviceThread;
+
+public class Main extends Activity {
 	
-	@Override
-	public void onCreate(Bundle savedInstanceState)
+	protected String username, password, namespace, url;
+	protected PwelDayStatusService webservice;
+	protected Graph graph;
+	protected ArrayList<HashMap<String, String>>  valueList;
+	
+	protected RelativeLayout relative;
+	protected CheckBox oilBox;
+	protected CheckBox gasBox;
+	protected CheckBox waterBox;
+	
+	public void onCreate(Bundle savedInstanceState, String username, String password, String namespace, String url)
 	{
 		//Super
 		super.onCreate(savedInstanceState);
-
-		//Webservice
-		username = getIntent().getExtras().getString("username");
-		password = getIntent().getExtras().getString("password");
-		namespace = "http://pweldaystatuswsp.service.generated.ws.frmw.ec.com/";
-		url = "http://wv001927.eu.tieto.com/com.ec.frmw.ws.generated/PwelDayStatusWspService?";
+		
+		this.username = username;
+		this.password = password;
+		this.namespace = namespace;
+		this.url = url;
 
 		//Init
 		int rotation = getWindowManager().getDefaultDisplay().getRotation();
@@ -77,12 +64,6 @@ public class Main extends Activity
 		graph.addEmptyGraphLine("Gas", Color.BLUE);
 		graph.addEmptyGraphLine("Water", Color.GREEN);
 		relative.addView(graph);
-
-		//Thread for webservice
-		webserviceThread = new WebserviceThread(webservice);
-		
-		//Initialize webservice
-		runWebservice("9FB4E1510D033B19E040340A2B4042D7", "2003-01-01", "2003-01-31");
 		
 		//CheckBoxes
 		oilBox.setChecked(true);
@@ -95,57 +76,4 @@ public class Main extends Activity
 		waterBox.setOnCheckedChangeListener(new GraphLineCheckBoxListener(graph, 2));
 		graph.setOnTouchListener(new GraphListener());
 	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater menuInflator = new MenuInflater(this);
-		menuInflator.inflate(R.menu.main_menu, menu);
-		
-		MenuItem selectPeriod = menu.findItem(R.id.selectPeriod);
-		MenuItem selectObjectID = menu.findItem(R.id.selectObjectID);
-		MenuItem data = menu.findItem(R.id.data);
-		selectPeriod.setOnMenuItemClickListener(new SelectPeriodListener(this));
-		selectObjectID.setOnMenuItemClickListener(new SelectObjectIDListener(this));
-		data.setOnMenuItemClickListener(new SelectDataListener(this));
-		return super.onCreateOptionsMenu(menu);
-	}
-	
-	public String getData(String ... args) {
-		StringBuilder builder = new StringBuilder();
-		Set<String> keySet = valueList.get(0).keySet();
-		String indent = "";
-		for(String key: args)
-		{
-			if(keySet.contains(key)){
-				builder.append("\n");
-				builder.append(indent + key + ":");
-				builder.append("\n");
-				builder.append(indent + valueList.get(0).get(key));
-				indent += "--";
-			} 	
-		}
-		return builder.toString();
-	}
-
-	public void runWebservice(String objectID, String fromDate, String toDate) {
-		if(!objectID.equalsIgnoreCase("")){
-			this.objectID = objectID;
-		}
-		if(!fromDate.equalsIgnoreCase("")){
-			this.fromDate = fromDate;
-		}
-		if(!toDate.equalsIgnoreCase("")){
-			this.toDate = toDate;
-		}
-		
-		valueList = webserviceThread.startThread(this.objectID, this.fromDate, this.toDate);	
-
-		graph.clearAllGraphLines();
-		graph.addValuesToExistingLines(valueList, "theorOilVol", "theorGasVol", "theorWaterVol");
-		graph.invalidate();
-	} 
 }
-
-
-
-

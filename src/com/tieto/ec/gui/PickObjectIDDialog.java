@@ -1,6 +1,6 @@
 package com.tieto.ec.gui;
 
-import com.tieto.ec.activities.Main;
+import com.tieto.ec.activities.WellPeriod;
 import com.tieto.ec.listeners.main.pickObjectIDDialog.CancelListener;
 import com.tieto.ec.listeners.main.pickObjectIDDialog.OkListener;
 
@@ -11,7 +11,7 @@ import android.widget.TableLayout;
 
 public class PickObjectIDDialog extends Dialog{
 
-	public PickObjectIDDialog(Main main) {
+	public PickObjectIDDialog(WellPeriod main) {
 		super(main);
 		TableLayout layout = new TableLayout(main);
 		EditText editText = new EditText(main);
