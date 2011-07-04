@@ -14,11 +14,15 @@ import com.tieto.ec.logic.HttpTransportBasicAuth;
 
 import android.util.Log;
 
-public class Webservice {
+public class Webservice implements Runnable{
 
+	private ArrayList<HashMap<String, String>> valueList;
 	private String namespace, url;
 	private SoapSerializationEnvelope envelope;
 	private HttpTransportBasicAuth httpTransport;
+	private String method;
+	private String[] args;
+	private Thread thread;
 
 	public Webservice(String username, String password, String namespace, String url){
 		//Init
@@ -51,40 +55,20 @@ public class Webservice {
 		return valueList;
 	}
 
-	protected ArrayList<HashMap<String, String>> executeWebservice(String method, String ... args){
-		//Init
-		SoapObject request = new SoapObject(namespace, method); 		
-
-		//PARAMS
-		for (int i = 0; i < args.length; i=i+2) {
-			request.addProperty(args[i], args[i+1]);
-		}
-
-		//Envelope
-		envelope.setOutputSoapObject(request);
-
-		//Submiting
+	protected synchronized ArrayList<HashMap<String, String>> executeWebservice(String method, String ... args){
+		this.method = method;
+		this.args = args;
+		
+		thread = new Thread(this);
+		thread.start();
+		
 		try {
-			httpTransport.call(namespace + "/" + method, envelope);
-
-			SoapObject soap = (SoapObject) envelope.bodyIn;
-
-			ArrayList<HashMap<String, String>> valueList = soapObjectsToArrayList(soap);
-			
-
-			return valueList;
-		} catch (IOException e) {
+			wait();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
-		} catch (XmlPullParserException e) {
-			e.printStackTrace();
-			return new ArrayList<HashMap<String, String>>();
 		}
-		return null;
+		return valueList;
 	}
-
-	
-
-
 
 	protected boolean validate(String username, String password) {
 		//Init
@@ -115,5 +99,35 @@ public class Webservice {
 		}
 
 		return false;
+	}
+	
+
+	public synchronized void run() {
+		//Init
+		SoapObject request = new SoapObject(namespace, method); 		
+
+		//PARAMS
+		for (int i = 0; i < args.length; i=i+2) {
+			request.addProperty(args[i], args[i+1]);
+		}
+
+		//Envelope
+		envelope.setOutputSoapObject(request);
+
+		//Submiting
+		try {
+			httpTransport.call(namespace + "/" + method, envelope);
+
+			SoapObject soap = (SoapObject) envelope.bodyIn;
+
+			valueList = soapObjectsToArrayList(soap);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (XmlPullParserException e) {
+			e.printStackTrace();
+			valueList = new ArrayList<HashMap<String, String>>();
+		}
+
+		notify();
 	}
 }
