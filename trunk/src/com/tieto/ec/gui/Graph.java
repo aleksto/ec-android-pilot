@@ -1,13 +1,18 @@
 package com.tieto.ec.gui;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.Paint;
 
+import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYPlot;
 
 public class Graph extends XYPlot{
@@ -20,12 +25,36 @@ public class Graph extends XYPlot{
 
 		graphLines = new ArrayList<SimpleXYSeries>();
 		formats = new ArrayList<LineAndPointFormatter>();
+		
+		//this
+		setRangeLowerBoundary(0, BoundaryMode.FIXED);
+		setRangeValueFormat(new DecimalFormat("0"));
+		setBorderStyle(BorderStyle.SQUARE, null, null);
+		getBorderPaint().setStrokeWidth(1);
+		getBorderPaint().setAntiAlias(false);
+		getBorderPaint().setColor(Color.WHITE);
+		disableAllMarkup();
+		
+		//GraphWidget
+		XYGraphWidget widget = getGraphWidget();
+        widget.getGridBackgroundPaint().setColor(Color.WHITE);
+        widget.getGridLinePaint().setColor(Color.BLACK);
+        widget.getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1,1}, 1));
+        widget.getDomainOriginLinePaint().setColor(Color.BLACK);
+        widget.getRangeOriginLinePaint().setColor(Color.BLACK);
 	}
 
 	public void addEmptyGraphLine(String title, int color){
 		SimpleXYSeries line = new SimpleXYSeries(title);
 		LineAndPointFormatter format = new LineAndPointFormatter(Color.BLACK, Color.BLACK, color);
+		
+		Paint paint = new Paint();
+		paint.setColor(color);
+		paint.setAlpha(1000);
+		format.setFillPaint(paint);
+		
 		addSeries(line, format);
+		
 		graphLines.add(line);
 		formats.add(format);
 	}
@@ -33,11 +62,13 @@ public class Graph extends XYPlot{
 	public void addLineFromValues(String title, int color, ArrayList<HashMap<String, String>> values, String key){
 		addEmptyGraphLine(title, color);
 		addValuesToExistingLine(values, key, idxFromTitle(title));
+		
 	}
 
 	public void show(int graphNr){
 		addSeries(graphLines.get(graphNr), formats.get(graphNr));
 		invalidate();
+		
 	}
 
 	public void show(String title){
@@ -47,6 +78,7 @@ public class Graph extends XYPlot{
 				invalidate();
 			}
 		}
+		
 	}
 
 	public void hide(int graphNr){
@@ -54,6 +86,7 @@ public class Graph extends XYPlot{
 			removeSeries(graphLines.get(graphNr));		
 			invalidate();	
 		}
+		
 	}
 
 	public void hide(String title){
@@ -63,6 +96,7 @@ public class Graph extends XYPlot{
 				invalidate();
 			}
 		}
+		
 	}
 
 	public void addValuesToExistingLine(ArrayList<HashMap<String, String>> values, String key, int lineNr){
@@ -87,12 +121,14 @@ public class Graph extends XYPlot{
 		for (int i = 0; i < values.length; i+=2) {
 			addPointToLine(title, values[i], values[i+1]);
 		}
+		
 	}
 
 	public void addPointsToLine(int lineNr, Double ... values){
 		for (int i = 0; i < values.length; i+=2) {
 			addPointToLine(lineNr, values[i], values[i+1]);
 		}
+		
 	}
 
 	public void addPointToLine(String title, double x, double y){
@@ -115,17 +151,16 @@ public class Graph extends XYPlot{
 	public void clearGraphLine(String title){
 		for (SimpleXYSeries line : graphLines) {
 			if(line.getTitle().equalsIgnoreCase(title)){
-				int idx = graphLines.indexOf(line);
-				graphLines.set(idx, new SimpleXYSeries(title));
+				clearGraphLine(graphLines.indexOf(line));
 			}
 		}
 	}
 	
 	public void clearGraphLine(int nr){
 		SimpleXYSeries line = graphLines.get(nr);
-
-		for (int i = 0; i < line.size(); i++) {
-			line.removeFirst();
+		int size = line.size();
+		for (int i = 0; i < size; i++) {
+			line.removeLast();
 		}
 	}
 	
@@ -139,9 +174,9 @@ public class Graph extends XYPlot{
 	}
 	
 	private int idxFromTitle(String title){
-		for (SimpleXYSeries line : graphLines) {
-			if(line.getTitle().equalsIgnoreCase(title)){
-				return graphLines.indexOf(line);
+		for (int i = 0; i < graphLines.size(); i++) {
+			if(graphLines.get(i).getTitle().equalsIgnoreCase(title)){
+				return i;
 			}
 		}
 		return -1;
