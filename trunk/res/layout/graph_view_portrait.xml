@@ -10,34 +10,6 @@
 		android:layout_width="match_parent" 
 		android:layout_height="match_parent">
 		
-		<Button 
-			android:id="@+id/dateButton_portrait"
-			android:text="Periode"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentTop="true"
-			android:layout_centerHorizontal="true">
-		</Button>
-		
-		<Button 
-			android:id="@+id/objectIDButton_portrait"
-			android:text="Object ID"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentTop="true"
-			android:layout_toRightOf="@id/dateButton_portrait">
-		</Button>
-		
-		<TextView 
-			android:id="@+id/data_portrait"
-			android:text="Info"
-			android:textColor="#000000"
-			android:layout_centerHorizontal="true"
-			android:layout_below="@id/dateButton_portrait"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-		></TextView>
-		
 		<TextView 
 			android:id="@+id/gasLabel_portrait"
 			android:text="Gas"
@@ -45,7 +17,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_centerHorizontal="true"
-			android:layout_below="@id/data_portrait">
+			android:layout_alignParentTop="true">
 		</TextView>
 		
 		<CheckBox 
@@ -56,7 +28,13 @@
 			android:layout_below="@id/gasLabel_portrait">
 		</CheckBox>
 		
-		
+		<CheckBox 
+			android:id="@+id/oilBox_portrait"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toLeftOf="@id/gasBox_portrait"
+			android:layout_below="@id/gasLabel_portrait">
+		</CheckBox>
 		
 		<TextView 
 			android:id="@+id/oilLabel_portrait"
@@ -64,17 +42,9 @@
 			android:textColor="#000000"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_alignParentLeft="true"
-			android:layout_below="@id/data_portrait">
+			android:layout_toLeftOf="@id/gasBox_portrait"
+			android:layout_alignParentTop="true">
 		</TextView>
-		
-		<CheckBox 
-			android:id="@+id/oilBox_portrait"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentLeft="true"
-			android:layout_below="@id/oilLabel_portrait">
-		</CheckBox>
 		
 		<TextView 
 			android:id="@+id/waterLabel_portrait"
@@ -82,15 +52,15 @@
 			android:textColor="#000000"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_below="@id/data_portrait">
+			android:layout_toRightOf="@id/gasBox_portrait"
+			android:layout_alignParentTop="true">
 		</TextView>
 		
 		<CheckBox 
 			android:id="@+id/waterBox_portrait"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
+			android:layout_toRightOf="@id/gasBox_portrait"
 			android:layout_below="@id/waterLabel_portrait">
 		</CheckBox>
 		
