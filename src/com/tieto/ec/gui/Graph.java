@@ -8,22 +8,24 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 
 import com.androidplot.xy.BoundaryMode;
-import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYSeriesFormatter;
 
 
 public class Graph extends XYPlot{
 
+	@SuppressWarnings("rawtypes")
+	protected ArrayList<XYSeriesFormatter> formats;
 	protected ArrayList<SimpleXYSeries> graphLines;
-	protected ArrayList<LineAndPointFormatter> formats;
 
+	@SuppressWarnings("rawtypes")
 	public Graph(Context context, String title){
 		super(context, title);
 
 		graphLines = new ArrayList<SimpleXYSeries>();
-		formats = new ArrayList<LineAndPointFormatter>();
+		formats = new ArrayList<XYSeriesFormatter>();
 
 		//this
 		setRangeLowerBoundary(0, BoundaryMode.FIXED);

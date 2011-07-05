@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import com.tieto.R;
 import com.tieto.ec.gui.Graph;
-import com.tieto.ec.listeners.GraphListener;
 import com.tieto.ec.listeners.main.GraphLineCheckBoxListener;
 import com.tieto.ec.webServices.PwelDayStatusService;
 
@@ -55,7 +54,9 @@ public class Main extends Activity {
 		webservice = new PwelDayStatusService(username , password, namespace, url);
 
 		//Graph
-		relative.addView(graph);
+		if(graph != null){
+			relative.addView(graph);			
+		}
 		
 		//CheckBoxes
 		oilBox.setChecked(true);
@@ -66,6 +67,5 @@ public class Main extends Activity {
 		oilBox.setOnCheckedChangeListener(new GraphLineCheckBoxListener(graph, 0));
 		gasBox.setOnCheckedChangeListener(new GraphLineCheckBoxListener(graph, 1));
 		waterBox.setOnCheckedChangeListener(new GraphLineCheckBoxListener(graph, 2));
-		graph.setOnTouchListener(new GraphListener());
 	}
 }

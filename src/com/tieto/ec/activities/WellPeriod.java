@@ -10,9 +10,12 @@ import android.view.MenuItem;
 import com.tieto.R;
 
 import com.tieto.ec.gui.LineGraph;
+import com.tieto.ec.listeners.main.GraphListener;
 import com.tieto.ec.listeners.main.SelectDataListener;
 import com.tieto.ec.listeners.main.SelectObjectIDListener;
 import com.tieto.ec.listeners.main.SelectPeriodListener;
+
+import java.text.SimpleDateFormat;
 import java.util.Set;
 
 public class WellPeriod extends Main
@@ -24,6 +27,9 @@ public class WellPeriod extends Main
 	public void onCreate(Bundle savedInstanceState)
 	{
 		//Webservice
+		objectID = "9FB4E1510D033B19E040340A2B4042D7";
+		fromDate = "2003-01-01";
+		toDate = "2003-01-31";
 		username = getIntent().getExtras().getString("username");
 		password = getIntent().getExtras().getString("password");
 		namespace = getIntent().getExtras().getString("namespace");
@@ -34,12 +40,16 @@ public class WellPeriod extends Main
 		super.onCreate(savedInstanceState, username, password, namespace, url, graph);
 		
 		//Graph
+		graph.setDomainValueFormat(new SimpleDateFormat());
+		graph.setDomainStepValue(5);
+		graph.setGridPadding(0, 20, 0, 0);
 		graph.addEmptyGraphLine("Oil", Color.BLACK);
 		graph.addEmptyGraphLine("Gas", Color.BLUE);
 		graph.addEmptyGraphLine("Water", Color.GREEN);
+		graph.setOnTouchListener(new GraphListener(this, objectID, username, password, namespace, url));
 		
 		//Initialize webservice
-		runWebservice("9FB4E1510D033B19E040340A2B4042D7", "2003-01-01", "2003-01-31");		
+		runWebservice(objectID, fromDate, toDate);		
 	}
 
 	@Override
