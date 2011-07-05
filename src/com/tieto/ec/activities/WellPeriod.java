@@ -1,6 +1,6 @@
 package com.tieto.ec.activities;
 
-
+import android.graphics.Color;
 import android.os.Bundle;
 
 import android.view.Menu;
@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.tieto.R;
 
+import com.tieto.ec.gui.LineGraph;
 import com.tieto.ec.listeners.main.SelectDataListener;
 import com.tieto.ec.listeners.main.SelectObjectIDListener;
 import com.tieto.ec.listeners.main.SelectPeriodListener;
@@ -17,6 +18,7 @@ import java.util.Set;
 public class WellPeriod extends Main
 {
 	private String objectID, fromDate, toDate;
+	private LineGraph graph;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -26,9 +28,15 @@ public class WellPeriod extends Main
 		password = getIntent().getExtras().getString("password");
 		namespace = getIntent().getExtras().getString("namespace");
 		url = getIntent().getExtras().getString("url");
+		graph = new LineGraph(this, "Well");
 		
 		//Super
-		super.onCreate(savedInstanceState, username, password, namespace, url);
+		super.onCreate(savedInstanceState, username, password, namespace, url, graph);
+		
+		//Graph
+		graph.addEmptyGraphLine("Oil", Color.BLACK);
+		graph.addEmptyGraphLine("Gas", Color.BLUE);
+		graph.addEmptyGraphLine("Water", Color.GREEN);
 		
 		//Initialize webservice
 		runWebservice("9FB4E1510D033B19E040340A2B4042D7", "2003-01-01", "2003-01-31");		

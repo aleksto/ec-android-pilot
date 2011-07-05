@@ -1,8 +1,5 @@
 package com.tieto.ec.listeners.main;
 
-import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.SimpleXYSeries;
-import com.androidplot.xy.XYPlot;
 import com.tieto.ec.gui.Graph;
 
 import android.widget.CheckBox;
@@ -25,7 +22,12 @@ public class GraphLineCheckBoxListener implements OnCheckedChangeListener {
 			graph.show(lineNr);
 		}
 		else{
-			graph.hide(lineNr);
+			if(size > 1){
+				graph.hide(lineNr);				
+			}else {
+				CheckBox box = (CheckBox) buttonView;
+				box.setChecked(true);
+			}
 		}
 		graph.invalidate();
 	}

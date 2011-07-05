@@ -1,28 +1,23 @@
 package com.tieto.ec.gui;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
-import android.graphics.Paint;
 
 import com.androidplot.xy.BoundaryMode;
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYPlot;
-import com.tieto.ec.logic.DateFormat;
-import com.androidplot.xy.XYStepMode;
 
 
 public class Graph extends XYPlot{
 
-	private ArrayList<SimpleXYSeries> graphLines;
-	private ArrayList<LineAndPointFormatter> formats;
+	protected ArrayList<SimpleXYSeries> graphLines;
+	protected ArrayList<LineAndPointFormatter> formats;
 
 	public Graph(Context context, String title){
 		super(context, title);
@@ -33,11 +28,7 @@ public class Graph extends XYPlot{
 		//this
 		setRangeLowerBoundary(0, BoundaryMode.FIXED);
 		setRangeValueFormat(new DecimalFormat("0"));
-		setDomainValueFormat(new SimpleDateFormat());
-		setDomainStep(XYStepMode.SUBDIVIDE, 4);
 		setBorderStyle(BorderStyle.SQUARE, null, null);
-		setDomainValueFormat(new SimpleDateFormat());
-		setDomainStepValue(5);
 		getBorderPaint().setStrokeWidth(1);
 		getBorderPaint().setAntiAlias(false);
 		getBorderPaint().setColor(Color.WHITE);
@@ -50,29 +41,6 @@ public class Graph extends XYPlot{
 		widget.getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1,1}, 1));
 		widget.getDomainOriginLinePaint().setColor(Color.BLACK);
 		widget.getRangeOriginLinePaint().setColor(Color.BLACK);
-        
-        
-	}
-
-	public void addEmptyGraphLine(String title, int color){
-		SimpleXYSeries line = new SimpleXYSeries(title);
-		LineAndPointFormatter format = new LineAndPointFormatter(color, color, color);
-
-		Paint paint = new Paint();
-		paint.setColor(color);
-		paint.setAlpha(0);
-		format.setFillPaint(paint);
-
-		addSeries(line, format);
-
-		graphLines.add(line);
-		formats.add(format);
-	}
-
-	public void addLineFromValues(String title, int color, ArrayList<HashMap<String, String>> values, String key){
-		addEmptyGraphLine(title, color);
-		addValuesToExistingLine(values, key, idxFromTitle(title));
-
 	}
 
 	public void show(int graphNr){
@@ -110,49 +78,6 @@ public class Graph extends XYPlot{
 
 	}
 
-	public void addValuesToExistingLine(ArrayList<HashMap<String, String>> values, String key, int lineNr){
-		for (HashMap<String,String> map : values){
-			addPointToLine(lineNr, DateFormat.parse(map.get("daytime")), Double.valueOf(map.get(key).replace(",", ".")));
-		} 
-		
-	}
-
-	public void addValuesToExistingLines(ArrayList<HashMap<String, String>> values, String ... key){
-		for (int i = 0; i < key.length; i++) {		
-			addValuesToExistingLine(values, key[i], i);
-		}
-	}
-
-	public void addPointsToLine(String title, Double ... values){
-		for (int i = 0; i < values.length; i+=2) {
-			addPointToLine(title, values[i], values[i+1]);
-		}
-
-	}
-
-	public void addPointsToLine(int lineNr, Double ... values){
-		for (int i = 0; i < values.length; i+=2) {
-			addPointToLine(lineNr, values[i], values[i+1]);
-		}
-
-	}
-
-	public void addPointToLine(String title, double x, double y){
-		for (int i = 0; i<graphLines.size(); i++) {
-			if(graphLines.get(i).getTitle().equalsIgnoreCase(title)){
-				addPointToLine(i, x, y);
-			}
-		}
-		invalidate();
-	}
-
-	private void addPointToLine(int lineNr, double x, double y){
-		SimpleXYSeries line = graphLines.get(lineNr);
-		line.addLast(x, y);
-		invalidate();
-
-	}
-
 	public void clearGraphLine(String title){
 		for (SimpleXYSeries line : graphLines) {
 			if(line.getTitle().equalsIgnoreCase(title)){
@@ -178,7 +103,7 @@ public class Graph extends XYPlot{
 		}
 	}
 
-	private int idxFromTitle(String title){
+	protected int idxFromTitle(String title){
 		for (int i = 0; i < graphLines.size(); i++) {
 			if(graphLines.get(i).getTitle().equalsIgnoreCase(title)){
 				return i;
