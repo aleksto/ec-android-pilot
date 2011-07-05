@@ -10,18 +10,15 @@ import com.tieto.ec.listeners.main.GraphLineCheckBoxListener;
 import com.tieto.ec.webServices.PwelDayStatusService;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Surface;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 
-
 public class Main extends Activity {
 	
 	protected String username, password, namespace, url;
 	protected PwelDayStatusService webservice;
-	protected Graph graph;
 	protected ArrayList<HashMap<String, String>>  valueList;
 	
 	protected RelativeLayout relative;
@@ -29,7 +26,7 @@ public class Main extends Activity {
 	protected CheckBox gasBox;
 	protected CheckBox waterBox;
 	
-	public void onCreate(Bundle savedInstanceState, String username, String password, String namespace, String url)
+	public void onCreate(Bundle savedInstanceState, String username, String password, String namespace, String url, Graph graph)
 	{
 		//Super
 		super.onCreate(savedInstanceState);
@@ -55,14 +52,9 @@ public class Main extends Activity {
 			waterBox = (CheckBox) findViewById(R.id.waterBox_landscape);
 		}
 
-
-		graph = new Graph(this, "Well");    	
 		webservice = new PwelDayStatusService(username , password, namespace, url);
 
 		//Graph
-		graph.addEmptyGraphLine("Oil", Color.BLACK);
-		graph.addEmptyGraphLine("Gas", Color.BLUE);
-		graph.addEmptyGraphLine("Water", Color.GREEN);
 		relative.addView(graph);
 		
 		//CheckBoxes
