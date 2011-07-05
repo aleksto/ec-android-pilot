@@ -20,17 +20,18 @@ public class DateFormat {
 	
 	public static String parse(double daytime){
 		Date date = new Date((long) daytime);
+		int offset = date.getHours()/12;
 		if((date.getMonth()+1) < 10 && date.getDate() < 10){
-			return date.getYear() + "-0" + (date.getMonth()+1) + "-0" + date.getDate();			
+			return date.getYear() + "-0" + (date.getMonth()+1) + "-0" + (date.getDate() + offset);			
 		}
 		if((date.getMonth()+1) >= 10 && date.getDate() < 10){
-			return date.getYear() + "-" + (date.getMonth()+1) + "-0" + date.getDate();			
+			return date.getYear() + "-" + (date.getMonth()+1) + "-0" + (date.getDate() + offset);			
 		}
 		if((date.getMonth()+1) < 10 && date.getDate() >= 10){
-			return date.getYear() + "-0" + (date.getMonth()+1) + "-" + date.getDate();			
+			return date.getYear() + "-0" + (date.getMonth()+1) + "-" + (date.getDate() + offset);			
 		}
 		else{
-			return date.getYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();			
+			return date.getYear() + "-" + (date.getMonth()+1) + "-" + (date.getDate() + offset);			
 		}
 	}
 }

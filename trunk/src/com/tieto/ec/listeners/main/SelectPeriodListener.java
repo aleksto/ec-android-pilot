@@ -2,12 +2,9 @@ package com.tieto.ec.listeners.main;
 
 import com.tieto.ec.activities.WellPeriod;
 import com.tieto.ec.gui.PickPeriodDialog;
-import com.tieto.ec.webServices.PwelDayStatusService;
 
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
-import android.view.View;
-import android.view.View.OnClickListener;
 
 public class SelectPeriodListener implements OnMenuItemClickListener {
 	
