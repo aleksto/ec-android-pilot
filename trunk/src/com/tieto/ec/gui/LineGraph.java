@@ -1,14 +1,17 @@
 package com.tieto.ec.gui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
+import java.util.List;
 
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
-import com.tieto.ec.logic.DateFormat;
+import com.tieto.frmw.model.GraphData;
+import com.tieto.frmw.model.GraphPoint;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 public class LineGraph extends Graph{
 
@@ -16,7 +19,28 @@ public class LineGraph extends Graph{
 		super(context, title);
 	}
 	
-	public void addEmptyGraphLine(String title, int color){
+	public void add(GraphData graphData) {
+		List<GraphPoint> graphPoints = graphData.getGraphPoints();
+		List<String> pointAttributes = graphData.getPointAttributes();
+		
+		for (String string : pointAttributes) {
+			addEmptyGraphLine(string, Color.GREEN);
+		}
+		
+		for (GraphPoint point : graphPoints) {
+			Date daytime = point.getDaytime();
+			for (String string : pointAttributes) {
+				String value = point.getValue(string);
+				int idx = pointAttributes.indexOf(string);
+				Log.d("tieto", idx + " " + value);
+				addPointToLine(idx, (double)daytime.getTime(), Double.valueOf(value));
+			}
+		}
+		
+		invalidate();
+	}
+	
+	private void addEmptyGraphLine(String title, int color){
 		SimpleXYSeries line = new SimpleXYSeries(title);
 		LineAndPointFormatter format = new LineAndPointFormatter(color, color, color);
 
@@ -29,44 +53,6 @@ public class LineGraph extends Graph{
 
 		graphLines.add(line);
 		formats.add(format);
-	}
-
-	public void addLineFromValues(String title, int color, ArrayList<HashMap<String, Object>> values, String key){
-		addEmptyGraphLine(title, color);
-		addValuesToExistingLine(values, key, idxFromTitle(title));
-	}
-
-	public void addValuesToExistingLines(ArrayList<HashMap<String, Object>> values, String ... key){
-		for (int i = 0; i < key.length; i++) {		
-			addValuesToExistingLine(values, key[i], i);
-		}
-	}
-	
-	public void addValuesToExistingLine(ArrayList<HashMap<String, Object>> values, String key, int lineNr){
-		for (HashMap<String,Object> map : values){
-			addPointToLine(lineNr, DateFormat.parse(map.get("daytime")+""), Double.valueOf(map.get(key)+"".replace(",", ".")));
-		} 
-	}
-	
-	public void addPointsToLine(String title, Double ... values){
-		for (int i = 0; i < values.length; i+=2) {
-			addPointToLine(title, values[i], values[i+1]);
-		}
-	}
-	
-	public void addPointsToLine(int lineNr, Double ... values){
-		for (int i = 0; i < values.length; i+=2) {
-			addPointToLine(lineNr, values[i], values[i+1]);
-		}
-	}
-	
-	public void addPointToLine(String title, double x, double y){
-		for (int i = 0; i<graphLines.size(); i++) {
-			if(graphLines.get(i).getTitle().equalsIgnoreCase(title)){
-				addPointToLine(i, x, y);
-			}
-		}
-		invalidate();
 	}
 	
 	private void addPointToLine(int lineNr, double x, double y){
