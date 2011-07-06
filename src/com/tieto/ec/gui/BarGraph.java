@@ -56,12 +56,12 @@ public class BarGraph extends Graph{
 		bar.setModel(Arrays.asList(vals), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
 	}
 	
-	public void addBarsWithValueList(ArrayList<HashMap<String, String>> valueList, String title, String ... keys){
+	public void addBarsWithValueList(ArrayList<HashMap<String, Object>> valueList, String title, String ... keys){
 		Double[] vals = new Double[valueList.size()*keys.length];
 		int counter = 0;	
-		for (HashMap<String,String> map : valueList) {
+		for (HashMap<String,Object> map : valueList) {
 			for (int i = 0; i < keys.length; i++) {
-				vals[counter] = Double.valueOf(map.get(keys[i]));
+				vals[counter] = Double.valueOf(map.get(keys[i])+"");
 				counter++;
 			}
 		}
