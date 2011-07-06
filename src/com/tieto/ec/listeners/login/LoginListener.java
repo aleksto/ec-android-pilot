@@ -1,7 +1,7 @@
 package com.tieto.ec.listeners.login;
 
+import com.tieto.ec.activities.DailyMonthlyReport;
 import com.tieto.ec.activities.LogIn;
-import com.tieto.ec.activities.WellPeriod;
 import com.tieto.ec.webServices.PwelDayStatusService;
 
 import android.content.Intent;
@@ -9,15 +9,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 
-public class LoginListener implements OnClickListener, Runnable{
-
-	//Thread
-	private Thread thread;
+public class LoginListener implements OnClickListener {
 
 	//Webservice
 	private PwelDayStatusService service;
 	private String namespace, url; 
-
 	private EditText username, password;
 	private LogIn login;
 
@@ -31,12 +27,6 @@ public class LoginListener implements OnClickListener, Runnable{
 	}
 
 	public void onClick(View v){
-		thread = new Thread(this);
-		thread.start();
-	}
-
-	public void run(){
-		
 		/*
 		service = new PwelDayStatusService(username.getText().toString(), password.getText().toString(), namespace, url);
 		
@@ -51,7 +41,7 @@ public class LoginListener implements OnClickListener, Runnable{
 	}
 
 	private void login(String username, String password) {
-		Intent intent = new Intent(login, WellPeriod.class);
+		Intent intent = new Intent(login, DailyMonthlyReport.class);
 		intent.putExtra("username", username);
 		intent.putExtra("password", password);
 		intent.putExtra("namespace", namespace);
