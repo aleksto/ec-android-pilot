@@ -38,7 +38,7 @@ public class GraphListener implements OnTouchListener {
 
 		//Toast
 		toast.setView(text);
-		toast.setGravity(Gravity.BOTTOM, 1, 1);
+		toast.setGravity(Gravity.CENTER, 1, 1);
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {
