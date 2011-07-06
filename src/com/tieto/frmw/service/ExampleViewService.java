@@ -51,13 +51,16 @@ public class ExampleViewService implements ViewService {
 		GraphData data = new GraphData();
 		data.setPointAttributes("OIL", "GAS", "WATER");
 		Calendar c = Calendar.getInstance();
-		c.set(2011, Calendar.JULY, 6);
-		Date daytime = c.getTime();
-		GraphPoint graphPoint1 = new GraphPoint(daytime);
-		graphPoint1.addValue("OIL", "8000");
-		graphPoint1.addValue("GAS", "5000");
-		graphPoint1.addValue("WATER", "2000");
-		data.addGraphPoint(graphPoint1);
+		
+		for (int i = 0; i < 10; i++) {
+			c.set(2011, Calendar.JULY, (i+3));
+			Date daytime = c.getTime();
+			GraphPoint graphPoint1 = new GraphPoint(daytime);
+			graphPoint1.addValue("OIL", "" + Math.random()*10000);
+			graphPoint1.addValue("GAS", "" + Math.random()*5000);
+			graphPoint1.addValue("WATER", "" + Math.random()*2000);
+			data.addGraphPoint(graphPoint1);
+		}
 		return data;
 	}
 
@@ -68,7 +71,6 @@ public class ExampleViewService implements ViewService {
 		textData.addTextElement(new TextElement(today, "Just kidding"));					
 		return textData;
 	}
-
 	
 	public GraphData getGraphData(TableRow row, Date fromDate, Date toDate, int resolution) {
 		// TODO Auto-generated method stub
