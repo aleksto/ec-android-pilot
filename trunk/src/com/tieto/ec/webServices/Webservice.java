@@ -16,7 +16,7 @@ import android.util.Log;
 
 public class Webservice implements Runnable{
 
-	private ArrayList<HashMap<String, String>> valueList;
+	private ArrayList<HashMap<String, Object>> valueList;
 	private String namespace, url;
 	private SoapSerializationEnvelope envelope;
 	private HttpTransportBasicAuth httpTransport;
@@ -32,22 +32,22 @@ public class Webservice implements Runnable{
 		httpTransport = new HttpTransportBasicAuth(url, username, password);
 	}
 
-	private HashMap<String, String> soapObjectToHashMap(SoapObject soap){
+	private HashMap<String, Object> soapObjectToHashMap(SoapObject soap){
 		//Init
-		HashMap<String, String> map = new HashMap<String, String>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		//Populating
 		for (int i = 0; i < soap.getPropertyCount(); i++) {
 			PropertyInfo propertyInfo = new PropertyInfo();
 			soap.getPropertyInfo(i, propertyInfo);
-			map.put(propertyInfo.getName(), soap.getProperty(i)+"");
+			map.put(propertyInfo.getName(), soap.getProperty(i));
 		}
 
 		return map;
 	}
 	
-	private ArrayList<HashMap<String, String>> soapObjectsToArrayList(SoapObject soap) {
-		ArrayList<HashMap<String, String>> valueList = new ArrayList<HashMap<String, String>>();
+	private ArrayList<HashMap<String, Object>> soapObjectsToArrayList(SoapObject soap) {
+		ArrayList<HashMap<String, Object>> valueList = new ArrayList<HashMap<String, Object>>();
 		for (int i = 0; i < soap.getPropertyCount(); i++) {
 			SoapObject returnValue = (SoapObject) soap.getProperty(i);
 			valueList.add(soapObjectToHashMap(returnValue));
@@ -55,7 +55,7 @@ public class Webservice implements Runnable{
 		return valueList;
 	}
 
-	protected synchronized ArrayList<HashMap<String, String>> executeWebservice(String method, String ... args){
+	protected synchronized ArrayList<HashMap<String, Object>> executeWebservice(String method, String ... args){
 		this.method = method;
 		this.args = args;
 		
@@ -101,7 +101,6 @@ public class Webservice implements Runnable{
 		return false;
 	}
 	
-
 	public synchronized void run() {
 		//Init
 		SoapObject request = new SoapObject(namespace, method); 		
@@ -125,7 +124,7 @@ public class Webservice implements Runnable{
 			e.printStackTrace();
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
-			valueList = new ArrayList<HashMap<String, String>>();
+			valueList = new ArrayList<HashMap<String, Object>>();
 		}
 
 		notify();

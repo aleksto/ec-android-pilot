@@ -31,20 +31,20 @@ public class LineGraph extends Graph{
 		formats.add(format);
 	}
 
-	public void addLineFromValues(String title, int color, ArrayList<HashMap<String, String>> values, String key){
+	public void addLineFromValues(String title, int color, ArrayList<HashMap<String, Object>> values, String key){
 		addEmptyGraphLine(title, color);
 		addValuesToExistingLine(values, key, idxFromTitle(title));
 	}
 
-	public void addValuesToExistingLines(ArrayList<HashMap<String, String>> values, String ... key){
+	public void addValuesToExistingLines(ArrayList<HashMap<String, Object>> values, String ... key){
 		for (int i = 0; i < key.length; i++) {		
 			addValuesToExistingLine(values, key[i], i);
 		}
 	}
 	
-	public void addValuesToExistingLine(ArrayList<HashMap<String, String>> values, String key, int lineNr){
-		for (HashMap<String,String> map : values){
-			addPointToLine(lineNr, DateFormat.parse(map.get("daytime")), Double.valueOf(map.get(key).replace(",", ".")));
+	public void addValuesToExistingLine(ArrayList<HashMap<String, Object>> values, String key, int lineNr){
+		for (HashMap<String,Object> map : values){
+			addPointToLine(lineNr, DateFormat.parse(map.get("daytime")+""), Double.valueOf(map.get(key)+"".replace(",", ".")));
 		} 
 	}
 	

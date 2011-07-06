@@ -1,5 +1,6 @@
 package com.tieto.ec.activities;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -14,30 +15,39 @@ import com.tieto.ec.listeners.main.GraphListener;
 import com.tieto.ec.listeners.main.SelectDataListener;
 import com.tieto.ec.listeners.main.SelectObjectIDListener;
 import com.tieto.ec.listeners.main.SelectPeriodListener;
+import com.tieto.ec.webServices.PwelDayStatusService;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 
-public class WellPeriod extends Main
+public class WellPeriod extends Activity
 {
 	private String objectID, fromDate, toDate;
 	private LineGraph graph;
+	private ArrayList<HashMap<String, Object>> valueList;
+	private PwelDayStatusService webservice;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
+		//Super
+		super.onCreate(savedInstanceState);
+		
 		//Webservice
 		objectID = "9FB4E1510D033B19E040340A2B4042D7";
 		fromDate = "2003-01-01";
 		toDate = "2003-01-31";
-		username = getIntent().getExtras().getString("username");
-		password = getIntent().getExtras().getString("password");
-		namespace = getIntent().getExtras().getString("namespace");
-		url = getIntent().getExtras().getString("url");
+		String username = getIntent().getExtras().getString("username");
+		String password = getIntent().getExtras().getString("password");
+		String namespace = getIntent().getExtras().getString("namespace");
+		String url = getIntent().getExtras().getString("url");
+		webservice = new PwelDayStatusService(username, password, namespace, url);
 		graph = new LineGraph(this, "Well");
 		
-		//Super
-		super.onCreate(savedInstanceState, username, password, namespace, url, graph);
+		//this
+		setContentView(graph);
 		
 		//Graph
 		graph.setDomainValueFormat(new SimpleDateFormat());

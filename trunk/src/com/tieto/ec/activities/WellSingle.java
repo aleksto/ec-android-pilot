@@ -1,15 +1,26 @@
 package com.tieto.ec.activities;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.tieto.ec.gui.BarGraph;
 import com.tieto.ec.logic.NameFormat;
+import com.tieto.ec.webServices.PwelDayStatusService;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 
-public class WellSingle extends Main{
+public class WellSingle extends Activity{
+	
+	private PwelDayStatusService webservice;
+	private ArrayList<HashMap<String, Object>>  valueList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		//Super
+		super.onCreate(savedInstanceState);
+		
 		//Extras
 		String daytime = getIntent().getExtras().getString("daytime");
 		String objectID = getIntent().getExtras().getString("objectID");
@@ -18,9 +29,7 @@ public class WellSingle extends Main{
 		String namespace = getIntent().getExtras().getString("namespace");
 		String url = getIntent().getExtras().getString("url");
 		BarGraph graph = new BarGraph(this, "Well", Color.BLACK);
-		
-		//Super
-		super.onCreate(savedInstanceState, username, password, namespace, url, null);
+		webservice = new PwelDayStatusService(username, password, namespace, url);
 		
 		//this
 		setContentView(graph);
