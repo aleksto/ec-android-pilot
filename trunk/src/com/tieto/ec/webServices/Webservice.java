@@ -122,6 +122,9 @@ public class Webservice implements Runnable{
 			valueList = soapObjectsToArrayList(soap);
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch(java.lang.ClassCastException e){
+			e.printStackTrace();
+			valueList = null;
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
 			valueList = new ArrayList<HashMap<String, Object>>();
