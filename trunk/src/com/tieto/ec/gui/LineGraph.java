@@ -32,7 +32,6 @@ public class LineGraph extends Graph{
 			for (String string : pointAttributes) {
 				String value = point.getValue(string);
 				int idx = pointAttributes.indexOf(string);
-				Log.d("tieto", idx + " " + value);
 				addPointToLine(idx, (double)daytime.getTime(), Double.valueOf(value));
 			}
 		}
