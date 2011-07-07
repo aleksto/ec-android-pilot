@@ -1,7 +1,6 @@
 package com.tieto.ec.activities;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import android.view.Menu;
@@ -11,10 +10,10 @@ import android.view.MenuItem;
 import com.tieto.R;
 
 import com.tieto.ec.gui.LineGraph;
-import com.tieto.ec.listeners.main.GraphListener;
-import com.tieto.ec.listeners.main.SelectDataListener;
-import com.tieto.ec.listeners.main.SelectObjectIDListener;
-import com.tieto.ec.listeners.main.SelectPeriodListener;
+import com.tieto.ec.listeners.activities.main.GraphListener;
+import com.tieto.ec.listeners.activities.main.SelectDataListener;
+import com.tieto.ec.listeners.activities.main.SelectObjectIDListener;
+import com.tieto.ec.listeners.activities.main.SelectPeriodListener;
 import com.tieto.ec.webServices.PwelDayStatusService;
 
 import java.text.SimpleDateFormat;
@@ -39,6 +38,8 @@ public class WellPeriod extends Activity
 		objectID = "9FB4E1510D033B19E040340A2B4042D7";
 		fromDate = "2003-01-01";
 		toDate = "2003-01-31";
+		String fromDate = getIntent().getExtras().getString("fromDate");
+		String toDate = getIntent().getExtras().getString("toDate");
 		String username = getIntent().getExtras().getString("username");
 		String password = getIntent().getExtras().getString("password");
 		String namespace = getIntent().getExtras().getString("namespace");

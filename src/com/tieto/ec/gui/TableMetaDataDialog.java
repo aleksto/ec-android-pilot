@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tieto.ec.activities.DailyMorningReport;
-import com.tieto.ec.listeners.dmr.metaDataDialog.CancelListener;
-import com.tieto.ec.listeners.dmr.metaDataDialog.HeaderChangeListener;
-import com.tieto.ec.listeners.dmr.metaDataDialog.OkListener;
+import com.tieto.ec.listeners.activities.dmr.metaDataDialog.CancelListener;
+import com.tieto.ec.listeners.activities.dmr.metaDataDialog.HeaderChangeListener;
+import com.tieto.ec.listeners.activities.dmr.metaDataDialog.OkListener;
 import com.tieto.ec.logic.FileManager;
 import com.tieto.frmw.model.TableColumn;
 import com.tieto.frmw.model.TableData;

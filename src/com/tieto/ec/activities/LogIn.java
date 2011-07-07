@@ -1,8 +1,8 @@
 package com.tieto.ec.activities;
 
 import com.tieto.R;
-import com.tieto.ec.listeners.login.ExitListener;
-import com.tieto.ec.listeners.login.LoginListener;
+import com.tieto.ec.listeners.activities.login.ExitListener;
+import com.tieto.ec.listeners.activities.login.LoginListener;
 
 import android.app.Activity;
 import android.graphics.Color;
