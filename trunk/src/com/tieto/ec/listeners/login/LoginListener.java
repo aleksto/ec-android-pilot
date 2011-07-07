@@ -40,18 +40,18 @@ public class LoginListener implements OnClickListener {
 	}
 
 	public void onClick(View v){
-		service = new PwelDayStatusService(username.getText().toString(), password.getText().toString(), namespace, url);
+//		service = new PwelDayStatusService(username.getText().toString(), password.getText().toString(), namespace, url);
 		
-		if(service.findByPK("", "") != null){
-			login.toastFromOtherThreads("Not valid username/password");
-		}else{
+//		if(service.findByPK("", "") != null){
+//			login.toastFromOtherThreads("Not valid username/password");
+//		}else{
 			//Writing username and password
 			FileManager.writePath(login, "com.tieto.ec.username", username.getText().toString());
 			FileManager.writePath(login, "com.tieto.ec.password", password.getText().toString());
 			
 			//Loggin inn
 			login(username.getText().toString(), password.getText().toString());
-		}
+//		}
 	}
 
 	private void login(String username, String password) {
