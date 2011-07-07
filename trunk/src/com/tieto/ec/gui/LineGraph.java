@@ -11,7 +11,6 @@ import com.tieto.frmw.model.GraphPoint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 public class LineGraph extends Graph{
 
@@ -24,7 +23,7 @@ public class LineGraph extends Graph{
 		List<String> pointAttributes = graphData.getPointAttributes();
 		
 		for (String string : pointAttributes) {
-			addEmptyGraphLine(string, Color.GREEN);
+			addEmptyGraphLine(string, Color.rgb((int)(Math.random()*255.0), (int)(Math.random()*255.0), (int)(Math.random()*255.0)));
 		}
 		
 		for (GraphPoint point : graphPoints) {

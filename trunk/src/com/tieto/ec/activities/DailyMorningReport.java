@@ -8,6 +8,7 @@ import java.util.List;
 import com.tieto.R;
 import com.tieto.ec.gui.Cell;
 import com.tieto.ec.gui.LineGraph;
+import com.tieto.ec.listeners.dmr.TableMetaDataListener;
 import com.tieto.frmw.model.GraphData;
 import com.tieto.frmw.model.GraphSection;
 import com.tieto.frmw.model.Resolution;
@@ -23,7 +24,6 @@ import com.tieto.frmw.service.ViewService;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.HorizontalScrollView;
 import android.widget.TableLayout;
@@ -67,6 +67,7 @@ public class DailyMorningReport extends Activity{
 		
 		//Title
 		sectionTitle.setText(section.getSectionHeader() + ":");
+		sectionTitle.setTextSize(30);
 		
 		//Childs
 		table.addView(sectionTitle);
@@ -77,7 +78,8 @@ public class DailyMorningReport extends Activity{
 			addTextData(textData, table);
 		}
 		else if(section instanceof TableSection){
-			TableData tableData = webservice.getTableData((TableSection)section, fromdate, toDate, resolution);			
+			TableData tableData = webservice.getTableData((TableSection)section, fromdate, toDate, resolution);
+			sectionTitle.setOnClickListener(new TableMetaDataListener(this, section.getSectionHeader(), tableData));
 			addTableData(tableData, table);
 		}
 		else if(section instanceof GraphSection){
@@ -116,11 +118,6 @@ public class DailyMorningReport extends Activity{
 		TableRow headerRow = new TableRow(this);
 		for (TableColumn tableColumn : tableColumns) {
 			//Init
-			TextView headerView = new TextView(this);
-			
-			//Text
-			headerView.setText("\t" + tableColumn.getHeader());
-			
 			headerRow.addView(new Cell(this, tableColumn.getHeader()));
 		}
 		table.addView(headerRow);

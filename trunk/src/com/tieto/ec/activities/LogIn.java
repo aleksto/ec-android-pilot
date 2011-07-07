@@ -60,7 +60,7 @@ public class LogIn extends Activity{
     }
 	
 	@Override
-	protected void onResume() {
+	protected void onRestart() {
 		super.onResume();
 		onBackPressed();
 	}
