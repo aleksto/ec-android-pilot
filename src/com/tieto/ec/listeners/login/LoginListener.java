@@ -1,8 +1,7 @@
 package com.tieto.ec.listeners.login;
 
-import com.tieto.ec.activities.DailyManagementReport;
+import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.activities.LogIn;
-import com.tieto.ec.activities.WellPeriod;
 import com.tieto.ec.webServices.PwelDayStatusService;
 
 import android.content.Intent;
@@ -42,7 +41,7 @@ public class LoginListener implements OnClickListener {
 	}
 
 	private void login(String username, String password) {
-		Intent intent = new Intent(login, WellPeriod.class);
+		Intent intent = new Intent(login, DailyMorningReport.class);
 		intent.putExtra("username", username);
 		intent.putExtra("password", password);
 		intent.putExtra("namespace", namespace);

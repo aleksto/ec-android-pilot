@@ -53,9 +53,6 @@ public class WellPeriod extends Activity
 		graph.setDomainValueFormat(new SimpleDateFormat());
 		graph.setDomainStepValue(5);
 		graph.setGridPadding(0, 20, 0, 0);
-		graph.addEmptyGraphLine("Oil", Color.BLACK);
-		graph.addEmptyGraphLine("Gas", Color.BLUE);
-		graph.addEmptyGraphLine("Water", Color.GREEN);
 		graph.setOnTouchListener(new GraphListener(this, objectID, username, password, namespace, url));
 		
 		//Initialize webservice
@@ -107,7 +104,7 @@ public class WellPeriod extends Activity
 		valueList = webservice.findByPKTimeRange(this.objectID, this.fromDate, this.toDate);	
 
 		graph.clearAllGraphLines();
-		graph.addValuesToExistingLines(valueList, "theorOilVol", "theorGasVol", "theorWaterVol");
+//		graph.addValuesToExistingLines(valueList, "theorOilVol", "theorGasVol", "theorWaterVol");
 		graph.invalidate();
 	} 
 }
