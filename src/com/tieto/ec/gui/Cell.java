@@ -18,11 +18,12 @@ public class Cell extends RelativeLayout{
 		textView.setText(text);
 		textView.setBackgroundColor(Color.WHITE);
 		textView.setTextColor(Color.BLACK);
-		textView.setPadding(2, 2, 2, 2);
+		textView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		textView.setGravity(RelativeLayout.CENTER_IN_PARENT);
 		
 		//This
 		addView(textView);
 		setBackgroundColor(Color.BLACK);
+		setPadding(2, 2, 2, 2);
 	}
 }
