@@ -1,6 +1,8 @@
 package com.tieto.ec.activities;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -8,7 +10,9 @@ import java.util.List;
 import com.tieto.R;
 import com.tieto.ec.gui.Cell;
 import com.tieto.ec.gui.LineGraph;
+import com.tieto.ec.listeners.dmr.GraphFullScreenListener;
 import com.tieto.ec.listeners.dmr.TableMetaDataListener;
+import com.tieto.ec.logic.FileManager;
 import com.tieto.frmw.model.GraphData;
 import com.tieto.frmw.model.GraphSection;
 import com.tieto.frmw.model.Resolution;
@@ -24,6 +28,7 @@ import com.tieto.frmw.service.ViewService;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.HorizontalScrollView;
 import android.widget.TableLayout;
@@ -32,6 +37,7 @@ import android.widget.TextView;
 
 public class DailyMorningReport extends Activity{
 
+	private List<Section> sections;
 	private ViewService webservice;
 	private String username, password, namespace, url;
 	private TableLayout table;
@@ -54,7 +60,15 @@ public class DailyMorningReport extends Activity{
 		table = (TableLayout) findViewById(R.id.dmr_table);
 		
 		//Building report
-		List<Section> sections = webservice.getSections();
+		sections = webservice.getSections();
+		
+		//List Sections
+		listSections();
+	}
+	
+	public void listSections(){
+		Log.d("tieto", "listSections");
+		table.removeAllViews();
 		Calendar c = Calendar.getInstance();
 		for (Section section : sections) {
 			addSection(section, c.getTime(), c.getTime(), Resolution.MONTHLY);			
@@ -80,17 +94,18 @@ public class DailyMorningReport extends Activity{
 		else if(section instanceof TableSection){
 			TableData tableData = webservice.getTableData((TableSection)section, fromdate, toDate, resolution);
 			sectionTitle.setOnClickListener(new TableMetaDataListener(this, section.getSectionHeader(), tableData));
-			addTableData(tableData, table);
+			addTableData(tableData, table, section.getSectionHeader());
 		}
 		else if(section instanceof GraphSection){
 			GraphData graphData = webservice.getGraphData((GraphSection)section, fromdate, toDate, resolution);	
-			addGraphData(graphData, table);
+			addGraphData(graphData, table, section.getSectionHeader());
 		}
 	}
 
-	private void addGraphData(GraphData graphData, TableLayout sectionTable) {
+
+	private void addGraphData(GraphData graphData, TableLayout sectionTable, String title) {
 		//Init
-		LineGraph graph = new LineGraph(this, "Daily Morning Report");
+		LineGraph graph = new LineGraph(this, "");
 		
 		//Add data
 		graph.add(graphData);
@@ -102,9 +117,13 @@ public class DailyMorningReport extends Activity{
 		
 		//Childs
 		sectionTable.addView(graph);
+		
+		//Listener
+		graph.setOnClickListener(new GraphFullScreenListener(this, graphData, title));
 	}
 
-	private void addTableData(TableData tableData, TableLayout sectionTable) {
+
+	private void addTableData(TableData tableData, TableLayout sectionTable, String title) {
 		//Init
 		HorizontalScrollView hScroll = new HorizontalScrollView(this);
 		TableLayout table = new TableLayout(this);
@@ -113,12 +132,17 @@ public class DailyMorningReport extends Activity{
 		//Table
 		table.setStretchAllColumns(true);
 		
+		//Active columns
+		ArrayList<Integer> activeColumns = activeColumns(title, tableData);
+		
 		//Headers
 		List<TableColumn> tableColumns = tableData.getTableColumns();
 		TableRow headerRow = new TableRow(this);
-		for (TableColumn tableColumn : tableColumns) {
+		for (int i = 0; i < tableColumns.size(); i++) {
 			//Init
-			headerRow.addView(new Cell(this, tableColumn.getHeader()));
+			if(activeColumns.contains(i)){
+				headerRow.addView(new Cell(this, tableColumns.get(i).getHeader()));				
+			}
 		}
 		table.addView(headerRow);
 		
@@ -128,9 +152,11 @@ public class DailyMorningReport extends Activity{
 			TableRow row = new TableRow(this);
 			List<String> values = tableRow.getValues();
 			
-			for (String string : values) {
+			for (int i = 0; i < values.size(); i++) {
 				//Add Cell
-				row.addView(new Cell(this, string));
+				if(activeColumns.contains(i)){
+					row.addView(new Cell(this, values.get(i)));					
+				}
 			}
 			
 			//Childs
@@ -142,12 +168,43 @@ public class DailyMorningReport extends Activity{
 		sectionTable.addView(hScroll);
 	}
 
+
 	private void addTextData(TextData textData, TableLayout sectionTable) {
 		List<TextElement> textElements = textData.getTextElements();
 		for (TextElement text : textElements) {
 			TextView view = new TextView(this);
 			view.setText(text.getDaytime() + ":\n" + text.getText());
 			sectionTable.addView(view);
+		}
+	}
+
+
+	private ArrayList<Integer> activeColumns(String title, TableData tableData){
+		ArrayList<Integer> columns = new ArrayList<Integer>();
+		try {
+			String[] atributes = FileManager.readPath(this, "com.tieto.ec.tables." + title).split("#@#");
+			List<TableColumn> tableColumns = tableData.getTableColumns();
+			
+			for (int i = 0; i < atributes.length; i++) {
+				
+				for (TableColumn tableColumn : tableColumns) {
+					if(tableColumn.getHeader().equalsIgnoreCase(atributes[i])){
+						columns.add(tableColumns.indexOf(tableColumn));
+					}
+				}
+			}
+			return columns;
+		} catch (IOException e) {
+			StringBuilder builder = new StringBuilder();
+			List<TableColumn> tableColumns = tableData.getTableColumns();
+			
+			for (TableColumn tableColumn : tableColumns) {
+				builder.append(tableColumn.getHeader() + "#@#");
+			}
+			Log.d("tieto", builder.toString());
+			FileManager.writePath(this, "com.tieto.ec.tables." + title, builder.toString());
+			
+			return activeColumns(title, tableData);
 		}
 	}
 }
