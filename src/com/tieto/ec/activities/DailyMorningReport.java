@@ -145,7 +145,6 @@ public class DailyMorningReport extends Activity{
 		sectionTable.addView(hScroll);
 	}
 
-
 	private void addTextData(TextData textData, TableLayout sectionTable) {
 		List<TextElement> textElements = textData.getTextElements();
 		for (TextElement text : textElements) {

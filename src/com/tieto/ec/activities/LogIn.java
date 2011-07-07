@@ -59,6 +59,12 @@ public class LogIn extends Activity{
     	exit.setOnClickListener(new ExitListener(this));
     }
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		onBackPressed();
+	}
+	
 	public void toastFromOtherThreads(final String msg){
 		handler.post(new Runnable() {
 			public void run() {
