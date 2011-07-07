@@ -10,8 +10,9 @@ import java.util.List;
 import com.tieto.R;
 import com.tieto.ec.gui.Cell;
 import com.tieto.ec.gui.LineGraph;
-import com.tieto.ec.listeners.dmr.GraphFullScreenListener;
-import com.tieto.ec.listeners.dmr.TableMetaDataListener;
+import com.tieto.ec.listeners.activities.dmr.DmrOptionsButtonListener;
+import com.tieto.ec.listeners.activities.dmr.GraphFullScreenListener;
+import com.tieto.ec.listeners.activities.dmr.TableMetaDataListener;
 import com.tieto.ec.logic.FileManager;
 import com.tieto.frmw.model.GraphData;
 import com.tieto.frmw.model.GraphSection;
@@ -29,6 +30,9 @@ import com.tieto.frmw.service.ViewService;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.HorizontalScrollView;
 import android.widget.TableLayout;
@@ -66,8 +70,17 @@ public class DailyMorningReport extends Activity{
 		listSections();
 	}
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = new MenuInflater(this);
+		inflater.inflate(R.menu.dmr_menu, menu);
+		
+		MenuItem optionButton = menu.findItem(R.id.dmr_options);
+		optionButton.setOnMenuItemClickListener(new DmrOptionsButtonListener(this));
+		return super.onCreateOptionsMenu(menu);
+	}
+	
 	public void listSections(){
-		Log.d("tieto", "listSections");
 		table.removeAllViews();
 		Calendar c = Calendar.getInstance();
 		for (Section section : sections) {
@@ -102,7 +115,6 @@ public class DailyMorningReport extends Activity{
 		}
 	}
 
-
 	private void addGraphData(GraphData graphData, TableLayout sectionTable, String title) {
 		//Init
 		LineGraph graph = new LineGraph(this, "");
@@ -121,7 +133,6 @@ public class DailyMorningReport extends Activity{
 		//Listener
 		graph.setOnClickListener(new GraphFullScreenListener(this, graphData, title));
 	}
-
 
 	private void addTableData(TableData tableData, TableLayout sectionTable, String title) {
 		//Init
@@ -168,7 +179,6 @@ public class DailyMorningReport extends Activity{
 		sectionTable.addView(hScroll);
 	}
 
-
 	private void addTextData(TextData textData, TableLayout sectionTable) {
 		List<TextElement> textElements = textData.getTextElements();
 		for (TextElement text : textElements) {
@@ -177,7 +187,6 @@ public class DailyMorningReport extends Activity{
 			sectionTable.addView(view);
 		}
 	}
-
 
 	private ArrayList<Integer> activeColumns(String title, TableData tableData){
 		ArrayList<Integer> columns = new ArrayList<Integer>();
