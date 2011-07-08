@@ -12,6 +12,7 @@ import com.tieto.ec.gui.Cell;
 import com.tieto.ec.gui.LineGraph;
 import com.tieto.ec.listeners.dmr.DmrOptionsButtonListener;
 import com.tieto.ec.listeners.dmr.GraphFullScreenListener;
+import com.tieto.ec.listeners.dmr.ShowHideSection;
 import com.tieto.ec.listeners.dmr.TableMetaDataListener;
 import com.tieto.ec.logic.FileManager;
 import com.tieto.frmw.model.GraphData;
@@ -28,11 +29,13 @@ import com.tieto.frmw.service.ExampleViewService;
 import com.tieto.frmw.service.ViewService;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.HorizontalScrollView;
 import android.widget.TableLayout;
@@ -45,6 +48,7 @@ public class DailyMorningReport extends Activity{
 	private ViewService webservice;
 	private String username, password, namespace, url;
 	private TableLayout table;
+	private int backgroundColor, textColor, cellTextColor, cellBackgroundColor, cellBorderColor;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,16 +62,45 @@ public class DailyMorningReport extends Activity{
 		url = getIntent().getExtras().getString("url");
 		webservice = new ExampleViewService();
 		
+		//Options
+		try {
+			backgroundColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.backgroundColor"));
+			textColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.textColor"));
+			cellTextColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.cellTextColor"));
+			cellBackgroundColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.cellBackgroundColor"));
+			cellBorderColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.cellBorderColor"));
+		} catch (IOException e) {
+			backgroundColor = Color.BLACK;
+			textColor = Color.GRAY;
+			cellBackgroundColor = Color.WHITE;
+			cellTextColor = Color.BLACK;
+			cellBorderColor = Color.BLACK;
+			FileManager.writePath(this, "com.tieto.ec.options.backgroundColor", ""+backgroundColor);
+			FileManager.writePath(this, "com.tieto.ec.options.textColor", ""+textColor);
+			FileManager.writePath(this, "com.tieto.ec.options.cellTextColor", ""+cellTextColor);
+			FileManager.writePath(this, "com.tieto.ec.options.cellBackgroundColor", ""+cellBackgroundColor);
+			FileManager.writePath(this, "com.tieto.ec.options.cellBorderColor", ""+cellBorderColor);
+			e.printStackTrace();
+		}
+		
 		//This
 		setContentView(R.layout.daily_management_report);
 		
 		table = (TableLayout) findViewById(R.id.dmr_table);
+		table.setBackgroundColor(backgroundColor);
 		
 		//Building report
 		sections = webservice.getSections();
 		
+		
 		//List Sections
 		listSections();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		onCreate(null);
 	}
 	
 	@Override
@@ -79,7 +112,7 @@ public class DailyMorningReport extends Activity{
 		optionButton.setOnMenuItemClickListener(new DmrOptionsButtonListener(this));
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+		
 	public void listSections(){
 		table.removeAllViews();
 		Calendar c = Calendar.getInstance();
@@ -95,9 +128,13 @@ public class DailyMorningReport extends Activity{
 		//Title
 		sectionTitle.setText(section.getSectionHeader() + ":");
 		sectionTitle.setTextSize(30);
+		sectionTitle.setTextColor(textColor);
 		
 		//Childs
 		table.addView(sectionTitle);
+		
+		//Listeners
+		sectionTitle.setOnClickListener(new ShowHideSection(section.getSectionHeader(), table));
 		
 		//Values
 		if(section instanceof TextSection){
@@ -106,7 +143,7 @@ public class DailyMorningReport extends Activity{
 		}
 		else if(section instanceof TableSection){
 			TableData tableData = webservice.getTableData((TableSection)section, fromdate, toDate, resolution);
-			sectionTitle.setOnClickListener(new TableMetaDataListener(this, section.getSectionHeader(), tableData));
+			sectionTitle.setOnLongClickListener(new TableMetaDataListener(this, section.getSectionHeader(), tableData));
 			addTableData(tableData, table, section.getSectionHeader());
 		}
 		else if(section instanceof GraphSection){
@@ -142,6 +179,7 @@ public class DailyMorningReport extends Activity{
 		
 		//Table
 		table.setStretchAllColumns(true);
+		table.setBackgroundColor(backgroundColor);
 		
 		//Active columns
 		ArrayList<Integer> activeColumns = activeColumns(title, tableData);
@@ -152,7 +190,7 @@ public class DailyMorningReport extends Activity{
 		for (int i = 0; i < tableColumns.size(); i++) {
 			//Init
 			if(activeColumns.contains(i)){
-				headerRow.addView(new Cell(this, tableColumns.get(i).getHeader()));				
+				headerRow.addView(new Cell(this, tableColumns.get(i).getHeader(), cellBackgroundColor, cellTextColor, cellBorderColor));				
 			}
 		}
 		table.addView(headerRow);
@@ -166,7 +204,7 @@ public class DailyMorningReport extends Activity{
 			for (int i = 0; i < values.size(); i++) {
 				//Add Cell
 				if(activeColumns.contains(i)){
-					row.addView(new Cell(this, values.get(i)));					
+					row.addView(new Cell(this, values.get(i), cellBackgroundColor, cellTextColor, cellBorderColor));					
 				}
 			}
 			
@@ -180,12 +218,15 @@ public class DailyMorningReport extends Activity{
 	}
 
 	private void addTextData(TextData textData, TableLayout sectionTable) {
+		TableLayout table = new TableLayout(this);
 		List<TextElement> textElements = textData.getTextElements();
 		for (TextElement text : textElements) {
 			TextView view = new TextView(this);
 			view.setText(text.getDaytime() + ":\n" + text.getText());
-			sectionTable.addView(view);
+			view.setTextColor(textColor);
+			table.addView(view);
 		}
+		sectionTable.addView(table);
 	}
 
 	private ArrayList<Integer> activeColumns(String title, TableData tableData){

@@ -1,6 +1,11 @@
 package com.tieto.ec.gui;
 
+import java.io.IOException;
+
+import com.tieto.ec.listeners.dmrOption.colorDialog.CancelListener;
+import com.tieto.ec.listeners.dmrOption.colorDialog.OkListener;
 import com.tieto.ec.listeners.dmrOption.colorDialog.RGBChangeListener;
+import com.tieto.ec.logic.FileManager;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -12,16 +17,24 @@ import android.widget.TextView;
 
 public class ColorChooserDialog extends Dialog{
 
+	public final static String BACKGROUND = "background";
+	public final static String TEXT = "text";
+	public final static String CELL_TEXT = "cellText";
+	public final static String CELL_BACKGROUND = "cellBackground";
+	public static final String CELL_BORDER = "cellBorder";
+	
+	private Context context;
 	private TableLayout table;
 	private SeekBar red;
 	private SeekBar green;
 	private SeekBar blue;
 	
-	public ColorChooserDialog(Context context) {
+	public ColorChooserDialog(Context context, String object) {
 		//Super
 		super(context);
 		
 		//Init
+		this.context = context;
 		table = new TableLayout(context);
 		red = new SeekBar(context);
 		green = new SeekBar(context);
@@ -52,6 +65,9 @@ public class ColorChooserDialog extends Dialog{
 		red.setOnSeekBarChangeListener(new RGBChangeListener(this));
 		green.setOnSeekBarChangeListener(new RGBChangeListener(this));
 		blue.setOnSeekBarChangeListener(new RGBChangeListener(this));
+		ok.setOnClickListener(new OkListener(this, context, red, green, blue, object));
+		cancel.setOnClickListener(new CancelListener(this));
+		
 		
 		//Table
 		table.addView(redLabel);
@@ -62,6 +78,17 @@ public class ColorChooserDialog extends Dialog{
 		table.addView(blue);
 		table.addView(ok);
 		table.addView(cancel);
+	}
+	
+	public void updateBars(String path){
+		try {
+			int color = Integer.valueOf(FileManager.readPath(context, path));
+			red.setProgress(Color.red(color));
+			green.setProgress(Color.green(color));
+			blue.setProgress(Color.blue(color));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void updateColor(){

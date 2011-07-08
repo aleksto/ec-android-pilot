@@ -45,12 +45,20 @@ public class LoginListener implements OnClickListener {
 		if(service.findByPK("", "") != null){
 			login.toastFromOtherThreads("Not valid username/password");
 		}else{
-			//Writing username and password
-			FileManager.writePath(login, "com.tieto.ec.username", username.getText().toString());
-			FileManager.writePath(login, "com.tieto.ec.password", password.getText().toString());
-			
-			//Loggin inn
-			login(username.getText().toString(), password.getText().toString());
+			try {
+				if(FileManager.readPath(login, "com.tieto.ec.options.rememberUsernameAndPassword").equalsIgnoreCase("true")){
+					//Writing username and password
+					FileManager.writePath(login, "com.tieto.ec.username", username.getText().toString());
+					FileManager.writePath(login, "com.tieto.ec.password", password.getText().toString());				
+				}
+				
+				//Loggin inn
+				login(username.getText().toString(), password.getText().toString());
+			} catch (IOException e) {
+				FileManager.writePath(login, "com.tieto.ec.options.rememberUsernameAndPassword", "true");
+				onClick(v);
+				e.printStackTrace();
+			}
 		}
 	}
 

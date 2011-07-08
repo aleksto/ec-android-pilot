@@ -5,7 +5,6 @@ import java.io.IOException;
 import com.tieto.ec.logic.FileManager;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
@@ -29,7 +28,6 @@ public class HeaderChangeListener implements OnCheckedChangeListener{
 			}else if(!isChecked){
 				headers = headers.replace(header + "#@#", "");
 			}
-			Log.d("tieto", title + ": " +headers);
 			FileManager.writePath(context, "com.tieto.ec.tables." + title, headers);
 		} catch (IOException e) {
 			e.printStackTrace();
