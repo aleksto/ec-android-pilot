@@ -5,9 +5,9 @@ import com.tieto.ec.gui.TableMetaDataDialog;
 import com.tieto.frmw.model.TableData;
 
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 
-public class TableMetaDataListener implements OnClickListener{
+public class TableMetaDataListener implements OnLongClickListener{
 
 	private TableMetaDataDialog dialog;
 	
@@ -15,8 +15,9 @@ public class TableMetaDataListener implements OnClickListener{
 		dialog = new TableMetaDataDialog(dailyMorningReport, title, data);
 	}
 	
-	public void onClick(View v) {
+	public boolean onLongClick(View v) {
 		dialog.updateCheckBoxes();
 		dialog.show();
+		return false;
 	}
 }
