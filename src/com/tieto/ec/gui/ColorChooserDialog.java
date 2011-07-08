@@ -1,6 +1,6 @@
 package com.tieto.ec.gui;
 
-import com.tieto.ec.listeners.listActivity.dmrOption.colorDialog.RGBChangeListener;
+import com.tieto.ec.listeners.dmrOption.colorDialog.RGBChangeListener;
 
 import android.app.Dialog;
 import android.content.Context;

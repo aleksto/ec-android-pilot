@@ -1,8 +1,8 @@
 package com.tieto.ec.gui;
 
 import com.tieto.ec.activities.WellPeriod;
-import com.tieto.ec.listeners.activities.main.pickObjectIDDialog.CancelListener;
-import com.tieto.ec.listeners.activities.main.pickObjectIDDialog.OkListener;
+import com.tieto.ec.listeners.main.pickObjectIDDialog.CancelListener;
+import com.tieto.ec.listeners.main.pickObjectIDDialog.OkListener;
 
 import android.app.Dialog;
 import android.widget.Button;
