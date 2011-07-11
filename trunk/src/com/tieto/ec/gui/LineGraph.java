@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
-import com.tieto.frmw.model.GraphData;
-import com.tieto.frmw.model.GraphPoint;
+import com.ec.prod.android.pilot.model.GraphData;
+import com.ec.prod.android.pilot.model.GraphPoint;
 
 import android.content.Context;
 import android.graphics.Color;

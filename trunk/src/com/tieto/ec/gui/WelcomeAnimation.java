@@ -8,8 +8,6 @@ import javax.microedition.khronos.opengles.GL10;
 import com.threed.jpct.Camera;
 import com.threed.jpct.FrameBuffer;
 import com.threed.jpct.Light;
-import com.threed.jpct.Logger;
-import com.threed.jpct.Matrix;
 import com.threed.jpct.Object3D;
 import com.threed.jpct.Primitives;
 import com.threed.jpct.RGBColor;
@@ -18,24 +16,12 @@ import com.threed.jpct.Texture;
 import com.threed.jpct.TextureManager;
 import com.threed.jpct.World;
 import com.threed.jpct.util.BitmapHelper;
-import com.threed.jpct.util.LensFlare;
 import com.threed.jpct.util.MemoryHelper;
 import com.tieto.R;
-import com.tieto.ec.activities.LogIn;
-import com.tieto.ec.temp.HelloWorld;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
-import android.util.Log;
-import android.view.View;
 
 public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 
@@ -46,7 +32,6 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 	private float rad = (float) (Math.PI/200f);
 	private ArrayList<Object3D> lightSpheres;
 	private ArrayList<Light> lights;
-	private SimpleVector degrees;
 
 	public WelcomeAnimation(Context context) {
 		super(context);
@@ -128,9 +113,6 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 			//Rad++
 			rad += 2*Math.PI/(nrOfLightSpheres*1f);
 		}
-		
-		//Light rotation
-		degrees = new SimpleVector();
 
 		//World
 		world.addObject(cube);
