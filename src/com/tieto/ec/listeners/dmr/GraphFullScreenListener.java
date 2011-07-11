@@ -3,7 +3,7 @@ package com.tieto.ec.listeners.dmr;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.gui.GraphFullScreenDialog;
 import com.tieto.ec.gui.LineGraph;
-import com.tieto.frmw.model.GraphData;
+import com.ec.prod.android.pilot.model.GraphData;
 
 import android.view.View;
 import android.view.View.OnClickListener;

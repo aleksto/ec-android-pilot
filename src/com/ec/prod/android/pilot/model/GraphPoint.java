@@ -1,4 +1,4 @@
-package com.tieto.frmw.model;
+package com.ec.prod.android.pilot.model;
 
 import java.util.Date;
 import java.util.HashMap;

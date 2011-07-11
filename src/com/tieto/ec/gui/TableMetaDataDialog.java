@@ -9,8 +9,8 @@ import com.tieto.ec.listeners.dmr.metaDataDialog.CancelListener;
 import com.tieto.ec.listeners.dmr.metaDataDialog.HeaderChangeListener;
 import com.tieto.ec.listeners.dmr.metaDataDialog.OkListener;
 import com.tieto.ec.logic.FileManager;
-import com.tieto.frmw.model.TableColumn;
-import com.tieto.frmw.model.TableData;
+import com.ec.prod.android.pilot.model.TableColumn;
+import com.ec.prod.android.pilot.model.TableData;
 
 import android.app.Dialog;
 import android.widget.Button;

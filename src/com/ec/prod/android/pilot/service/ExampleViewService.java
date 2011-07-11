@@ -1,21 +1,21 @@
-package com.tieto.frmw.service;
+package com.ec.prod.android.pilot.service;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.tieto.frmw.model.GraphData;
-import com.tieto.frmw.model.GraphPoint;
-import com.tieto.frmw.model.GraphSection;
-import com.tieto.frmw.model.Section;
-import com.tieto.frmw.model.TableColumn;
-import com.tieto.frmw.model.TableData;
-import com.tieto.frmw.model.TableRow;
-import com.tieto.frmw.model.TableSection;
-import com.tieto.frmw.model.TextData;
-import com.tieto.frmw.model.TextElement;
-import com.tieto.frmw.model.TextSection;
+import com.ec.prod.android.pilot.model.GraphData;
+import com.ec.prod.android.pilot.model.GraphPoint;
+import com.ec.prod.android.pilot.model.GraphSection;
+import com.ec.prod.android.pilot.model.Section;
+import com.ec.prod.android.pilot.model.TableColumn;
+import com.ec.prod.android.pilot.model.TableData;
+import com.ec.prod.android.pilot.model.TableRow;
+import com.ec.prod.android.pilot.model.TableSection;
+import com.ec.prod.android.pilot.model.TextData;
+import com.ec.prod.android.pilot.model.TextElement;
+import com.ec.prod.android.pilot.model.TextSection;
 
 
 public class ExampleViewService implements ViewService {
@@ -76,5 +76,4 @@ public class ExampleViewService implements ViewService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

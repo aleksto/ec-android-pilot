@@ -7,6 +7,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.ec.prod.android.pilot.model.GraphData;
+import com.ec.prod.android.pilot.model.GraphSection;
+import com.ec.prod.android.pilot.model.Resolution;
+import com.ec.prod.android.pilot.model.Section;
+import com.ec.prod.android.pilot.model.TableColumn;
+import com.ec.prod.android.pilot.model.TableData;
+import com.ec.prod.android.pilot.model.TableSection;
+import com.ec.prod.android.pilot.model.TextData;
+import com.ec.prod.android.pilot.model.TextElement;
+import com.ec.prod.android.pilot.model.TextSection;
+import com.ec.prod.android.pilot.service.ExampleViewService;
+import com.ec.prod.android.pilot.service.ViewService;
 import com.tieto.R;
 import com.tieto.ec.gui.Cell;
 import com.tieto.ec.gui.LineGraph;
@@ -15,18 +27,6 @@ import com.tieto.ec.listeners.dmr.GraphFullScreenListener;
 import com.tieto.ec.listeners.dmr.ShowHideSection;
 import com.tieto.ec.listeners.dmr.TableMetaDataListener;
 import com.tieto.ec.logic.FileManager;
-import com.tieto.frmw.model.GraphData;
-import com.tieto.frmw.model.GraphSection;
-import com.tieto.frmw.model.Resolution;
-import com.tieto.frmw.model.Section;
-import com.tieto.frmw.model.TableColumn;
-import com.tieto.frmw.model.TableData;
-import com.tieto.frmw.model.TableSection;
-import com.tieto.frmw.model.TextData;
-import com.tieto.frmw.model.TextElement;
-import com.tieto.frmw.model.TextSection;
-import com.tieto.frmw.service.ExampleViewService;
-import com.tieto.frmw.service.ViewService;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -179,7 +179,7 @@ public class DailyMorningReport extends Activity{
 		//Init
 		HorizontalScrollView hScroll = new HorizontalScrollView(this);
 		TableLayout table = new TableLayout(this);
-		List<com.tieto.frmw.model.TableRow> tableRows = tableData.getTableRows();
+		List<com.ec.prod.android.pilot.model.TableRow> tableRows = tableData.getTableRows();
 		
 		//Table
 		table.setStretchAllColumns(true);
@@ -200,7 +200,7 @@ public class DailyMorningReport extends Activity{
 		table.addView(headerRow);
 		
 		//Rows
-		for (com.tieto.frmw.model.TableRow tableRow : tableRows) {
+		for (com.ec.prod.android.pilot.model.TableRow tableRow : tableRows) {
 			//Init
 			TableRow row = new TableRow(this);
 			List<String> values = tableRow.getValues();

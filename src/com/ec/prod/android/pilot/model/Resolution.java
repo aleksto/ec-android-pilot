@@ -1,4 +1,4 @@
-package com.tieto.frmw.model;
+package com.ec.prod.android.pilot.model;
 
 public class Resolution {
 	public static final int DAILY = 1;
