@@ -38,6 +38,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.HorizontalScrollView;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -86,7 +87,10 @@ public class DailyMorningReport extends Activity{
 		//This
 		setContentView(R.layout.daily_management_report);
 		
+		//Background
+		ScrollView scroll = (ScrollView) findViewById(R.id.dmr_scroll);
 		table = (TableLayout) findViewById(R.id.dmr_table);
+		scroll.setBackgroundColor(backgroundColor);
 		table.setBackgroundColor(backgroundColor);
 		
 		//Building report
