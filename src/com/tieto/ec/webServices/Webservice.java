@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.Marshal;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -16,13 +17,13 @@ import android.util.Log;
 
 public class Webservice implements Runnable{
 
-	private ArrayList<HashMap<String, Object>> valueList;
 	private String namespace, url;
 	private SoapSerializationEnvelope envelope;
 	private HttpTransportBasicAuth httpTransport;
 	private String method;
-	private String[] args;
+	private PropertyInfo[] args;
 	private Thread thread;
+	private Object bodyIn;
 
 	public Webservice(String username, String password, String namespace, String url){
 		//Init
@@ -31,31 +32,12 @@ public class Webservice implements Runnable{
 		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); 
 		httpTransport = new HttpTransportBasicAuth(url, username, password);
 	}
-
-	private HashMap<String, Object> soapObjectToHashMap(SoapObject soap){
-		//Init
-		HashMap<String, Object> map = new HashMap<String, Object>();
-
-		//Populating
-		for (int i = 0; i < soap.getPropertyCount(); i++) {
-			PropertyInfo propertyInfo = new PropertyInfo();
-			soap.getPropertyInfo(i, propertyInfo);
-			map.put(propertyInfo.getName(), soap.getProperty(i));
-		}
-
-		return map;
-	}
 	
-	private ArrayList<HashMap<String, Object>> soapObjectsToArrayList(SoapObject soap) {
-		ArrayList<HashMap<String, Object>> valueList = new ArrayList<HashMap<String, Object>>();
-		for (int i = 0; i < soap.getPropertyCount(); i++) {
-			SoapObject returnValue = (SoapObject) soap.getProperty(i);
-			valueList.add(soapObjectToHashMap(returnValue));
-		}
-		return valueList;
+	protected void addMarshal(Marshal marshal) {
+		marshal.register(envelope);
 	}
 
-	protected synchronized ArrayList<HashMap<String, Object>> executeWebservice(String method, String ... args){
+	protected synchronized Object executeWebservice(String method, PropertyInfo ... args){
 		this.method = method;
 		this.args = args;
 		
@@ -67,38 +49,7 @@ public class Webservice implements Runnable{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		return valueList;
-	}
-
-	protected boolean validate(String username, String password) {
-		//Init
-		SoapObject request = new SoapObject(namespace, "findByPK");
-		HttpTransportBasicAuth httpTransport = new HttpTransportBasicAuth(url, username, password);
-
-		//Envelope
-		envelope.setOutputSoapObject(request);
-
-		request.addProperty("daytime", "");
-		request.addProperty("objectid", "");
-
-		//Submiting
-		try {
-			httpTransport.call(namespace + "/" + "findByPK", envelope);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (XmlPullParserException e) {
-			e.printStackTrace();
-		}
-
-		if(envelope.headerIn != null){		
-			for (int i = 0; i < envelope.headerIn.length; i++) {
-				Log.d("tieto", envelope.headerIn[i]+"");			
-			}
-		}else{
-			Log.d("tieto", "Header in = null");						
-		}
-
-		return false;
+		return bodyIn;
 	}
 	
 	public synchronized void run() {
@@ -106,28 +57,27 @@ public class Webservice implements Runnable{
 		SoapObject request = new SoapObject(namespace, method); 		
 
 		//PARAMS
-		for (int i = 0; i < args.length; i=i+2) {
-			request.addProperty(args[i], args[i+1]);
+		if(args != null){
+			for (int i = 0; i < args.length; i++) {
+				request.addProperty(args[i]);
+			}
 		}
 
 		//Envelope
 		envelope.setOutputSoapObject(request);
-
+		
 		//Submiting
 		try {
 			httpTransport.call(namespace + "/" + method, envelope);
-
-			SoapObject soap = (SoapObject) envelope.bodyIn;
-
-			valueList = soapObjectsToArrayList(soap);
+			bodyIn = envelope.bodyIn;
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch(java.lang.ClassCastException e){
 			e.printStackTrace();
-			valueList = null;
+			bodyIn = null;
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
-			valueList = new ArrayList<HashMap<String, Object>>();
+			bodyIn = new Object();
 		}
 
 		notify();

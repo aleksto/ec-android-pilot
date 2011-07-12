@@ -22,16 +22,18 @@ import com.tieto.R;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
+import android.util.Log;
 
 public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 
 	private FrameBuffer fb;
 	private World world;
-	private Object3D cube;
 	private RGBColor back = new RGBColor(0, 0, 0);
-	private float rad = (float) (Math.PI/200f);
+	private float rad = (float) (Math.PI/50f);
 	private ArrayList<Object3D> lightSpheres;
 	private ArrayList<Light> lights;
+	private Object3D cube;
+	private Camera cam;
 
 	public WelcomeAnimation(Context context) {
 		super(context);
@@ -40,9 +42,20 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 	}
 
 	public void onDrawFrame(GL10 gl) {
-		//Main sphere
-		cube.rotateY(rad);
-
+		
+		if(cam.getPosition().z < -30){
+			//Main sphere
+			cube.rotateX(-rad*4.1f);
+			
+			//Cam
+			cam.moveCamera(Camera.CAMERA_MOVEIN, 10);			
+		}else{
+			Log.d("tieto", cube.getTransparency()+"");
+			if(cube.getTransparency() > 0){				
+				cube.setTransparency(cube.getTransparency()-1);
+			}
+		}
+		
 		//Orbits
 		for (Object3D light : lightSpheres) {
 			light.rotateY(rad);
@@ -67,7 +80,7 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 
 		//World
 		world = new World();
-		world.setAmbientLight(100, 100, 100);
+		world.setAmbientLight(100,100,100);
 
 		// Create a texture out of the icon...:-)
 		Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(getResources().getDrawable(R.drawable.energy_components)), 256, 256));
@@ -77,15 +90,19 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 		cube = Primitives.getSphere(50, 10);
 		cube.calcTextureWrapSpherical();
 		cube.setTexture("texture");
-		cube.setSpecularLighting(true);
+		cube.calcNormals();
+		cube.setLighting(Object3D.LIGHTING_ALL_ENABLED);
+		cube.setTransparency(30);
 		cube.strip();
 		cube.build();
+		
+		world.addObject(cube);
 		
 		//Orbits
 		float x,y,z;
 		float rad = 0;
-		int radius = 15;
-		int nrOfLightSpheres = 5;
+		int radius = 13;
+		int nrOfLightSpheres = 8;
 		lightSpheres = new ArrayList<Object3D>();
 		lights = new ArrayList<Light>();
 		for (int i = 0; i < nrOfLightSpheres; i++) {
@@ -94,7 +111,7 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 			z = (float)(radius*Math.sin(rad));
 			
 			//Init and setting up
-			Object3D lightSphere = Primitives.getSphere(1);
+			Object3D lightSphere = Primitives.getSphere(0.3f);
 			lightSphere.translate(x, y, z);
 			lightSphere.strip();
 			lightSphere.build();
@@ -103,7 +120,12 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 			//Light
 			Light light = new Light(world);
 			light.setPosition(new SimpleVector(x*2, y*2, z*2));
-			light.setIntensity((float)(255*Math.random()), (float)(255*Math.random()), (float)(255*Math.random()));
+			if(i%2 == 0){
+				light.setIntensity(0,0,255);
+			}else{
+				light.setIntensity(255,255,255);
+			}
+			
 			lights.add(light);
 			
 			//Adding
@@ -114,12 +136,9 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 			rad += 2*Math.PI/(nrOfLightSpheres*1f);
 		}
 
-		//World
-		world.addObject(cube);
-
 		//Camera
-		Camera cam = world.getCamera();
-		cam.moveCamera(Camera.CAMERA_MOVEOUT, 50);
+		cam = world.getCamera();
+		cam.moveCamera(Camera.CAMERA_MOVEOUT, 1000);
 		cam.lookAt(cube.getTransformedCenter());
 
 		MemoryHelper.compact();	
