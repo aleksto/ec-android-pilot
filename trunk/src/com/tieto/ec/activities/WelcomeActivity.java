@@ -16,5 +16,10 @@ public class WelcomeActivity extends Activity{
 		WelcomeAnimation animation = new WelcomeAnimation(this);
 		
 		setContentView(animation);
+		
+		//WEBSERVICE TEST
+//		ServicePilotAndroid service = new ServicePilotAndroid("", "", "http://service.pilot.android.prod.ec.com/", "http://wv001927.eu.tieto.com/com.ec.prod.android.pilot?wsdl");
+//		
+//		service.getTextData(new TextSection("Operational Comments"), new Date(), new Date(), Resolution.MONTHLY);
 	}
 }
