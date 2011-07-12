@@ -1,21 +1,26 @@
 package com.tieto.ec.webServices;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+
+import org.ksoap2.serialization.MarshalDate;
+import org.ksoap2.serialization.PropertyInfo;
 
 import android.util.Log;
 
-import com.tieto.frmw.model.GraphData;
-import com.tieto.frmw.model.GraphSection;
-import com.tieto.frmw.model.Section;
-import com.tieto.frmw.model.TableData;
-import com.tieto.frmw.model.TableRow;
-import com.tieto.frmw.model.TableSection;
-import com.tieto.frmw.model.TextData;
-import com.tieto.frmw.model.TextSection;
-import com.tieto.frmw.service.ViewService;
+import com.ec.prod.android.pilot.model.GraphData;
+import com.ec.prod.android.pilot.model.GraphSection;
+import com.ec.prod.android.pilot.model.Section;
+import com.ec.prod.android.pilot.model.TableData;
+import com.ec.prod.android.pilot.model.TableRow;
+import com.ec.prod.android.pilot.model.TableSection;
+import com.ec.prod.android.pilot.model.TextData;
+import com.ec.prod.android.pilot.model.TextSection;
+import com.ec.prod.android.pilot.service.ViewService;
+import com.tieto.ec.logic.DateFormat;
+import com.tieto.ec.logic.WebserviceParser;
+import com.tieto.ec.logic.marshal.MarshalTableSection;
+import com.tieto.ec.logic.marshal.MarshalTextSection;
 
 public class ServicePilotAndroid extends Webservice implements ViewService {
 	
@@ -23,40 +28,61 @@ public class ServicePilotAndroid extends Webservice implements ViewService {
 		super(username, password, namespace, url);
 	}
 
-	public List<Section> getSections() {
-		//ArrayList<HashMap<String, Object>> list = executeWebservice("getSections", "");
-		ArrayList<HashMap<String, Object>> sections = executeWebservice("getSections", "", "");
-		//Log.d("tieto", sections.size()+"");
-		//for (HashMap<String, Object> hashMap : sections) {
-		//	Object section = hashMap.get("sectionHeader");
-		//	Log.d("tieto", section+"");
-		//}
 
-		return null;
+	public TableData getTableData(TableSection section, Date fromdate, Date toDate, int resolution) {
+		//Properties
+		PropertyInfo sectionProperties = new PropertyInfo();
+		PropertyInfo fromDateProperties = new PropertyInfo();
+		PropertyInfo toDateProperties = new PropertyInfo();
+		PropertyInfo resolutionProperties = new PropertyInfo();
+		
+		//Properties Population
+		sectionProperties.setName("arg0");
+		sectionProperties.setValue(section);
+		fromDateProperties.setName("arg1");
+		fromDateProperties.setValue(fromdate);
+		toDateProperties.setName("arg2");
+		toDateProperties.setValue(toDate);
+		resolutionProperties.setName("arg3");
+		resolutionProperties.setValue(resolution);
+
+		addMarshal(new MarshalTableSection());
+		addMarshal(new MarshalDate());
+		
+		Object list = executeWebservice("getTableData", sectionProperties, fromDateProperties, toDateProperties, resolutionProperties);
+		return WebserviceParser.parseGetTableData(list);
 	}
 
-	public TableData getTableData(TableSection section, Date fromdate,
-			Date toDate, int resolution) {
-		ArrayList<HashMap<String, Object>> list = executeWebservice("getTableData", "");
-		return null;
-	}
-
-	public GraphData getGraphData(GraphSection section, Date fromDate,
-			Date toDate, int resolution) {
-		// TODO Auto-generated method stub
+	public GraphData getGraphData(GraphSection section, Date fromDate, Date toDate, int resolution) {
 		return null;
 	}
 	
-	public GraphData getGraphData(TableRow row, Date fromDate, Date toDate,
-			int resolution) {
-		// TODO Auto-generated method stub
+	public GraphData getGraphData(TableRow row, Date fromDate, Date toDate,	int resolution) {
 		return null;
 	}
 	
-	public TextData getTextData(TextSection section, Date fromDate,
-			Date toDate, int resolution) {
-		ArrayList<HashMap<String, Object>> list = executeWebservice("getTextData", "");
-		return null;
+	public TextData getTextData(TextSection section, Date fromDate,	Date toDate, int resolution) {
+		//Properties
+		PropertyInfo sectionProperties = new PropertyInfo();
+		PropertyInfo fromDateProperties = new PropertyInfo();
+		PropertyInfo toDateProperties = new PropertyInfo();
+		PropertyInfo resolutionProperties = new PropertyInfo();
+		
+		//Properties Population
+		sectionProperties.setName("arg0");
+		sectionProperties.setValue(section);
+		fromDateProperties.setName("arg1");
+		fromDateProperties.setValue(fromDate);
+		toDateProperties.setName("arg2");
+		toDateProperties.setValue(toDate);
+		resolutionProperties.setName("arg3");
+		resolutionProperties.setValue(resolution);
+
+		addMarshal(new MarshalTextSection());
+		addMarshal(new MarshalDate());
+		
+		Object list = executeWebservice("getTextData", sectionProperties, fromDateProperties, toDateProperties, resolutionProperties);
+		return WebserviceParser.parseGetTextData(list);
 	}
 
 
