@@ -48,8 +48,8 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 			cube.rotateX(-rad*4.1f);
 			
 			//Cam
-			cam.moveCamera(Camera.CAMERA_MOVEIN, 10);			
-		}else{
+//			cam.moveCamera(Camera.CAMERA_MOVEIN, 10);			
+		}else{	
 			Log.d("tieto", cube.getTransparency()+"");
 			if(cube.getTransparency() > 0){				
 				cube.setTransparency(cube.getTransparency()-1);
@@ -83,8 +83,10 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 		world.setAmbientLight(100,100,100);
 
 		// Create a texture out of the icon...:-)
-		Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(getResources().getDrawable(R.drawable.energy_components)), 256, 256));
-		TextureManager.getInstance().addTexture("texture", texture);
+		if(!TextureManager.getInstance().containsTexture("textture")){
+			Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(getResources().getDrawable(R.drawable.energy_components)), 256, 256));
+			TextureManager.getInstance().addTexture("texture", texture);
+		}
 
 		//Center sphere
 		cube = Primitives.getSphere(50, 10);
@@ -138,7 +140,7 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 
 		//Camera
 		cam = world.getCamera();
-		cam.moveCamera(Camera.CAMERA_MOVEOUT, 1000);
+		cam.moveCamera(Camera.CAMERA_MOVEOUT, 50);
 		cam.lookAt(cube.getTransformedCenter());
 
 		MemoryHelper.compact();	
