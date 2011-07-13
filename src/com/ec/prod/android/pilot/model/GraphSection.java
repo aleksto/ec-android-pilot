@@ -6,4 +6,8 @@ public class GraphSection extends Section{
 		super(sectionHeader);		
 	}
 
+	public GraphSection() {
+		
+	}
+
 }

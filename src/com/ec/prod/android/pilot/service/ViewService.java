@@ -15,7 +15,7 @@ import com.ec.prod.android.pilot.model.TextSection;
 public interface ViewService {
 	public List<Section> getSections();
 	public TableData getTableData(TableSection section, Date fromdate, Date toDate, int resolution);
-	public GraphData getGraphData(GraphSection section, Date fromDate, Date toDate, int resolution);
-	public GraphData getGraphData(TableRow row, Date fromDate, Date toDate, int resolution);
-	public TextData getTextData(TextSection section, Date fromDate, Date toDate, int resolution);
+	public GraphData getGraphDataBySection(GraphSection section, Date fromDate, Date toDate, int resolution);
+	public GraphData getGraphDataByRow(TableRow row, Date fromDate, Date toDate, int resolution);
+	public TextData getTextData(TextSection section, Date fromDate, Date toDate, int resolution);	
 }
