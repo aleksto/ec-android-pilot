@@ -10,6 +10,7 @@ public class PwelDayStatusService extends Webservice{
 		super(username, password, namespace, url);
 	}
 
+	/*
 	public ArrayList<HashMap<String, Object>> findByPK(String daytime, String objectID){
 		ArrayList<HashMap<String, Object>> list = executeWebservice("findByPK", "daytime", daytime,
 				"objectid", objectID);
@@ -157,4 +158,5 @@ public class PwelDayStatusService extends Webservice{
 															"theorWaterVol",theorWaterVol);
 		return list;
 	}
+	*/
 }
