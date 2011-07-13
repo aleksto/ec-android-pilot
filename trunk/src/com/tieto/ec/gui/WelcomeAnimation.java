@@ -48,7 +48,7 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 			cube.rotateX(-rad*4.1f);
 			
 			//Cam
-//			cam.moveCamera(Camera.CAMERA_MOVEIN, 10);			
+			cam.moveCamera(Camera.CAMERA_MOVEIN, 10);			
 		}else{	
 			Log.d("tieto", cube.getTransparency()+"");
 			if(cube.getTransparency() > 0){				
