@@ -13,7 +13,7 @@
         android:id="@+id/background" 
         android:layout_width="match_parent" 
         android:layout_height="match_parent" 
-        android:src="@drawable/tieto">
+        android:src="@drawable/icon">
         </ImageView>
         <EditText android:inputType="textPassword" 
         android:layout_width="wrap_content"
