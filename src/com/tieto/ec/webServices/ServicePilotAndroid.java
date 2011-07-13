@@ -17,7 +17,6 @@ import com.ec.prod.android.pilot.model.TableSection;
 import com.ec.prod.android.pilot.model.TextData;
 import com.ec.prod.android.pilot.model.TextSection;
 import com.ec.prod.android.pilot.service.ViewService;
-import com.tieto.ec.logic.DateFormat;
 import com.tieto.ec.logic.WebserviceParser;
 import com.tieto.ec.logic.marshal.MarshalTableSection;
 import com.tieto.ec.logic.marshal.MarshalTextSection;
@@ -26,6 +25,13 @@ public class ServicePilotAndroid extends Webservice implements ViewService {
 	
 	public ServicePilotAndroid(String username, String password, String namespace, String url) {
 		super(username, password, namespace, url);
+	}
+
+
+	public List<Section> getSections() {
+		Object bodyIn = executeWebservice("getSections", null);
+		List<Section> sections = WebserviceParser.parseSections(bodyIn);
+		return sections;
 	}
 
 
@@ -56,7 +62,8 @@ public class ServicePilotAndroid extends Webservice implements ViewService {
 	public GraphData getGraphData(GraphSection section, Date fromDate, Date toDate, int resolution) {
 		return null;
 	}
-	
+
+
 	public GraphData getGraphData(TableRow row, Date fromDate, Date toDate,	int resolution) {
 		return null;
 	}
@@ -84,6 +91,7 @@ public class ServicePilotAndroid extends Webservice implements ViewService {
 		Object list = executeWebservice("getTextData", sectionProperties, fromDateProperties, toDateProperties, resolutionProperties);
 		return WebserviceParser.parseGetTextData(list);
 	}
+
 
 
 	

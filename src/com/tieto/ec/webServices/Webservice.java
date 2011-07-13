@@ -1,8 +1,7 @@
 package com.tieto.ec.webServices;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.Marshal;
@@ -10,12 +9,10 @@ import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.xmlpull.v1.XmlPullParserException;
-
 import com.tieto.ec.logic.HttpTransportBasicAuth;
 
-import android.util.Log;
-
 public class Webservice implements Runnable{
+
 
 	private String namespace, url;
 	private SoapSerializationEnvelope envelope;
@@ -54,7 +51,8 @@ public class Webservice implements Runnable{
 	
 	public synchronized void run() {
 		//Init
-		SoapObject request = new SoapObject(namespace, method); 		
+		
+		SoapObject request = new SoapObject(namespace, method); 
 
 		//PARAMS
 		if(args != null){
@@ -63,9 +61,9 @@ public class Webservice implements Runnable{
 			}
 		}
 
-		//Envelope
+ 		//Envelope
 		envelope.setOutputSoapObject(request);
-		
+
 		//Submiting
 		try {
 			httpTransport.call(namespace + "/" + method, envelope);
