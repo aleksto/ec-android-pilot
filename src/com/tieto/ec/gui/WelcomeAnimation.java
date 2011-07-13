@@ -53,21 +53,25 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 		lightSpheres = new ArrayList<Object3D>();
 		lights = new ArrayList<Light>();
 		
+		//Adding texture
+		if(!TextureManager.getInstance().containsTexture("texture")){
+			Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(getResources().getDrawable(R.drawable.energy_components)), 256, 256));
+			TextureManager.getInstance().addTexture("texture", texture);			
+		}
+		
 		//Thos
 		setRenderer(this);
 		setOnClickListener(new WelcomeListener(activity));
 	}
 
 	public void onDrawFrame(GL10 gl) {
-		
-		if(cam.getPosition().z < -30){
+		if(cam.getPosition().z < -50){
 			//Main sphere
-			mainSphere.rotateX(-rotationSpeed*4.1f);
+			mainSphere.rotateX(-rotationSpeed*4.2f);
 			
 			//Cam
 			cam.moveCamera(Camera.CAMERA_MOVEIN, 10);			
-		}else{	
-			Log.d("tieto", mainSphere.getTransparency()+"");
+		}else{
 			if(mainSphere.getTransparency() > 0){				
 				mainSphere.setTransparency(mainSphere.getTransparency()-1);
 			}else{
@@ -77,7 +81,7 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 		
 		//Orbits
 		for (Object3D light : lightSpheres) {
-			light.rotateY(rotationSpeed);
+			light.rotateY(rotationSpeed*4);
 		}
 		
 		for (Light light : lights) {
@@ -99,13 +103,7 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 
 		//World
 		world = new World();
-		world.setAmbientLight(0,0,0);
-
-		// Create a texture out of the icon...:-)
-		if(!TextureManager.getInstance().containsTexture("textture")){
-			Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(getResources().getDrawable(R.drawable.energy_components)), 256, 256));
-			TextureManager.getInstance().addTexture("texture", texture);
-		}
+		world.setAmbientLight(50,50,50);
 
 		//Center sphere
 		mainSphere = Primitives.getSphere(50, 10);
@@ -113,7 +111,7 @@ public class WelcomeAnimation extends GLSurfaceView implements Renderer{
 		mainSphere.setTexture("texture");
 		mainSphere.calcNormals();
 		mainSphere.setLighting(Object3D.LIGHTING_ALL_ENABLED);
-		mainSphere.setTransparency(30);
+		mainSphere.setTransparency(80);
 		mainSphere.strip();
 		mainSphere.build();
 		
