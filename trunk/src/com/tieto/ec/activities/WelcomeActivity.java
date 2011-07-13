@@ -7,13 +7,15 @@ import android.os.Bundle;
 
 public class WelcomeActivity extends Activity{
 
+	private WelcomeAnimation animation;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		//Super
 		super.onCreate(savedInstanceState);
 		
 		//Init
-		WelcomeAnimation animation = new WelcomeAnimation(this);
+		animation = new WelcomeAnimation(this);
 		
 		setContentView(animation);
 		
@@ -21,5 +23,17 @@ public class WelcomeActivity extends Activity{
 //		ServicePilotAndroid service = new ServicePilotAndroid("", "", "http://service.pilot.android.prod.ec.com/", "http://wv001927.eu.tieto.com/com.ec.prod.android.pilot?wsdl");
 //		
 //		service.getTextData(new TextSection("Operational Comments"), new Date(), new Date(), Resolution.MONTHLY);
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		animation.onPause();
+	}
+	
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		onBackPressed();
 	}
 }
