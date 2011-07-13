@@ -6,5 +6,9 @@ public class TextSection extends Section {
 	public TextSection(String sectionHeader) {
 		super(sectionHeader);
 	}
+	
+	public TextSection() {
+		super();
+	}
 
 }

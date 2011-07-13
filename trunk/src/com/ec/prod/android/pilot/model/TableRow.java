@@ -6,8 +6,28 @@ import java.util.List;
 public class TableRow {
 
 	List<String> rowValues = new LinkedList<String>();
-	private String rowID;
+	private String rowId;
 	
+	public String getRowId() {
+		return rowId;
+	}
+
+	public void setRowId(String rowId) {
+		this.rowId = rowId;
+	}
+	
+	public TableRow() {
+		
+	}
+
+	public List<String> getRowValues() {
+		return rowValues;
+	}
+
+	public void setRowValues(List<String> rowValues) {
+		this.rowValues = rowValues;
+	}
+
 	public TableRow(String...rowValues) {
 		for (String rowValue : rowValues) {
 			this.rowValues.add(rowValue);
@@ -18,11 +38,4 @@ public class TableRow {
 		return rowValues;
 	}
 
-	public void setRowID(String ID){
-		this.rowID = ID;
-	}
-
-	public String getRowID(){
-		return rowID;
-	}
 }

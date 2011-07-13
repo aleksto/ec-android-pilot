@@ -5,6 +5,10 @@ public class TableSection extends Section {
 	public TableSection(String sectionHeader) {
 		super(sectionHeader);		
 	}
+	
+	public TableSection() {
+		super();
+	}
 
 	
 

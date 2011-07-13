@@ -3,6 +3,10 @@ package com.ec.prod.android.pilot.model;
 public class TableColumn {
 
 	private String text;
+	
+	public TableColumn() {
+		
+	}
 
 	public TableColumn(String text) {
 		this.text = text;

@@ -6,6 +6,10 @@ public class TextElement {
 	private Date daytime;
 	private String text;
 
+	public TextElement() {
+		
+	}
+	
 	public TextElement(Date daytime, String text) {
 		this.daytime = daytime;
 		this.text = text;

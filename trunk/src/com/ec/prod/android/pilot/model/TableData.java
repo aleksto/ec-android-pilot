@@ -8,7 +8,14 @@ public class TableData {
 	private List<TableRow> tableRows = new LinkedList<TableRow>();
 	private List<TableColumn> tableColumns;
 	
+	public void setTableColumns(List<TableColumn> tableColumns) {
+		this.tableColumns = tableColumns;
+	}
 
+	public TableData() {
+		
+	}
+	
 	public TableData(List<TableColumn> tableColumns) {
 		this.tableColumns = tableColumns;
 	}
