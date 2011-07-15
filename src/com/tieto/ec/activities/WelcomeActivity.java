@@ -20,8 +20,6 @@ public class WelcomeActivity extends Activity{
 		
 		setContentView(animation);
 		
-		
-		
 		startActivity(new Intent(this, LogIn.class));
 	}
 	

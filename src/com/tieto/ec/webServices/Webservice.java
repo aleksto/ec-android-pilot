@@ -18,7 +18,7 @@ public class Webservice implements Runnable{
 	private SoapSerializationEnvelope envelope;
 	private HttpTransportBasicAuth httpTransport;
 	private String method;
-	private PropertyInfo[] args;
+	private String[] args;
 	private Thread thread;
 	private Object bodyIn;
 
@@ -34,7 +34,7 @@ public class Webservice implements Runnable{
 		marshal.register(envelope);
 	}
 
-	protected synchronized Object executeWebservice(String method, PropertyInfo ... args){
+	protected synchronized Object executeWebservice(String method, String ... args){
 		this.method = method;
 		this.args = args;
 		
@@ -55,9 +55,9 @@ public class Webservice implements Runnable{
 		SoapObject request = new SoapObject(namespace, method); 
 
 		//PARAMS
-		if(args != null){
-			for (int i = 0; i < args.length; i++) {
-				request.addProperty(args[i]);
+		if(args[0] != ""){
+			for (int i = 0; i < args.length; i+=2) {
+				request.addProperty(args[i], args[i+1]);
 			}
 		}
 

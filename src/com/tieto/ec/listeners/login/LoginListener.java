@@ -2,10 +2,11 @@ package com.tieto.ec.listeners.login;
 
 import java.io.IOException;
 
+import com.ec.prod.android.pilot.client.DMRViewServiceUnmarshalled;
+import com.ec.prod.android.pilot.service.ViewService;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.activities.LogIn;
 import com.tieto.ec.logic.FileManager;
-import com.tieto.ec.webServices.PwelDayStatusService;
 
 import android.content.Intent;
 import android.view.View;
@@ -15,7 +16,7 @@ import android.widget.EditText;
 public class LoginListener implements OnClickListener {
 
 	//Webservice
-	private PwelDayStatusService service;
+	private ViewService service;
 	private String namespace, url; 
 	private EditText username, password;
 	private LogIn login;
@@ -25,8 +26,9 @@ public class LoginListener implements OnClickListener {
 		this.login = login;
 		this.password = password;
 		this.username = username;
-		namespace = "http://pweldaystatuswsp.service.generated.ws.frmw.ec.com/";
-		url = "http://wv001927.eu.tieto.com/com.ec.frmw.ws.generated/PwelDayStatusWspService?";
+		this.password = password;
+		namespace = "http://service.pilot.android.prod.ec.com/";
+		url = "http://wv001927.eu.tieto.com/com.ec.prod.android.pilot?wsdl";
 		
 		try {
 			String usernameRead = FileManager.readPath(login, "com.tieto.ec.username");
@@ -40,11 +42,11 @@ public class LoginListener implements OnClickListener {
 	}
 
 	public void onClick(View v){
-//		service = new PwelDayStatusService(username.getText().toString(), password.getText().toString(), namespace, url);
+		service = new DMRViewServiceUnmarshalled(username.getText().toString(), password.getText().toString(), namespace, url);
 		
-//		if(service.findByPK("", "") != null){
-//			login.toastFromOtherThreads("Not valid username/password");
-//		}else{
+		if(service.getSections() == null){
+			login.toastFromOtherThreads("Not valid username/password");
+		}else{
 			try {
 				if(FileManager.readPath(login, "com.tieto.ec.options.rememberUsernameAndPassword").equalsIgnoreCase("true")){
 					//Writing username and password
@@ -59,7 +61,7 @@ public class LoginListener implements OnClickListener {
 				onClick(v);
 				e.printStackTrace();
 			}
-//		}
+		}
 	}
 
 	private void login(String username, String password) {

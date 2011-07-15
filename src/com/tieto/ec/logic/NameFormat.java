@@ -3,6 +3,7 @@ package com.tieto.ec.logic;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
+import java.util.List;
 
 public class NameFormat extends Format {
 	
@@ -10,9 +11,9 @@ public class NameFormat extends Format {
 	 * @author bogeeoiv
 	 */
 	private static final long serialVersionUID = 1L;
-	private String[] titles;
+	private List<String> titles;
 	
-	public NameFormat(String ... titles){
+	public NameFormat(List<String> titles){
 		this.titles = titles;
 	}
 
@@ -22,7 +23,7 @@ public class NameFormat extends Format {
 
 		// using num.intValue() will floor the value, so we add 0.5 to round instead:
 		int roundNum = (int) (num.floatValue() + 0.5f);
-		toAppendTo.append(titles[roundNum]);
+		toAppendTo.append(titles.get(roundNum));
 		return toAppendTo;
 	}
 

@@ -19,8 +19,11 @@ public class DMRViewServiceUnmarshalled implements ViewService {
 
 	private ViewServiceMarshalled viewService;
 	
+	public DMRViewServiceUnmarshalled(String username, String password, String namespace, String url){
+		viewService = new AndroidViewServiceMarshalled(username, password, namespace, url);
+	}
+	
 	public List<Section> getSections() {
-		
 		List<String> sections = viewService.getSections(); // + KSOAP2 trick
 		return MarshalService.unMarshalSections(sections);
 	}

@@ -19,6 +19,7 @@ public class WebserviceDateConverter {
 	}
 	
 	public static String parse(double daytime){
+		//Date.getTime()
 		Date date = new Date((long) daytime);
 		int offset = date.getHours()/12;
 		if((date.getMonth()+1) < 10 && date.getDate() < 10){

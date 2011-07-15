@@ -5,8 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.ec.prod.android.pilot.model.GraphData;
+import com.ec.prod.android.pilot.model.GraphPoint;
 import com.ec.prod.android.pilot.model.GraphSection;
 import com.ec.prod.android.pilot.model.Section;
 import com.ec.prod.android.pilot.model.TableColumn;
@@ -24,8 +26,31 @@ public class MarshalService {
 	private static final String delimiter = ";";	
 
 	public static List<String> marshalGraphData(GraphData graphData) {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> graphDataExpression = new LinkedList<String>();
+		
+		// Handles attributes
+		List<String> attributes = graphData.getPointAttributes();
+		String attributeString = "";
+		for (String attribute : attributes) {
+			attributeString += attribute + delimiter;
+		}
+		graphDataExpression.add(attributeString);
+		
+		// Handles points
+		List<GraphPoint> points = graphData.getGraphPoints();
+		for (GraphPoint point : points) {			
+			String pointExpression = "";
+			Date daytime = point.getDaytime();
+			pointExpression += sdf.format(daytime) + delimiter;			
+			Map<String, String> values = point.getValues();
+			for (String key : values.keySet()) {
+				String keyValue = values.get(key);
+				pointExpression += key + "#" + keyValue + delimiter;
+			}
+			graphDataExpression.add(pointExpression);					
+		}
+		return graphDataExpression;
+		
 	}
 
 	public static String marshalGraphSection(GraphSection section) {
@@ -104,8 +129,31 @@ public class MarshalService {
 	}
 
 	public static GraphData unMarshalGraphData(List<String> graphData) {
-		// TODO Auto-generated method stub
-		return null;
+		GraphData graphDataObject = new GraphData();
+		
+		// Handles attributes
+		String attributesExpression = graphData.get(0);
+		String[] attributes = attributesExpression.split(delimiter);		
+		graphDataObject.setPointAttributes(attributes);
+		
+		// Handles points
+		for (int i = 1; i < graphData.size(); i++) {			
+			String graphPointExpression = graphData.get(i);
+			String[] pointValues = graphPointExpression.split(delimiter);
+			Date daytime;
+			try {
+				daytime = sdf.parse(pointValues[0]);
+			} catch (ParseException e) {
+				throw new IllegalStateException("Could not parse daytime out of Graph Data string", e);
+			}
+			GraphPoint point = new GraphPoint(daytime);			
+			for (int t = 1; t < pointValues.length; t++) {
+				String[] valueSet = pointValues[t].split("#");
+				point.addValue(valueSet[0], valueSet[1]);
+			}			
+			graphDataObject.addGraphPoint(point);			
+		}		
+		return graphDataObject;
 	}
 
 	public static GraphSection unMarshalGraphSection(String section) {

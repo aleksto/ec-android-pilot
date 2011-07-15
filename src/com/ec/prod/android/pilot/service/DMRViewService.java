@@ -76,5 +76,17 @@ public class DMRViewService implements ViewService {
 		return null;
 	}
 
+	public GraphData getGraphData(GraphSection section, Date fromDate,
+			Date toDate, int resolution) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public GraphData getGraphData(TableRow row, Date fromDate, Date toDate,
+			int resolution) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

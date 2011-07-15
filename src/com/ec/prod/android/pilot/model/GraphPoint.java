@@ -25,4 +25,8 @@ public class GraphPoint {
 		pointValues.put(attribute, value);		
 	}
 
+	public Map<String, String> getValues() {
+		return pointValues;
+	}
+
 }
