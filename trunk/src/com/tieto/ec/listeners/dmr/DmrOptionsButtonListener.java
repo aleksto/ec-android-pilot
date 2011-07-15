@@ -1,6 +1,6 @@
 package com.tieto.ec.listeners.dmr;
 
-import com.tieto.ec.activities.listActivities.DmrOptionActivity;
+import com.tieto.ec.activities.DailyMoringReportOptions;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,7 +16,7 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 	}
 
 	public boolean onMenuItemClick(MenuItem arg0) {
-		Intent intent = new Intent(activity, DmrOptionActivity.class);
+		Intent intent = new Intent(activity, DailyMoringReportOptions.class);
 		activity.startActivity(intent);
 		return false;
 	}

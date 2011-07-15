@@ -1,6 +1,6 @@
 package com.tieto.ec.listeners.welcomActivity;
 
-import com.tieto.ec.activities.LogIn;
+import com.tieto.ec.activities.Login;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +16,7 @@ public class WelcomeListener implements OnClickListener {
 	}
 
 	public void onClick(View arg0) {
-		Intent intent = new Intent(context, LogIn.class);
+		Intent intent = new Intent(context, Login.class);
 		context.startActivity(intent);
 		
 	}

@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.ec.prod.android.pilot.service.ViewServiceMarshalled;
-import com.tieto.ec.logic.DateFormat;
-import com.tieto.ec.webServices.Webservice;
+import com.ec.prod.android.pilot.client.WebserviceDateConverter;
+import com.ec.prod.android.pilot.client.Webservice;
 
 public class AndroidViewServiceMarshalled extends Webservice implements ViewServiceMarshalled{
 
@@ -29,8 +29,8 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 
 	public List<String> getTableData(String section, Date fromdate, Date toDate, int resolution) {
 		Object response = executeWebservice("getTableData", "arg0", section,
-				"arg1", DateFormat.parse(fromdate.getTime()),
-				"arg2", DateFormat.parse(toDate.getTime()),
+				"arg1", WebserviceDateConverter.parse(fromdate.getTime()),
+				"arg2", WebserviceDateConverter.parse(toDate.getTime()),
 				"arg3", Integer.toString(resolution));
 
 		String[] responseList = response.toString().split("return=");
@@ -46,8 +46,8 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 
 	public List<String> getGraphDataBySection(String section, Date fromDate, Date toDate, int resolution) {
 		Object response = executeWebservice("getGraphDataBySection", "arg0", section,
-				"arg1", DateFormat.parse(fromDate.getTime()),
-				"arg2", DateFormat.parse(toDate.getTime()),
+				"arg1", WebserviceDateConverter.parse(fromDate.getTime()),
+				"arg2", WebserviceDateConverter.parse(toDate.getTime()),
 				"arg3", Integer.toString(resolution));
 
 		String[] responseList = response.toString().split("return=");
@@ -68,8 +68,8 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 
 	public List<String> getTextData(String section, Date fromDate, Date toDate,	int resolution) {
 		Object response = executeWebservice("getTextData", "arg0", section,
-				"arg1", DateFormat.parse(fromDate.getTime()),
-				"arg2", DateFormat.parse(toDate.getTime()),
+				"arg1", WebserviceDateConverter.parse(fromDate.getTime()),
+				"arg2", WebserviceDateConverter.parse(toDate.getTime()),
 				"arg3", Integer.toString(resolution));
 
 		String[] responseList = response.toString().split("return=");

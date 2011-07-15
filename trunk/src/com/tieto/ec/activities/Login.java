@@ -17,7 +17,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class LogIn extends Activity{
+public class Login extends Activity{
 
 	private Handler handler;
 	
@@ -68,7 +68,7 @@ public class LogIn extends Activity{
 	public void toastFromOtherThreads(final String msg){
 		handler.post(new Runnable() {
 			public void run() {
-				Toast.makeText(LogIn.this, msg, Toast.LENGTH_SHORT).show();
+				Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
 			}
 		});
 	}

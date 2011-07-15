@@ -18,7 +18,7 @@ import com.threed.jpct.World;
 import com.threed.jpct.util.BitmapHelper;
 import com.threed.jpct.util.MemoryHelper;
 import com.tieto.R;
-import com.tieto.ec.activities.LogIn;
+import com.tieto.ec.activities.Login;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -65,7 +65,7 @@ public class AnimationRenderer implements Renderer{
 			if(mainSphere.getTransparency() > 0){				
 				mainSphere.setTransparency(mainSphere.getTransparency()-1);
 			}else{
-				activity.startActivity(new Intent(activity, LogIn.class));
+				activity.startActivity(new Intent(activity, Login.class));
 			}
 		}
 		

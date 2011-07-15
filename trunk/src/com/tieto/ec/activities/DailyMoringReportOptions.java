@@ -1,4 +1,4 @@
-package com.tieto.ec.activities.listActivities;
+package com.tieto.ec.activities;
 
 import java.io.IOException;
 
@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class DmrOptionActivity extends ListActivity{
+public class DailyMoringReportOptions extends ListActivity{
 
 	private ColorChooserDialog background, text, cellText, cellBackground, cellBorder;
 

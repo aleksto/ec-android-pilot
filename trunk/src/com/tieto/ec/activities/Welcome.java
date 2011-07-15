@@ -6,7 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-public class WelcomeActivity extends Activity{
+public class Welcome extends Activity{
 
 	private WelcomeAnimation animation;
 
@@ -20,7 +20,7 @@ public class WelcomeActivity extends Activity{
 		
 		setContentView(animation);
 		
-		startActivity(new Intent(this, LogIn.class));
+		startActivity(new Intent(this, Login.class));
 	}
 	
 	@Override
