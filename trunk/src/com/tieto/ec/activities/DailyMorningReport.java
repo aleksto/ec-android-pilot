@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.ec.prod.android.pilot.client.DMRViewServiceUnmarshalled;
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphSection;
 import com.ec.prod.android.pilot.model.Resolution;
@@ -17,9 +18,10 @@ import com.ec.prod.android.pilot.model.TableSection;
 import com.ec.prod.android.pilot.model.TextData;
 import com.ec.prod.android.pilot.model.TextElement;
 import com.ec.prod.android.pilot.model.TextSection;
-import com.ec.prod.android.pilot.service.ExampleViewService;
 import com.ec.prod.android.pilot.service.ViewService;
 import com.tieto.R;
+import com.tieto.ec.gui.graphs.BarGraph;
+import com.tieto.ec.gui.graphs.Graph;
 import com.tieto.ec.gui.graphs.LineGraph;
 import com.tieto.ec.gui.table.Cell;
 import com.tieto.ec.listeners.dmr.DmrOptionsButtonListener;
@@ -28,6 +30,7 @@ import com.tieto.ec.listeners.dmr.GraphLineChooserListener;
 import com.tieto.ec.listeners.dmr.ShowHideSection;
 import com.tieto.ec.listeners.dmr.TableMetaDataListener;
 import com.tieto.ec.logic.FileManager;
+import com.tieto.ec.logic.NameFormat;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -36,7 +39,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
@@ -62,7 +64,7 @@ public class DailyMorningReport extends Activity{
 		password = getIntent().getExtras().getString("password");
 		namespace = getIntent().getExtras().getString("namespace");
 		url = getIntent().getExtras().getString("url");
-		webservice = new ExampleViewService();
+		webservice = new DMRViewServiceUnmarshalled(username, password, namespace, url);
 		
 		//Options
 		try {
@@ -152,18 +154,27 @@ public class DailyMorningReport extends Activity{
 			addTableData(tableData, table, section.getSectionHeader());
 		}
 		else if(section instanceof GraphSection){
-			GraphData graphData = webservice.getGraphData((GraphSection)section, fromdate, toDate, resolution);	
+			GraphData graphData = webservice.getGraphDataBySection((GraphSection)section, fromdate, toDate, resolution);	
 			addGraphData(graphData, table, section.getSectionHeader());
 		}
 	}
 
 	private void addGraphData(GraphData graphData, TableLayout sectionTable, String title) {
 		//Init
-		LineGraph graph = new LineGraph(this, "");
+		Graph graph = null;
 		
 		//Add data
-		graph.add(graphData);
-		graph.setDomainValueFormat(new SimpleDateFormat());
+		if(graphData.getGraphPoints().size()>1){
+			graph = new LineGraph(this, "");
+			graph.setDomainValueFormat(new SimpleDateFormat("yyyy-MM-dd"));
+			((LineGraph) graph).add(graphData);			
+		}else{
+			graph = new BarGraph(this, "", Color.GREEN);
+			graph.setGridPadding(25, 0, 25, 0);
+			graph.setDomainStepValue(graphData.getPointAttributes().size());
+			graph.setDomainValueFormat(new NameFormat(graphData.getPointAttributes()));
+			((BarGraph) graph).add(graphData);	
+		}
 		
 		//LayoutParams
 		int width = getWindowManager().getDefaultDisplay().getWidth();

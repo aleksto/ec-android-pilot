@@ -1,21 +1,29 @@
 package com.tieto.ec.gui.graphs;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
+import com.androidplot.series.XYSeries;
 import com.androidplot.xy.BarFormatter;
 import com.androidplot.xy.BarRenderer;
 import com.androidplot.xy.SimpleXYSeries;
+import com.ec.prod.android.pilot.model.GraphData;
+import com.ec.prod.android.pilot.model.GraphPoint;
 
 import android.content.Context;
 import android.graphics.Color;
 
 public class BarGraph extends Graph{
 
+	private int color;
+	
 	public BarGraph(Context context, String title, int color) {
 		//Super
 		super(context, title);
+		
+		//Init
+		this.color = color;
 		
 		//This      
         getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
@@ -32,6 +40,22 @@ public class BarGraph extends Graph{
         //List
         graphLines.add(new SimpleXYSeries(""));
         formats.add(new BarFormatter(1, 1));
+	}
+	
+	public BarGraph(BarGraph graph){
+		this(graph.context, graph.title, graph.color);
+		
+		this.graphLines = graph.graphLines;
+		this.formats = graph.formats;
+
+		Set<XYSeries> seriesSet = graph.getSeriesSet();
+		
+		for (XYSeries xySeries : seriesSet) {
+			if(graphLines.contains(xySeries)){
+				int inx = graphLines.indexOf(xySeries);
+				addSeries(graphLines.get(inx), formats.get(inx));
+			}
+		}
 	}
 	
 	private void addBars(String title, Number ... vals){
@@ -56,16 +80,20 @@ public class BarGraph extends Graph{
 		bar.setModel(Arrays.asList(vals), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
 	}
 	
-	public void addBarsWithValueList(ArrayList<HashMap<String, Object>> valueList, String title, String ... keys){
-		Double[] vals = new Double[valueList.size()*keys.length];
-		int counter = 0;	
-		for (HashMap<String,Object> map : valueList) {
-			for (int i = 0; i < keys.length; i++) {
-				vals[counter] = Double.valueOf(map.get(keys[i])+"");
-				counter++;
+	public void add(GraphData graphData) {
+		List<String> pointAttributes = graphData.getPointAttributes();
+		List<GraphPoint> graphPoints = graphData.getGraphPoints();
+		Double[] vals = new Double[graphPoints.size()*pointAttributes.size()];
+		
+		int counter = 0;
+		for (GraphPoint point : graphPoints) {
+			for (String attribute : pointAttributes) {
+				vals[counter++] =  Double.valueOf(point.getValue(attribute));
 			}
 		}
+		
 		addBars(title, vals);
+		
 		invalidate();
 	}
 }

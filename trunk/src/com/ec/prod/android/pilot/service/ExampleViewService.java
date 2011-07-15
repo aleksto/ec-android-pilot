@@ -76,4 +76,16 @@ public class ExampleViewService implements ViewService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public GraphData getGraphDataBySection(GraphSection section, Date fromDate,
+			Date toDate, int resolution) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public GraphData getGraphDataByRow(TableRow row, Date fromDate,
+			Date toDate, int resolution) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

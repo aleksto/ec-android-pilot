@@ -18,10 +18,11 @@ import com.androidplot.xy.XYSeriesFormatter;
 
 public class Graph extends XYPlot{
 
-	protected String title;
-	protected Context context;
+	@SuppressWarnings("rawtypes")
 	protected ArrayList<XYSeriesFormatter> formats;
 	protected ArrayList<SimpleXYSeries> graphLines;
+	protected String title;
+	protected Context context;
 
 	@SuppressWarnings("rawtypes")
 	public Graph(Context context, String title){
@@ -48,6 +49,22 @@ public class Graph extends XYPlot{
 		widget.getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1,1}, 1));
 		widget.getDomainOriginLinePaint().setColor(Color.BLACK);
 		widget.getRangeOriginLinePaint().setColor(Color.BLACK);
+	}
+	
+	public Graph(Graph graph){
+		this(graph.context, graph.title);
+		
+		this.graphLines = graph.graphLines;
+		this.formats = graph.formats;
+
+		Set<XYSeries> seriesSet = graph.getSeriesSet();
+		
+		for (XYSeries xySeries : seriesSet) {
+			if(graphLines.contains(xySeries)){
+				int inx = graphLines.indexOf(xySeries);
+				addSeries(graphLines.get(inx), formats.get(inx));
+			}
+		}
 	}
 
 	public void show(int graphNr){

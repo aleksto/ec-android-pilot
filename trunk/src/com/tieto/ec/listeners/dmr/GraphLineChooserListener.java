@@ -1,7 +1,7 @@
 package com.tieto.ec.listeners.dmr;
 
 import com.tieto.ec.gui.dialogs.GraphLineChooserDialog;
-import com.tieto.ec.gui.graphs.LineGraph;
+import com.tieto.ec.gui.graphs.Graph;
 
 import android.content.Context;
 import android.view.View;
@@ -11,7 +11,7 @@ public class GraphLineChooserListener implements OnLongClickListener {
 
 	private GraphLineChooserDialog dialog;
 	
-	public GraphLineChooserListener(Context context, LineGraph graph) {
+	public GraphLineChooserListener(Context context, Graph graph) {
 		dialog = new GraphLineChooserDialog(context, graph);
 	}
 
