@@ -1,4 +1,4 @@
-package com.tieto.ec.logic;
+package com.ec.prod.android.pilot.client;
 
 import java.util.Date;
 

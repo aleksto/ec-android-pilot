@@ -22,7 +22,7 @@
  * Contributor(s): Paul Spencer, John D. Beatty, Dave Dash, F. Hunter, 
  *                  Renaud Tognelli, Thomas Strang, Alexander Krebs, Sean McDaniel
  */
-package com.tieto.ec.logic;
+package com.ec.prod.android.pilot.client;
 
 import java.io.*;
 

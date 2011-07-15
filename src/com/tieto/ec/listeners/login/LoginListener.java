@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.ec.prod.android.pilot.client.DMRViewServiceUnmarshalled;
 import com.ec.prod.android.pilot.service.ViewService;
 import com.tieto.ec.activities.DailyMorningReport;
-import com.tieto.ec.activities.LogIn;
+import com.tieto.ec.activities.Login;
 import com.tieto.ec.logic.FileManager;
 
 import android.content.Intent;
@@ -19,9 +19,9 @@ public class LoginListener implements OnClickListener {
 	private ViewService service;
 	private String namespace, url; 
 	private EditText username, password;
-	private LogIn login;
+	private Login login;
 
-	public LoginListener(EditText username, EditText password, LogIn login){
+	public LoginListener(EditText username, EditText password, Login login){
 		//Init
 		this.login = login;
 		this.password = password;
