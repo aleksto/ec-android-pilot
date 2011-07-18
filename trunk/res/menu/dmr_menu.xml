@@ -2,5 +2,6 @@
 <menu
   xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:title="Options" android:id="@+id/dmr_options"></item>
+    <item android:title="Map" android:id="@+id/dmr_map"></item>
     
 </menu>
