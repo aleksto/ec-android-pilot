@@ -7,7 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
     <application android:icon="@drawable/icon" android:label="Energy Components">
-        <activity android:name=".ec.activities.WelcomeActivity"
+    	<uses-library android:name="com.google.android.maps" />
+        <activity android:name=".ec.activities.Welcome"
                   android:label="Energy Components">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -15,10 +16,9 @@
             </intent-filter>
         </activity>
 
-		<activity android:name=".ec.activities.LogIn" android:label="Log In" ></activity>
+		<activity android:name=".ec.activities.Login" android:label="Login" ></activity>
+		<activity android:name=".ec.activities.LoginOptions" android:label="Login Options" ></activity>
 		<activity android:name=".ec.activities.DailyMorningReport" android:label="Daily Morning Report" ></activity>
-		<activity android:name=".ec.activities.WellPeriod" android:label="Well - Period" ></activity>
-		<activity android:name=".ec.activities.WellSingle" android:label="Well" ></activity>
-		<activity android:name=".ec.activities.listActivities.DmrOptionActivity" android:label="DMR Options" ></activity>
+		<activity android:name=".ec.activities.DailyMoringReportOptions" android:label="Daily Morning Report Options" ></activity>
     </application>
 </manifest>
