@@ -34,6 +34,8 @@ public class Graph extends XYPlot{
 		formats = new ArrayList<XYSeriesFormatter>();
 
 		//this
+		setDomainLabel("");
+		setRangeLabel("");
 		setRangeLowerBoundary(0, BoundaryMode.FIXED);
 		setRangeValueFormat(new DecimalFormat("0"));
 		setBorderStyle(BorderStyle.SQUARE, null, null);
@@ -49,22 +51,6 @@ public class Graph extends XYPlot{
 		widget.getGridLinePaint().setPathEffect(new DashPathEffect(new float[]{1,1}, 1));
 		widget.getDomainOriginLinePaint().setColor(Color.BLACK);
 		widget.getRangeOriginLinePaint().setColor(Color.BLACK);
-	}
-	
-	public Graph(Graph graph){
-		this(graph.context, graph.title);
-		
-		this.graphLines = graph.graphLines;
-		this.formats = graph.formats;
-
-		Set<XYSeries> seriesSet = graph.getSeriesSet();
-		
-		for (XYSeries xySeries : seriesSet) {
-			if(graphLines.contains(xySeries)){
-				int inx = graphLines.indexOf(xySeries);
-				addSeries(graphLines.get(inx), formats.get(inx));
-			}
-		}
 	}
 
 	public void show(int graphNr){

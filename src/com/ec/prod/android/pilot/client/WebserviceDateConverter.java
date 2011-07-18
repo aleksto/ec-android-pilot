@@ -18,21 +18,19 @@ public class WebserviceDateConverter {
 		return date.getTime();
 	}
 	
-	public static String parse(double daytime){
-		//Date.getTime()
-		Date date = new Date((long) daytime);
+	public static String parse(Date date){
 		int offset = date.getHours()/12;
 		if((date.getMonth()+1) < 10 && date.getDate() < 10){
-			return date.getYear() + "-0" + (date.getMonth()+1) + "-0" + (date.getDate() + offset);			
+			return (date.getYear()+1900) + "-0" + (date.getMonth()+1) + "-0" + (date.getDate() + offset);			
 		}
 		if((date.getMonth()+1) >= 10 && date.getDate() < 10){
-			return date.getYear() + "-" + (date.getMonth()+1) + "-0" + (date.getDate() + offset);			
+			return (date.getYear()+1900) + "-" + (date.getMonth()+1) + "-0" + (date.getDate() + offset);			
 		}
 		if((date.getMonth()+1) < 10 && date.getDate() >= 10){
-			return date.getYear() + "-0" + (date.getMonth()+1) + "-" + (date.getDate() + offset);			
+			return (date.getYear()+1900) + "-0" + (date.getMonth()+1) + "-" + (date.getDate() + offset);			
 		}
 		else{
-			return date.getYear() + "-" + (date.getMonth()+1) + "-" + (date.getDate() + offset);			
+			return (date.getYear()+1900) + "-" + (date.getMonth()+1) + "-" + (date.getDate() + offset);			
 		}
 	}
 }

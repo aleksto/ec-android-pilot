@@ -24,9 +24,9 @@ public class GraphFullScreenListener implements OnClickListener {
 	public void onClick(View v) {	
 		graphFullScreenDialog.show();
 		if(graph instanceof LineGraph){			
-			graphFullScreenDialog.setContentView(new Graph((LineGraph) graph));
+			graphFullScreenDialog.setContentView(new LineGraph((LineGraph) graph));
 		}else if(graph instanceof BarGraph){
-			graphFullScreenDialog.setContentView(new Graph((BarGraph) graph));
+			graphFullScreenDialog.setContentView(new BarGraph((BarGraph) graph));
 		}
 		graphFullScreenDialog.setTitle(title);
 	}

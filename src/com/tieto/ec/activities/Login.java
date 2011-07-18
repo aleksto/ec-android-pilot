@@ -5,10 +5,14 @@ import com.tieto.ec.listeners.login.ExitListener;
 import com.tieto.ec.listeners.login.LoginListener;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;	
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,6 +23,7 @@ import android.widget.TextView;
 
 public class Login extends Activity{
 
+	private boolean quit;
 	private Handler handler;
 	
 	@Override
@@ -29,6 +34,7 @@ public class Login extends Activity{
     	
     	//Init
     	handler = new Handler(Looper.getMainLooper());
+    	quit = false;
     	
     	//Image
     	ImageView image = (ImageView) findViewById(R.id.background);
@@ -62,7 +68,29 @@ public class Login extends Activity{
 	@Override
 	protected void onRestart() {
 		super.onResume();
-		onBackPressed();
+		if(quit){
+			onBackPressed();			
+		}else{
+			onCreate(null);
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = new MenuInflater(this);
+		inflater.inflate(R.menu.login_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.options:
+			Intent intent = new Intent(this, LoginOptions.class);
+			startActivity(intent);
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 	
 	public void toastFromOtherThreads(final String msg){
@@ -71,5 +99,9 @@ public class Login extends Activity{
 				Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
 			}
 		});
+	}
+
+	public void setQuit(boolean quit) {
+		this.quit = quit;
 	}
 }

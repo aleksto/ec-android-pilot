@@ -24,13 +24,13 @@ import com.tieto.ec.gui.graphs.BarGraph;
 import com.tieto.ec.gui.graphs.Graph;
 import com.tieto.ec.gui.graphs.LineGraph;
 import com.tieto.ec.gui.table.Cell;
+import com.tieto.ec.listeners.dmr.DmrMapButtonListener;
 import com.tieto.ec.listeners.dmr.DmrOptionsButtonListener;
 import com.tieto.ec.listeners.dmr.GraphFullScreenListener;
 import com.tieto.ec.listeners.dmr.GraphLineChooserListener;
 import com.tieto.ec.listeners.dmr.ShowHideSection;
 import com.tieto.ec.listeners.dmr.TableMetaDataListener;
 import com.tieto.ec.logic.FileManager;
-import com.tieto.ec.logic.NameFormat;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -70,7 +70,7 @@ public class DailyMorningReport extends Activity{
 		try {
 			backgroundColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.backgroundColor"));
 			textColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.textColor"));
-			cellTextColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.cellTextColor"));
+			cellTextColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.textColor"));
 			cellBackgroundColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.cellBackgroundColor"));
 			cellBorderColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.cellBorderColor"));
 		} catch (IOException e) {
@@ -81,7 +81,6 @@ public class DailyMorningReport extends Activity{
 			cellBorderColor = Color.BLACK;
 			FileManager.writePath(this, "com.tieto.ec.options.backgroundColor", ""+backgroundColor);
 			FileManager.writePath(this, "com.tieto.ec.options.textColor", ""+textColor);
-			FileManager.writePath(this, "com.tieto.ec.options.cellTextColor", ""+cellTextColor);
 			FileManager.writePath(this, "com.tieto.ec.options.cellBackgroundColor", ""+cellBackgroundColor);
 			FileManager.writePath(this, "com.tieto.ec.options.cellBorderColor", ""+cellBorderColor);
 			e.printStackTrace();
@@ -117,6 +116,10 @@ public class DailyMorningReport extends Activity{
 		
 		MenuItem optionButton = menu.findItem(R.id.dmr_options);
 		optionButton.setOnMenuItemClickListener(new DmrOptionsButtonListener(this));
+		
+
+		MenuItem mapButton = menu.findItem(R.id.dmr_map);
+		mapButton.setOnMenuItemClickListener(new DmrMapButtonListener(this));
 		return super.onCreateOptionsMenu(menu);
 	}
 		
@@ -165,14 +168,14 @@ public class DailyMorningReport extends Activity{
 		
 		//Add data
 		if(graphData.getGraphPoints().size()>1){
+			//Line Graph
 			graph = new LineGraph(this, "");
 			graph.setDomainValueFormat(new SimpleDateFormat("yyyy-MM-dd"));
+			graph.setOnLongClickListener(new GraphLineChooserListener(this, graph));
 			((LineGraph) graph).add(graphData);			
 		}else{
+			//Bar graph
 			graph = new BarGraph(this, "", Color.GREEN);
-			graph.setGridPadding(25, 0, 25, 0);
-			graph.setDomainStepValue(graphData.getPointAttributes().size());
-			graph.setDomainValueFormat(new NameFormat(graphData.getPointAttributes()));
 			((BarGraph) graph).add(graphData);	
 		}
 		
@@ -184,7 +187,6 @@ public class DailyMorningReport extends Activity{
 		sectionTable.addView(graph);
 		
 		//Listener
-		graph.setOnLongClickListener(new GraphLineChooserListener(this, graph));
 		graph.setOnClickListener(new GraphFullScreenListener(this, graph, title));
 	}
 

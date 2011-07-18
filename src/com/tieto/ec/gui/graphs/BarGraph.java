@@ -2,14 +2,14 @@ package com.tieto.ec.gui.graphs;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
-import com.androidplot.series.XYSeries;
 import com.androidplot.xy.BarFormatter;
 import com.androidplot.xy.BarRenderer;
 import com.androidplot.xy.SimpleXYSeries;
+import com.ec.prod.android.pilot.client.WebserviceDateConverter;
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphPoint;
+import com.tieto.ec.logic.NameFormat;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -17,6 +17,7 @@ import android.graphics.Color;
 public class BarGraph extends Graph{
 
 	private int color;
+	private GraphData data;
 	
 	public BarGraph(Context context, String title, int color) {
 		//Super
@@ -31,6 +32,7 @@ public class BarGraph extends Graph{
         getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
         getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
  
+        setGridPadding(25, 0, 25, 0);
         setBorderStyle(BorderStyle.SQUARE, null, null);
         getBorderPaint().setStrokeWidth(1);
         getBorderPaint().setAntiAlias(false);
@@ -38,24 +40,15 @@ public class BarGraph extends Graph{
         getDomainLabelWidget().pack();
         
         //List
-        graphLines.add(new SimpleXYSeries(""));
+        graphLines.add(new SimpleXYSeries(title));
         formats.add(new BarFormatter(1, 1));
 	}
 	
 	public BarGraph(BarGraph graph){
+		//This
 		this(graph.context, graph.title, graph.color);
 		
-		this.graphLines = graph.graphLines;
-		this.formats = graph.formats;
-
-		Set<XYSeries> seriesSet = graph.getSeriesSet();
-		
-		for (XYSeries xySeries : seriesSet) {
-			if(graphLines.contains(xySeries)){
-				int inx = graphLines.indexOf(xySeries);
-				addSeries(graphLines.get(inx), formats.get(inx));
-			}
-		}
+		add(graph.data);
 	}
 	
 	private void addBars(String title, Number ... vals){
@@ -81,9 +74,15 @@ public class BarGraph extends Graph{
 	}
 	
 	public void add(GraphData graphData) {
+		//Init
+		this.data = graphData;
 		List<String> pointAttributes = graphData.getPointAttributes();
 		List<GraphPoint> graphPoints = graphData.getGraphPoints();
 		Double[] vals = new Double[graphPoints.size()*pointAttributes.size()];
+		
+		//Format
+		setDomainStepValue(graphData.getPointAttributes().size());
+		setDomainValueFormat(new NameFormat(graphData.getPointAttributes()));
 		
 		int counter = 0;
 		for (GraphPoint point : graphPoints) {
@@ -92,7 +91,7 @@ public class BarGraph extends Graph{
 			}
 		}
 		
-		addBars(title, vals);
+		addBars(WebserviceDateConverter.parse(graphData.getGraphPoints().get(0).getDaytime()), vals);
 		
 		invalidate();
 	}
