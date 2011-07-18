@@ -16,6 +16,8 @@
             </intent-filter>
         </activity>
 
+
+		<activity android:name=".ec.activities.Map" android:label="Map" ></activity>
 		<activity android:name=".ec.activities.Login" android:label="Login" ></activity>
 		<activity android:name=".ec.activities.LoginOptions" android:label="Login Options" ></activity>
 		<activity android:name=".ec.activities.DailyMorningReport" android:label="Daily Morning Report" ></activity>
