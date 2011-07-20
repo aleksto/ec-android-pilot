@@ -1,6 +1,5 @@
 package com.tieto.ec.listeners.dmr;
 
-import com.tieto.ec.gui.dialogs.GraphLineChooserDialog;
 import com.tieto.ec.gui.graphs.Graph;
 
 import android.content.Context;
@@ -9,14 +8,14 @@ import android.view.View.OnLongClickListener;
 
 public class GraphLineChooserListener implements OnLongClickListener {
 
-	private GraphLineChooserDialog dialog;
+//	private GraphLineChooserDialog dialog;
 	
 	public GraphLineChooserListener(Context context, Graph graph) {
-		dialog = new GraphLineChooserDialog(context, graph);
+//		dialog = new GraphLineChooserDialog(context, graph);
 	}
 
 	public boolean onLongClick(View arg0) {
-		dialog.show();
+//		dialog.show();
 		return false;
 	}
 }

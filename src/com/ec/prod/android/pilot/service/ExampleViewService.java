@@ -28,6 +28,7 @@ public class ExampleViewService implements ViewService {
 		sectionList.add(new TableSection("Deferments"));
 		sectionList.add(new TableSection("Equipment"));
 		sectionList.add(new GraphSection("Export Curves"));
+		sectionList.add(new GraphSection("Import Curves"));
 		return sectionList;
 	}
 
@@ -47,7 +48,20 @@ public class ExampleViewService implements ViewService {
 		return data;
 	}
 
-	public GraphData getGraphData(GraphSection section, Date fromDate, Date toDate, int resolution) {
+	public TextData getTextData(TextSection section, Date fromDate, Date toDate, int resolution) {
+		TextData textData = new TextData();
+		Date today = Calendar.getInstance().getTime();		
+		textData.addTextElement(new TextElement(today, "Facility not producing optimally"));
+		textData.addTextElement(new TextElement(today, "Just kidding"));	
+
+		today.setDate(today.getDate()-1);
+		textData.addTextElement(new TextElement(today, "High Oil level"));
+		today.setDate(today.getDate()-1);
+		textData.addTextElement(new TextElement(today, "Everything is working ok"));	
+		return textData;
+	}
+
+	public GraphData getGraphDataBySection(GraphSection section, Date fromDate,	Date toDate, int resolution) {
 		GraphData data = new GraphData();
 		data.setPointAttributes("OIL", "GAS", "WATER");
 		Calendar c = Calendar.getInstance();
@@ -62,25 +76,6 @@ public class ExampleViewService implements ViewService {
 			data.addGraphPoint(graphPoint1);
 		}
 		return data;
-	}
-
-	public TextData getTextData(TextSection section, Date fromDate, Date toDate, int resolution) {
-		TextData textData = new TextData();
-		Date today = Calendar.getInstance().getTime();		
-		textData.addTextElement(new TextElement(today, "Facility not producing optimally"));
-		textData.addTextElement(new TextElement(today, "Just kidding"));					
-		return textData;
-	}
-	
-	public GraphData getGraphData(TableRow row, Date fromDate, Date toDate, int resolution) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public GraphData getGraphDataBySection(GraphSection section, Date fromDate,
-			Date toDate, int resolution) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	public GraphData getGraphDataByRow(TableRow row, Date fromDate,

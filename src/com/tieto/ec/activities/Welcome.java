@@ -3,7 +3,6 @@ package com.tieto.ec.activities;
 import com.tieto.ec.gui.animation3D.WelcomeAnimation;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
 public class Welcome extends Activity{
@@ -19,8 +18,6 @@ public class Welcome extends Activity{
 		animation = new WelcomeAnimation(this);
 		
 		setContentView(animation);
-		
-		startActivity(new Intent(this, Login.class));
 	}
 	
 	@Override

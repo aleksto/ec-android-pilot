@@ -13,7 +13,7 @@ public class Map extends MapActivity{
 		super.onCreate(arg0);
 		
 		//This
-		setContentView(new MapView(this, "0hoZ07_5UfH6X3Y2PsdQhiZz93hfNnj9n07T-Ow"));
+		setContentView(new MapView(this, "0UNgOgmNX74tAYYOGjfS7Gl9IYpHJlZZTHqwtdg"));
 	}
 	
 	@Override

@@ -3,9 +3,9 @@ package com.tieto.ec.activities;
 import com.tieto.R;
 import com.tieto.ec.listeners.login.ExitListener;
 import com.tieto.ec.listeners.login.LoginListener;
+import com.tieto.ec.listeners.login.LoginOptionsListener;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;	
 import android.os.Handler;
@@ -79,18 +79,10 @@ public class Login extends Activity{
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = new MenuInflater(this);
 		inflater.inflate(R.menu.login_menu, menu);
+		
+		MenuItem option = menu.findItem(R.id.login_option);
+		option.setOnMenuItemClickListener(new LoginOptionsListener(this));
 		return super.onCreateOptionsMenu(menu);
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.options:
-			Intent intent = new Intent(this, LoginOptions.class);
-			startActivity(intent);
-			break;
-		}
-		return super.onOptionsItemSelected(item);
 	}
 	
 	public void toastFromOtherThreads(final String msg){
