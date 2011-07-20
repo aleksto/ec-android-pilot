@@ -1,29 +1,33 @@
 package com.tieto.ec.listeners.dmr;
 
+import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.enums.OptionRowType;
 import com.tieto.ec.gui.dialogs.OptionDialog;
-import com.tieto.ec.logic.DialogSection;
 
-import android.content.Context;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 
 public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 
-	private OptionDialog options;
+	private OptionDialog root;
+	private final DailyMorningReport dmr;
 
-	public DmrOptionsButtonListener(Context context){
+	public DmrOptionsButtonListener(DailyMorningReport dmr){
+		this.dmr = dmr;
+	}
+
+	public boolean onMenuItemClick(MenuItem arg0) {
 		//Init
-		DialogSection root = new DialogSection("DMR Report");
-		DialogSection security = new DialogSection("Security");
-		DialogSection color = new DialogSection("Colors");
-		DialogSection textColor = new DialogSection("Text Color");
-		DialogSection backgroundColor = new DialogSection("Background Color");
-		DialogSection cellTextColor = new DialogSection("Cell Background Color");
-		DialogSection cellBackgroundColor = new DialogSection("Cell Border Color");
+		root = new OptionDialog(dmr, "DMR Report");
+		OptionDialog security = new OptionDialog(dmr, "Security");
+		OptionDialog color = new OptionDialog(dmr, "Colors");
+		OptionDialog textColor = new OptionDialog(dmr, "Text Color");
+		OptionDialog backgroundColor = new OptionDialog(dmr, "Background Color");
+		OptionDialog cellTextColor = new OptionDialog(dmr, "Cell Background Color");
+		OptionDialog cellBackgroundColor = new OptionDialog(dmr, "Cell Border Color");
 		
 		// Root options
-		createRootOptions(root);
+		createRootOptions();
 		createColorOptions(color);
 		createSecurityOptions(security);
 		createSubColorOptions(textColor);
@@ -39,15 +43,17 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		color.addChild(cellTextColor);
 		color.addChild(cellBackgroundColor);
 		
-		options = new OptionDialog(context, root);
-	}
-
-	public boolean onMenuItemClick(MenuItem arg0) {
-		options.show();
+		//Listeners
+		textColor.setOnDismissListener(new OnColorDialogDismissListener(dmr));
+		backgroundColor.setOnDismissListener(new OnColorDialogDismissListener(dmr));
+		cellTextColor.setOnDismissListener(new OnColorDialogDismissListener(dmr));
+		cellBackgroundColor.setOnDismissListener(new OnColorDialogDismissListener(dmr));
+		
+		root.show();
 		return false;
 	}
 
-	private void createSubColorOptions(DialogSection section) {
+	private void createSubColorOptions(OptionDialog section) {
 		section.addOption("Black", OptionRowType.CHOOSE_BUTTON);
 		section.addOption("Blue", OptionRowType.CHOOSE_BUTTON);
 		section.addOption("Light Blue", OptionRowType.CHOOSE_BUTTON);
@@ -62,20 +68,20 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		section.addOption("Yellow", OptionRowType.CHOOSE_BUTTON);
 	}
 
-	private void createSecurityOptions(DialogSection section) {
-		section.addOption("Clear Username And Password", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Remember Login Credentials", OptionRowType.CHECK_BOX);
+	private void createSecurityOptions(OptionDialog section) {
+		section.addOption("Clear Username\nAnd Password", OptionRowType.CHOOSE_BUTTON);
+		section.addOption("Remember Login\nCredentials", OptionRowType.CHECK_BOX);
 	}
 
-	private void createColorOptions(DialogSection section) {
+	private void createColorOptions(OptionDialog section) {
 		section.addOption("Text Color", OptionRowType.NONE);
 		section.addOption("Background Color", OptionRowType.NONE);
 		section.addOption("Cell Background Color", OptionRowType.NONE);
 		section.addOption("Cell Border Color", OptionRowType.NONE);
 	}
 
-	private void createRootOptions(DialogSection section) {
-		section.addOption("Security", OptionRowType.NONE);
-		section.addOption("Colors", OptionRowType.NONE);
+	private void createRootOptions() {
+		root.addOption("Security", OptionRowType.NONE);
+		root.addOption("Colors", OptionRowType.NONE);
 	}
 }

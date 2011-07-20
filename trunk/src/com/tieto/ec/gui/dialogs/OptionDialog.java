@@ -1,15 +1,13 @@
 package com.tieto.ec.gui.dialogs;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
 import com.tieto.ec.enums.OptionRowType;
-import com.tieto.ec.listeners.dialogs.CheckBoxChangeListener;
-import com.tieto.ec.listeners.dialogs.ChooseButtonListener;
-import com.tieto.ec.listeners.dialogs.DrillDownListener;
-import com.tieto.ec.listeners.dialogs.EditButtonListener;
-import com.tieto.ec.logic.DialogSection;
+import com.tieto.ec.listeners.dialogs.DialogActionListener;
 import com.tieto.ec.logic.FileManager;
 
 import android.app.Dialog;
@@ -25,32 +23,44 @@ import android.widget.TextView;
 
 public class OptionDialog extends Dialog {
 
+	private String title, path;
+	private TreeMap<String, OptionRowType> option;
+	private List<OptionDialog> childs;
+	private OptionDialog parent;
+	
 	private TableLayout table;
 	private Context context;
-	private String basePath;
-	private TreeMap<String, OptionRowType> options;
-	private DialogSection section;
+	private String optionsTitle;
+	private Dialog nextState;
+	private boolean goBack;
 
-	public OptionDialog(Context context, DialogSection section){
+	public OptionDialog(Context context, String title){
 		//Super
 		super(context);
-		
+				
 		//Init
+		this.title = title;
 		this.context = context;
-		this.section = section;
-		basePath = section.getBasePath();
-		options = section.getOptions();
+		path = title;
 		table = new TableLayout(context);
 		ScrollView scroll = new ScrollView(context);
+		childs = new ArrayList<OptionDialog>();
+		option = new TreeMap<String, OptionRowType>();
+		parent = null;
 		
 		//This
 		setContentView(scroll);
-		setTitle(section.getTitle());
+		setTitle(title);
 		
 		//Scroll
 		scroll.addView(table);
 		
+	}
+	
+	@Override
+	public void show() {
 		populateOptionDialog();
+		super.show();
 	}
 	
 	@Override
@@ -61,10 +71,12 @@ public class OptionDialog extends Dialog {
 	}
 
 	private void populateOptionDialog() {
-		Set<String> optionTexts = options.keySet();
+		table.removeAllViews();
+		Set<String> optionTexts = option.keySet();
 		
 		for (String optionText : optionTexts) {
 			//Init
+			optionsTitle = optionText;
 			RelativeLayout optionRow = new RelativeLayout(context);
 			TextView optionsTextView = new TextView(context);
 			TextView optionsSubTextView = new TextView(context);
@@ -89,9 +101,9 @@ public class OptionDialog extends Dialog {
 			//Text
 			optionsTextView.setTextSize(20);
 			optionsSubTextView.setTextSize(10);
-			optionsTextView.setText(optionText);
+			optionsTextView.setText(optionsTitle);
 			
-			switch (options.get(optionText)) {
+			switch (option.get(optionsTitle)) {
 			case EDIT_BUTTON:
 				//Init
 				Button editButton = new Button(context);
@@ -99,15 +111,18 @@ public class OptionDialog extends Dialog {
 				//Text
 				editButton.setText("Edit");
 				try {
-					optionsSubTextView.setText(FileManager.readPath(context, basePath + "." + optionText));
-					Log.d("tieto", "Read path: " + basePath + "." + optionText + " for subtext. \tString read: " + optionsSubTextView.getText());
+					optionsSubTextView.setText(FileManager.readPath(context, path + "." + optionsTitle));
+					Log.d("tieto", "Read path: " + path + "." + optionsTitle + " for subtext. \tString read: " + optionsSubTextView.getText());
 				} catch (IOException e) {
 					optionsSubTextView.setText("");
 					e.printStackTrace();
 				}
 				
+				nextState = new EditTextDialog(context, this, path, optionsTitle);
+				
 				//Listener
-				editButton.setOnClickListener(new EditButtonListener(this, context, basePath, optionText));
+				goBack = false;
+				editButton.setOnClickListener(new DialogActionListener(this, goBack));
 				
 				//Child
 				optionRow.addView(editButton, buttonSpaceParameters);
@@ -120,7 +135,8 @@ public class OptionDialog extends Dialog {
 				chooseButton.setText("Choose");
 				
 				//Listener
-				chooseButton.setOnClickListener(new ChooseButtonListener(this, context, basePath, optionText));
+				goBack = true;
+				chooseButton.setOnClickListener(new DialogActionListener(this, goBack));
 				
 				//Child
 				optionRow.addView(chooseButton, buttonSpaceParameters);
@@ -130,11 +146,12 @@ public class OptionDialog extends Dialog {
 				CheckBox checkBox = new CheckBox(context);
 				
 				//Listener
-				checkBox.setOnCheckedChangeListener(new CheckBoxChangeListener(context, basePath + "." + optionText));
+				goBack = false;
+				checkBox.setOnCheckedChangeListener(new DialogActionListener(this, goBack));
 				
 				//Checking state
 				try {
-					checkBox.setChecked(Boolean.valueOf(FileManager.readPath(context, basePath + "." + optionText)));
+					checkBox.setChecked(Boolean.valueOf(FileManager.readPath(context, path + "." + optionsTitle)));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -143,7 +160,10 @@ public class OptionDialog extends Dialog {
 				optionRow.addView(checkBox, buttonSpaceParameters);
 				break;
 			case NONE:
-				optionsTextView.setOnClickListener(new DrillDownListener(context, section.getChild(optionText)));
+				nextState = getChild(optionsTitle);
+
+				goBack = false;
+				optionsTextView.setOnClickListener(new DialogActionListener(this, goBack));
 				break;
 			}
 			
@@ -154,5 +174,60 @@ public class OptionDialog extends Dialog {
 	public void refresh() {
 		table.removeAllViews();
 		populateOptionDialog();
+	}
+	
+	public void addChild(OptionDialog child){
+		childs.add(child);
+		child.parent = this;
+		child.path = this.path + "." + child.path;
+	}
+	
+	public List<OptionDialog> getChilds(){
+		return childs;
+	}
+	
+	public OptionDialog getChild(String title){
+		for (OptionDialog child : childs) {
+			if(child.title.equalsIgnoreCase(title)){
+				return child;
+			}
+		}
+		return null;
+	}
+	
+	public OptionDialog getParent(){
+		return parent;
+	}
+	
+	public boolean hasParent(){
+		if(parent == null){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	public TreeMap<String, OptionRowType> getOptions(){
+		return option;
+	}
+
+	public void addOption(String text, OptionRowType type){
+		option.put(text, type);
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public String getOptionTitle() {
+		return optionsTitle;
+	}
+
+	public Dialog getNextState() {
+		return nextState;
 	}
 }

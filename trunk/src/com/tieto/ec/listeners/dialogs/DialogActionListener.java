@@ -17,19 +17,24 @@ public class DialogActionListener implements OnClickListener, OnCheckedChangeLis
 	private Dialog nextState;
 	private OptionDialog dialog;
 	private boolean goBack;
+	private String optionTitle;
 
 	public DialogActionListener(OptionDialog dialog, boolean goBack) {
 		this.dialog = dialog;
 		this.goBack = goBack;
+		
+		optionTitle = dialog.getOptionTitle();
+		if(!goBack){
+			nextState = dialog.getNextState();			
+		}
 	}
 
 	public void onClick(View v) {
 		if(goBack){
-			FileManager.writePath(dialog.getContext(), dialog.getPath(), dialog.getOptionTitle());
+			FileManager.writePath(dialog.getContext(), dialog.getPath(), optionTitle);
 			dialog.dismiss();
 		}
 		else{
-			nextState = dialog.getNextState();
 			nextState.show();
 		}	
 	}
