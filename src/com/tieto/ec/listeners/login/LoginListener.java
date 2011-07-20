@@ -10,6 +10,7 @@ import com.tieto.ec.gui.dialogs.InfoDialog;
 import com.tieto.ec.logic.FileManager;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -33,11 +34,14 @@ public class LoginListener implements OnClickListener {
 		try {
 			namespace = FileManager.readPath(login, "Input Options.Webservice Namespace");
 			url = FileManager.readPath(login, "Input Options.Webservice URL");
-			String usernameRead = FileManager.readPath(login, "com.tieto.ec.username");
-			String passwordRead = FileManager.readPath(login, "com.tieto.ec.password");
+			String usernameAndPassword = FileManager.readPath(login, "DMR Report.Security");
 
-			if(!usernameRead.equalsIgnoreCase("") && !passwordRead.equalsIgnoreCase("")){
-				login(usernameRead, passwordRead);
+			if(!usernameAndPassword.equalsIgnoreCase("Clear Username\nAnd Password") && !usernameAndPassword.equalsIgnoreCase("null")){
+				Log.d("tieto", usernameAndPassword);
+				String[] split = usernameAndPassword.split("123456789");
+				if(split.length == 2){
+					login(split[0], split[1]);					
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -59,6 +63,7 @@ public class LoginListener implements OnClickListener {
 				login("", "");				
 			}else{
 				//Normal login
+				login(username.getText().toString(), password.getText().toString());
 			}
 		}else{
 			//URL and namespace is not defined
@@ -102,6 +107,18 @@ public class LoginListener implements OnClickListener {
 	private void login(String username, String password) {
 		//Setting login to quit when resuming
 		login.setQuit(true);
+		
+		//Saving username and password
+		try {
+			if(Boolean.valueOf(FileManager.readPath(login, "DMR Report.Security.Remember Login\nCredentials"))){
+				if(!username.equalsIgnoreCase("") && !password.equalsIgnoreCase("")){
+					FileManager.writePath(login, "DMR Report.Security", username + "123456789" + password);					
+				}
+			}
+		} catch (IOException e) {
+			FileManager.writePath(login, "DMR Report.Security.Remember Login\nCredentials", "true");
+			e.printStackTrace();
+		}
 		
 		//Starting new intent
 		Intent intent = new Intent(login, DailyMorningReport.class);

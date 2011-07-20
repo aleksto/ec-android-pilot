@@ -37,6 +37,7 @@ import com.tieto.ec.logic.FileManager;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -54,6 +55,7 @@ public class DailyMorningReport extends Activity{
 	private String username, password, namespace, url;
 	private TableLayout table;
 	private int backgroundColor, textColor, cellTextColor, cellBackgroundColor, cellBorderColor;
+	private ScrollView scroll;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,34 +73,15 @@ public class DailyMorningReport extends Activity{
 			webservice = new DMRViewServiceUnmarshalled(username, password, namespace, url);			
 		}
 		
-		//Options
-		try {
-			backgroundColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Background Color"));
-			textColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Text Color"));
-			cellTextColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Text Color"));
-			cellBackgroundColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Cell Background Color"));
-			cellBorderColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Cell Border Color"));
-		} catch (IOException e) {
-			backgroundColor = Color.BLACK;
-			textColor = Color.GRAY;
-			cellBackgroundColor = Color.WHITE;
-			cellTextColor = Color.BLACK;
-			cellBorderColor = Color.BLACK;
-			FileManager.writePath(this, "DMR Report.Colors.Background Color", "Light Blue");
-			FileManager.writePath(this, "DMR Report.Colors.Text Color", "Black");
-			FileManager.writePath(this, "DMR Report.Colors.Cell Background Color", "White");
-			FileManager.writePath(this, "DMR Report.Colors.Cell Border Color", "Black");
-			e.printStackTrace();
-		}
-		
 		//This
 		setContentView(R.layout.daily_management_report);
 		
 		//Background
-		ScrollView scroll = (ScrollView) findViewById(R.id.dmr_scroll);
+		scroll = (ScrollView) findViewById(R.id.dmr_scroll);
 		table = (TableLayout) findViewById(R.id.dmr_table);
-		scroll.setBackgroundColor(backgroundColor);
-		table.setBackgroundColor(backgroundColor);
+		
+		//Options
+		updateColors();
 		
 		//Building report
 		sections = webservice.getSections();
@@ -127,7 +110,37 @@ public class DailyMorningReport extends Activity{
 		mapButton.setOnMenuItemClickListener(new DmrMapButtonListener(this));
 		return super.onCreateOptionsMenu(menu);
 	}
+	
+	public void refresh(){
+		Log.d("tieto", "Refreshing DMR");
+		updateColors();
+		listSections();
+	}
+	
+	public void updateColors(){
+		try {
+			backgroundColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Background Color"));
+			textColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Text Color"));
+			cellTextColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Text Color"));
+			cellBackgroundColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Cell Background Color"));
+			cellBorderColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Cell Border Color"));
+		} catch (IOException e) {
+			backgroundColor = Color.BLACK;
+			textColor = Color.GRAY;
+			cellBackgroundColor = Color.WHITE;
+			cellTextColor = Color.BLACK;
+			cellBorderColor = Color.BLACK;
+			FileManager.writePath(this, "DMR Report.Colors.Background Color", "Light Blue");
+			FileManager.writePath(this, "DMR Report.Colors.Text Color", "Black");
+			FileManager.writePath(this, "DMR Report.Colors.Cell Background Color", "White");
+			FileManager.writePath(this, "DMR Report.Colors.Cell Border Color", "Black");
+			e.printStackTrace();
+		}
 		
+		scroll.setBackgroundColor(backgroundColor);
+		table.setBackgroundColor(backgroundColor);
+	}
+	
 	public void listSections(){
 		table.removeAllViews();
 		Calendar c = Calendar.getInstance();

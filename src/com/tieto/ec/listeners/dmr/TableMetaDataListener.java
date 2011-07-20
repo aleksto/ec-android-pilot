@@ -3,7 +3,6 @@ package com.tieto.ec.listeners.dmr;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.enums.OptionRowType;
 import com.tieto.ec.gui.dialogs.OptionDialog;
-import com.tieto.ec.logic.DialogSection;
 import com.ec.prod.android.pilot.model.TableColumn;
 import com.ec.prod.android.pilot.model.TableData;
 
@@ -16,16 +15,15 @@ public class TableMetaDataListener implements OnLongClickListener{
 	
 	public TableMetaDataListener(DailyMorningReport dailyMorningReport, String title, TableData data){		
 		//Section
-		DialogSection section = new DialogSection(title);
+		optionDialog = new OptionDialog(dailyMorningReport, title);
 		
 		//Options
 		for (TableColumn column : data.getTableColumns()) {
-			section.addOption(column.getHeader(), OptionRowType.CHECK_BOX);
+			optionDialog.addOption(column.getHeader(), OptionRowType.CHECK_BOX);
 		}
 		
 		//Dialog
-		optionDialog = new OptionDialog(dailyMorningReport, section );
-		optionDialog.setOnDismissListener(new OnMetadataDismissListener(dailyMorningReport));
+		optionDialog.setOnDismissListener(new OnMetadataDialogDismissListener(dailyMorningReport));
 	}
 	
 	public boolean onLongClick(View v) {
