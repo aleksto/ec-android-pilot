@@ -16,7 +16,7 @@ public class DmrMapButtonListener implements OnMenuItemClickListener {
 	}
 
 	public boolean onMenuItemClick(MenuItem item) {
-		Intent intent = new Intent(activity, Map.class);
+		Intent intent = new Intent(activity, Map.class);	
 		activity.startActivity(intent);
 		return false;
 	}

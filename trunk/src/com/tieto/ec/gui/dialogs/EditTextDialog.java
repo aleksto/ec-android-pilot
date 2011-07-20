@@ -2,8 +2,9 @@ package com.tieto.ec.gui.dialogs;
 
 import java.io.IOException;
 
-import com.tieto.ec.listeners.loginOptions.webserviceUrlDialog.CancelListener;
-import com.tieto.ec.listeners.loginOptions.webserviceUrlDialog.OkListener;
+import com.tieto.ec.listeners.dialogs.CancelListener;
+import com.tieto.ec.listeners.dialogs.EditTextWatcher;
+import com.tieto.ec.listeners.dialogs.OkListener;
 import com.tieto.ec.logic.FileManager;
 
 import android.app.Dialog;
@@ -13,26 +14,26 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 
-public class WebserviceUrlDialog extends Dialog{
+public class EditTextDialog extends Dialog{
 
-	public WebserviceUrlDialog(Context context) {
+	public EditTextDialog(Context context, OptionDialog optionDialog, String basePath, String title) {
 		//Super
 		super(context);
 		
 		//Init
 		ScrollView scroll = new ScrollView(context);
 		TableLayout table = new TableLayout(context);
-		EditText url = new EditText(context);
+		EditText editText = new EditText(context);
 		Button ok = new Button(context);
 		Button cancel = new Button(context);
 		
 		//this
-		setTitle("Enter new webservice url");
+		setTitle(title);
 		setContentView(scroll);
 		
 		//Childs
 		scroll.addView(table);
-		table.addView(url);
+		table.addView(editText);
 		table.addView(ok);
 		table.addView(cancel);
 		
@@ -40,14 +41,15 @@ public class WebserviceUrlDialog extends Dialog{
 		ok.setText("Ok");
 		cancel.setText("Cancel");
 		try {
-			url.setText(FileManager.readPath(context, "com.ec.prod.android.pilot.service.WebserviceUrl"));
+			editText.setText(FileManager.readPath(context, basePath + "." + title));
 		} catch (IOException e) {
-			url.setText("http://");
+			editText.setText("http://");
 			e.printStackTrace();
 		}
 		
 		//Listeners
-		ok.setOnClickListener(new OkListener(context, url, this));
-		cancel.setOnClickListener(new CancelListener(this));
+		editText.addTextChangedListener(new EditTextWatcher(context, editText, basePath + "." + title));
+		ok.setOnClickListener(new OkListener(this, optionDialog));
+		cancel.setOnClickListener(new CancelListener(this, context, basePath, title));
 	}
 }

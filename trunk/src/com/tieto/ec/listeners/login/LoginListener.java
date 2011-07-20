@@ -31,8 +31,8 @@ public class LoginListener implements OnClickListener {
 
 		//Reading saved data
 		try {
-			namespace = FileManager.readPath(login, "com.ec.prod.android.pilot.service.WebserviceNamespace");
-			url = FileManager.readPath(login, "com.ec.prod.android.pilot.service.WebserviceUrl");
+			namespace = FileManager.readPath(login, "Input Options.Webservice Namespace");
+			url = FileManager.readPath(login, "Input Options.Webservice URL");
 			String usernameRead = FileManager.readPath(login, "com.tieto.ec.username");
 			String passwordRead = FileManager.readPath(login, "com.tieto.ec.password");
 
@@ -45,34 +45,58 @@ public class LoginListener implements OnClickListener {
 	}
 
 	public void onClick(View v){
+		try {
+			//Reading new url and namespace if it is changed
+			namespace = FileManager.readPath(login, "Input Options.Webservice Namespace");
+			url = FileManager.readPath(login, "Input Options.Webservice URL");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		if(namespace != null && url != null){
-			service = new DMRViewServiceUnmarshalled(username.getText().toString(), password.getText().toString(), namespace, url);
-
-			try{
-				if(service.getSections() == null){
-					login.toastFromOtherThreads("Not valid username/password");
-				}else{
-					try {
-						if(FileManager.readPath(login, "com.tieto.ec.options.rememberUsernameAndPassword").equalsIgnoreCase("true")){
-							//Writing username and password
-							FileManager.writePath(login, "com.tieto.ec.username", username.getText().toString());
-							FileManager.writePath(login, "com.tieto.ec.password", password.getText().toString());				
-						}
-
-						//Loggin inn
-						login(username.getText().toString(), password.getText().toString());
-					} catch (IOException e) {
-						FileManager.writePath(login, "com.tieto.ec.options.rememberUsernameAndPassword", "true");
-						onClick(v);
-						e.printStackTrace();
-					}
-				}
-			} catch(java.lang.NullPointerException e){
-				InfoDialog.showInfoDialog(login, "Check webservice url and/or namespace");
+			if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
+				//DEBUG loggin
+				login("", "");				
+			}else{
+				//Normal login
 			}
 		}else{
+			//URL and namespace is not defined
 			InfoDialog.showInfoDialog(login, "if this is the first startup, please go to \nmenu->Options\n and set up url and namespace");
 		}
+		
+//		if(namespace != null && url != null){
+//			service = new DMRViewServiceUnmarshalled(username.getText().toString(), password.getText().toString(), namespace, url);
+//
+//			try{
+//				if(service.getSections() == null){
+//					login.toastFromOtherThreads("Not valid username/password");
+//				}else{
+//					try {
+//						if(FileManager.readPath(login, "com.tieto.ec.options.rememberUsernameAndPassword").equalsIgnoreCase("true")){
+//							//Writing username and password
+//							FileManager.writePath(login, "com.tieto.ec.username", username.getText().toString());
+//							FileManager.writePath(login, "com.tieto.ec.password", password.getText().toString());				
+//						}
+//
+//						//Loggin inn
+//						login(username.getText().toString(), password.getText().toString());
+//					} catch (IOException e) {
+//						FileManager.writePath(login, "com.tieto.ec.options.rememberUsernameAndPassword", "true");
+//						onClick(v);
+//						e.printStackTrace();
+//					}
+//				}
+//			} catch(java.lang.NullPointerException e){
+//				InfoDialog.showInfoDialog(login, "Check webservice url and/or namespace");
+//			}
+//		}else{
+//			if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
+//				login("", "");
+//			}else{
+//				InfoDialog.showInfoDialog(login, "if this is the first startup, please go to \nmenu->Options\n and set up url and namespace");				
+//			}
+//		}
 	}
 
 	private void login(String username, String password) {

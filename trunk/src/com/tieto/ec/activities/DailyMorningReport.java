@@ -18,6 +18,7 @@ import com.ec.prod.android.pilot.model.TableSection;
 import com.ec.prod.android.pilot.model.TextData;
 import com.ec.prod.android.pilot.model.TextElement;
 import com.ec.prod.android.pilot.model.TextSection;
+import com.ec.prod.android.pilot.service.ExampleViewService;
 import com.ec.prod.android.pilot.service.ViewService;
 import com.tieto.R;
 import com.tieto.ec.gui.graphs.BarGraph;
@@ -30,12 +31,12 @@ import com.tieto.ec.listeners.dmr.GraphFullScreenListener;
 import com.tieto.ec.listeners.dmr.GraphLineChooserListener;
 import com.tieto.ec.listeners.dmr.ShowHideSection;
 import com.tieto.ec.listeners.dmr.TableMetaDataListener;
+import com.tieto.ec.logic.ColorConverter;
 import com.tieto.ec.logic.FileManager;
 
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,25 +65,29 @@ public class DailyMorningReport extends Activity{
 		password = getIntent().getExtras().getString("password");
 		namespace = getIntent().getExtras().getString("namespace");
 		url = getIntent().getExtras().getString("url");
-		webservice = new DMRViewServiceUnmarshalled(username, password, namespace, url);
+		if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
+			webservice = new ExampleViewService();
+		}else{
+			webservice = new DMRViewServiceUnmarshalled(username, password, namespace, url);			
+		}
 		
 		//Options
 		try {
-			backgroundColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.backgroundColor"));
-			textColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.textColor"));
-			cellTextColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.textColor"));
-			cellBackgroundColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.cellBackgroundColor"));
-			cellBorderColor = Integer.valueOf(FileManager.readPath(this, "com.tieto.ec.options.cellBorderColor"));
+			backgroundColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Background Color"));
+			textColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Text Color"));
+			cellTextColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Text Color"));
+			cellBackgroundColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Cell Background Color"));
+			cellBorderColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Cell Border Color"));
 		} catch (IOException e) {
 			backgroundColor = Color.BLACK;
 			textColor = Color.GRAY;
 			cellBackgroundColor = Color.WHITE;
 			cellTextColor = Color.BLACK;
 			cellBorderColor = Color.BLACK;
-			FileManager.writePath(this, "com.tieto.ec.options.backgroundColor", ""+backgroundColor);
-			FileManager.writePath(this, "com.tieto.ec.options.textColor", ""+textColor);
-			FileManager.writePath(this, "com.tieto.ec.options.cellBackgroundColor", ""+cellBackgroundColor);
-			FileManager.writePath(this, "com.tieto.ec.options.cellBorderColor", ""+cellBorderColor);
+			FileManager.writePath(this, "DMR Report.Colors.Background Color", "Light Blue");
+			FileManager.writePath(this, "DMR Report.Colors.Text Color", "Black");
+			FileManager.writePath(this, "DMR Report.Colors.Cell Background Color", "White");
+			FileManager.writePath(this, "DMR Report.Colors.Cell Border Color", "Black");
 			e.printStackTrace();
 		}
 		
@@ -201,15 +206,15 @@ public class DailyMorningReport extends Activity{
 		table.setBackgroundColor(backgroundColor);
 		
 		//Active columns
-		ArrayList<Integer> activeColumns = activeColumns(title, tableData);
+		ArrayList<String> activeColumns = activeColumns(title, tableData);
 		
 		//Headers
 		List<TableColumn> tableColumns = tableData.getTableColumns();
 		TableRow headerRow = new TableRow(this);
-		for (int i = 0; i < tableColumns.size(); i++) {
+		for (TableColumn column: tableColumns) {
 			//Init
-			if(activeColumns.contains(i)){
-				headerRow.addView(new Cell(this, tableColumns.get(i).getHeader(), cellBackgroundColor, cellTextColor, cellBorderColor));				
+			if(activeColumns.contains(column.getHeader())){
+				headerRow.addView(new Cell(this, column.getHeader(), cellBackgroundColor, cellTextColor, cellBorderColor));				
 			}
 		}
 		table.addView(headerRow);
@@ -222,7 +227,8 @@ public class DailyMorningReport extends Activity{
 			
 			for (int i = 0; i < values.size(); i++) {
 				//Add Cell
-				if(activeColumns.contains(i)){
+				String header = tableColumns.get(i).getHeader();
+				if(activeColumns.contains(header)){
 					row.addView(new Cell(this, values.get(i), cellBackgroundColor, cellTextColor, cellBorderColor));					
 				}
 			}
@@ -248,30 +254,26 @@ public class DailyMorningReport extends Activity{
 		sectionTable.addView(table);
 	}
 
-	private ArrayList<Integer> activeColumns(String title, TableData tableData){
-		ArrayList<Integer> columns = new ArrayList<Integer>();
+	private ArrayList<String> activeColumns(String title, TableData tableData){
+		ArrayList<String> columns = new ArrayList<String>();
 		try {
-			String[] atributes = FileManager.readPath(this, "com.tieto.ec.tables." + title).split("#@#");
-			List<TableColumn> tableColumns = tableData.getTableColumns();
-			
-			for (int i = 0; i < atributes.length; i++) {
+			List<TableColumn> columnsList = tableData.getTableColumns();
+			for (int i = 0; i < columnsList.size(); i++) {
+				boolean active = Boolean.valueOf(FileManager.readPath(this, title + "." + columnsList.get(i).getHeader()));
 				
-				for (TableColumn tableColumn : tableColumns) {
-					if(tableColumn.getHeader().equalsIgnoreCase(atributes[i])){
-						columns.add(tableColumns.indexOf(tableColumn));
-					}
+				if(active){
+					columns.add(columnsList.get(i).getHeader());
 				}
 			}
+			
 			return columns;
 		} catch (IOException e) {
-			StringBuilder builder = new StringBuilder();
 			List<TableColumn> tableColumns = tableData.getTableColumns();
 			
 			for (TableColumn tableColumn : tableColumns) {
-				builder.append(tableColumn.getHeader() + "#@#");
-			}
-			Log.d("tieto", builder.toString());
-			FileManager.writePath(this, "com.tieto.ec.tables." + title, builder.toString());
+				FileManager.writePath(this,  title + "." + tableColumn.getHeader(), "true");
+				
+			}			
 			
 			return activeColumns(title, tableData);
 		}
