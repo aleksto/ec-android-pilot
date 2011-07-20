@@ -23,7 +23,7 @@ public class TableMetaDataListener implements OnLongClickListener{
 		}
 		
 		//Dialog
-		optionDialog.setOnDismissListener(new OnMetadataDialogDismissListener(dailyMorningReport));
+		optionDialog.setOnDismissListener(new DmrRefreshListener(dailyMorningReport));
 	}
 	
 	public boolean onLongClick(View v) {
