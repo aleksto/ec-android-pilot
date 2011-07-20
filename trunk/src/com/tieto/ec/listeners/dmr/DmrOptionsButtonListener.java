@@ -10,21 +10,21 @@ import android.view.MenuItem.OnMenuItemClickListener;
 public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 
 	private OptionDialog root;
-	private final DailyMorningReport dmr;
+	private final DailyMorningReport dailyMorningReport;
 
 	public DmrOptionsButtonListener(DailyMorningReport dmr){
-		this.dmr = dmr;
+		this.dailyMorningReport = dmr;
 	}
 
 	public boolean onMenuItemClick(MenuItem arg0) {
 		//Init
-		root = new OptionDialog(dmr, "DMR Report");
-		OptionDialog security = new OptionDialog(dmr, "Security");
-		OptionDialog color = new OptionDialog(dmr, "Colors");
-		OptionDialog textColor = new OptionDialog(dmr, "Text Color");
-		OptionDialog backgroundColor = new OptionDialog(dmr, "Background Color");
-		OptionDialog cellTextColor = new OptionDialog(dmr, "Cell Background Color");
-		OptionDialog cellBackgroundColor = new OptionDialog(dmr, "Cell Border Color");
+		root = new OptionDialog(dailyMorningReport, "DMR Report");
+		OptionDialog security = new OptionDialog(dailyMorningReport, "Security");
+		OptionDialog color = new OptionDialog(dailyMorningReport, "Colors");
+		OptionDialog textColor = new OptionDialog(dailyMorningReport, "Text Color");
+		OptionDialog backgroundColor = new OptionDialog(dailyMorningReport, "Background Color");
+		OptionDialog cellTextColor = new OptionDialog(dailyMorningReport, "Cell Background Color");
+		OptionDialog cellBackgroundColor = new OptionDialog(dailyMorningReport, "Cell Border Color");
 		
 		// Root options
 		createRootOptions();
@@ -44,10 +44,10 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		color.addChild(cellBackgroundColor);
 		
 		//Listeners
-		textColor.setOnDismissListener(new OnColorDialogDismissListener(dmr));
-		backgroundColor.setOnDismissListener(new OnColorDialogDismissListener(dmr));
-		cellTextColor.setOnDismissListener(new OnColorDialogDismissListener(dmr));
-		cellBackgroundColor.setOnDismissListener(new OnColorDialogDismissListener(dmr));
+		textColor.setOnDismissListener(new DmrRefreshListener(dailyMorningReport));
+		backgroundColor.setOnDismissListener(new DmrRefreshListener(dailyMorningReport));
+		cellTextColor.setOnDismissListener(new DmrRefreshListener(dailyMorningReport));
+		cellBackgroundColor.setOnDismissListener(new DmrRefreshListener(dailyMorningReport));
 		
 		root.show();
 		return false;
