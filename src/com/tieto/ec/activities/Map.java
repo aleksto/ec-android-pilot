@@ -17,7 +17,7 @@ public class Map extends MapActivity{
 		MapView map = new MapView(this, "0UNgOgmNX74tAYYOGjfS7Gl9IYpHJlZZTHqwtdg");	
 		
 		//Map
-		map.setBuiltInZoomControls(true);
+//		map.setBuiltInZoomControls(true);
         map.setEnabled(true);
         map.setClickable(true);
 		
