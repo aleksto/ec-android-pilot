@@ -66,6 +66,7 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		cellTextColor.setOnDismissListener(listener);
 		cellBackgroundColor.setOnDismissListener(listener);
 		intervalDialog.setOnDismissListener(listener);
+		datesDialog.setOnDismissListener(listener);
 
 		root.show();
 		return false;

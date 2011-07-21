@@ -54,8 +54,6 @@ public class Login extends Activity{
     	passwordLabel.setTextColor(Color.BLACK);
     	username.setTextColor(Color.BLACK);
     	password.setTextColor(Color.BLACK);
-    	username.setBackgroundResource(R.drawable.border);
-    	password.setBackgroundResource(R.drawable.border);
     	
     	//Buttons
     	Button login = (Button) findViewById(R.id.login);
@@ -80,8 +78,9 @@ public class Login extends Activity{
 		MenuInflater inflater = new MenuInflater(this);
 		inflater.inflate(R.menu.login_menu, menu);
 		
-		MenuItem option = menu.findItem(R.id.login_option);
-		option.setOnMenuItemClickListener(new LoginOptionsListener(this));
+		MenuItem optionButton = menu.findItem(R.id.login_option);
+		optionButton.setOnMenuItemClickListener(new LoginOptionsListener(this));
+		optionButton.setIcon(android.R.drawable.ic_menu_manage);
 		return super.onCreateOptionsMenu(menu);
 	}
 	

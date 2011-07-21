@@ -16,10 +16,9 @@ import com.tieto.ec.logic.FileManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ScrollView;
@@ -128,7 +127,6 @@ public class OptionDialog extends Dialog {
 		option.put(text, optionRowType);
 	}
 	
-	
 	public String getTitle() {
 		return title;
 	}
@@ -172,19 +170,22 @@ public class OptionDialog extends Dialog {
 			optionRow.setLayoutParams(rowParameters);
 			optionRow.addView(optionsTextView, textViewParameters);
 			optionRow.addView(optionsSubTextView, subTextViewParameters);
+			optionRow.setBackgroundResource(android.R.drawable.btn_default);
 			
 			//Text
+			optionsTextView.setTextColor(Color.BLACK);
 			optionsTextView.setTextSize(20);
+			optionsTextView.setText(optionsTitle);
 			optionsSubTextView.setTextSize(10);
-			optionsTextView.setText(optionsTitle.toString());
+			optionsSubTextView.setTextColor(Color.BLACK);
 			
 			switch (option.get(optionsTitle)) {
 			case EDIT_BUTTON:
 				//Init
-				Button editButton = new Button(context);
+//				Button editButton = new Button(context);
 				
 				//Text
-				editButton.setText("Edit");
+//				editButton.setText("Edit");
 				try {
 					optionsSubTextView.setText(FileManager.readPath(context, path + "." + optionsTitle));
 					Log.d("tieto", "Read path: " + path + "." + optionsTitle + " for subtext. \tString read: " + optionsSubTextView.getText());
@@ -197,17 +198,17 @@ public class OptionDialog extends Dialog {
 				
 				//Listener
 				goBack = false;
-				editButton.setOnClickListener(new DialogActionListener(this, goBack));
+				optionRow.setOnClickListener(new DialogActionListener(this, goBack));
 				
 				//Child
-				optionRow.addView(editButton, buttonSpaceParameters);
+//				optionRow.addView(editButton, buttonSpaceParameters);
 				break;
 			case DATE_BUTTON:
 				//Init
-				Button dateButton = new Button(context);
+//				Button dateButton = new Button(context);
 				
 				//Text
-				dateButton.setText("Edit");
+//				dateButton.setText("Edit");
 				try {
 					optionsSubTextView.setText(FileManager.readPath(context, path + "." + optionsTitle));
 					Log.d("tieto", "Read path: " + path + "." + optionsTitle + " for subtext. \tString read: " + optionsSubTextView.getText());
@@ -224,24 +225,24 @@ public class OptionDialog extends Dialog {
 				
 				//Listener
 				goBack = false;
-				dateButton.setOnClickListener(new DialogActionListener(this, goBack));
+				optionRow.setOnClickListener(new DialogActionListener(this, goBack));
 				
 				//Child
-				optionRow.addView(dateButton, buttonSpaceParameters);
+//				optionRow.addView(dateButton, buttonSpaceParameters);
 				break;
 			case CHOOSE_BUTTON:
 				//Init
-				Button chooseButton = new Button(context);
+//				Button chooseButton = new Button(context);
 				
 				//Text
-				chooseButton.setText("Choose");
+//				chooseButton.setText("Choose");
 				
 				//Listener
 				goBack = true;
-				chooseButton.setOnClickListener(new DialogActionListener(this, goBack));
+				optionRow.setOnClickListener(new DialogActionListener(this, goBack));
 				
 				//Child
-				optionRow.addView(chooseButton, buttonSpaceParameters);
+//				optionRow.addView(chooseButton, buttonSpaceParameters);
 				break;
 			case CHECK_BOX:
 				//Init
@@ -263,15 +264,13 @@ public class OptionDialog extends Dialog {
 				break;
 			case NONE:
 				nextState = getChild(optionsTitle.toString());
-
 				goBack = false;
 				optionsTextView.setOnClickListener(new DialogActionListener(this, goBack));
+				optionRow.setOnClickListener(new DialogActionListener(this, goBack));
 				break;
 			}
 			
 			table.addView(optionRow);
 		}
 	}
-
-
 }
