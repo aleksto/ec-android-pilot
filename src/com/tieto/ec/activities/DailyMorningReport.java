@@ -1,5 +1,6 @@
 package com.tieto.ec.activities;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.ec.prod.android.pilot.client.DMRViewServiceUnmarshalled;
+import com.ec.prod.android.pilot.client.WebserviceDateConverter;
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphSection;
 import com.ec.prod.android.pilot.model.Resolution;
@@ -35,6 +37,7 @@ import com.tieto.ec.listeners.dmr.ShowHideSection;
 import com.tieto.ec.listeners.dmr.TableMetaDataListener;
 import com.tieto.ec.logic.ColorConverter;
 import com.tieto.ec.logic.FileManager;
+import com.tieto.ec.logic.ResolutionConverter;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -106,10 +109,12 @@ public class DailyMorningReport extends Activity{
 		
 		MenuItem optionButton = menu.findItem(R.id.dmr_options);
 		optionButton.setOnMenuItemClickListener(new DmrOptionsButtonListener(this));
+		optionButton.setIcon(android.R.drawable.ic_menu_manage);
 		
 
 		MenuItem mapButton = menu.findItem(R.id.dmr_map);
 		mapButton.setOnMenuItemClickListener(new DmrMapButtonListener(this));
+		mapButton.setIcon(android.R.drawable.ic_menu_mapmode);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -120,13 +125,13 @@ public class DailyMorningReport extends Activity{
 	}
 	
 	public void updateColors(){
-		String basePath = "DMR Report.Color Options.";
+		String basePath = OptionTitle.DMRReport + "." + OptionTitle.ColorOptions + ".";
 		try {
-			backgroundColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.BackgroundColor.toString()));
-			textColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.TextColor.toString()));
-			cellTextColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.TextColor.toString()));
-			cellBackgroundColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.CellBackgroundColor.toString()));
-			cellBorderColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.CellBorderColor.toString()));
+			backgroundColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.BackgroundColor));
+			textColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.TextColor));
+			cellTextColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.TextColor));
+			cellBackgroundColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.CellBackgroundColor));
+			cellBorderColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.CellBorderColor));
 		} catch (IOException e) {
 			Log.d("tieto", "Setting default color");
 			backgroundColor = Color.BLACK;
@@ -134,10 +139,10 @@ public class DailyMorningReport extends Activity{
 			cellBackgroundColor = Color.WHITE;
 			cellTextColor = Color.BLACK;
 			cellBorderColor = Color.BLACK;
-			FileManager.writePath(this, basePath + OptionTitle.BackgroundColor.toString(), ColorType.LightBlue.toString());
-			FileManager.writePath(this, basePath + OptionTitle.TextColor.toString(), ColorType.Black.toString());
-			FileManager.writePath(this, basePath + OptionTitle.CellBackgroundColor.toString(), ColorType.White.toString());
-			FileManager.writePath(this, basePath + OptionTitle.CellBorderColor.toString(), ColorType.Black.toString());
+			FileManager.writePath(this, basePath + OptionTitle.BackgroundColor, ColorType.LightBlue.toString());
+			FileManager.writePath(this, basePath + OptionTitle.TextColor, ColorType.Black.toString());
+			FileManager.writePath(this, basePath + OptionTitle.CellBackgroundColor, ColorType.White.toString());
+			FileManager.writePath(this, basePath + OptionTitle.CellBorderColor, ColorType.Black.toString());
 			e.printStackTrace();
 		}
 		
@@ -147,10 +152,28 @@ public class DailyMorningReport extends Activity{
 	
 	public void listSections(){
 		table.removeAllViews();
-		Calendar c = Calendar.getInstance();
-		for (Section section : sections) {
-			addSection(section, c.getTime(), c.getTime(), Resolution.MONTHLY);			
-		}
+		String basePath = OptionTitle.DMRReport + "." + OptionTitle.ReportOptions + ".";
+		try {
+			int resolution = ResolutionConverter.convert(FileManager.readPath(this, basePath + OptionTitle.Interval));
+			Date fromDate = WebserviceDateConverter.parse(FileManager.readPath(this, basePath + OptionTitle.Dates + "." + OptionTitle.FromDate));
+			Date toDate = WebserviceDateConverter.parse(FileManager.readPath(this, basePath + OptionTitle.Dates + "." + OptionTitle.ToDate));
+			Log.d("tieto", "Getting sections: From Date: " + fromDate + "\tTo Date: " + toDate + "\tResolution: " + FileManager.readPath(this, "DMR Report.Report Options.Interval"));
+			for (Section section : sections) {
+				addSection(section, fromDate, toDate, resolution);			
+			}
+		} catch (IOException e) {
+			Log.d("tieto", "Setting default time and resolution");
+			Date fromDate = Calendar.getInstance().getTime();
+			Date toDate = Calendar.getInstance().getTime();
+			fromDate.setYear(101);
+			
+			FileManager.writePath(this, basePath + OptionTitle.Interval, "Weekly");
+			FileManager.writePath(this, basePath + OptionTitle.Dates + "." + OptionTitle.FromDate, WebserviceDateConverter.parse(fromDate));
+			FileManager.writePath(this, basePath + OptionTitle.Dates + "." + OptionTitle.ToDate, WebserviceDateConverter.parse(toDate));
+			
+			listSections();
+			e.printStackTrace();
+		}		
 	}
 	
 	private void addSection(Section section, Date fromdate, Date toDate, int resolution){
