@@ -1,5 +1,6 @@
 package com.tieto.ec.gui.graphs;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -9,6 +10,7 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphPoint;
+import com.tieto.ec.logic.FileManager;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -36,7 +38,7 @@ public class LineGraph extends Graph{
 		}
 	}
 	
-	public void add(GraphData graphData) {
+	public void add(GraphData graphData, String title) {
 		List<GraphPoint> graphPoints = graphData.getGraphPoints();
 		List<String> pointAttributes = graphData.getPointAttributes();
 		
@@ -49,10 +51,21 @@ public class LineGraph extends Graph{
 			for (String string : pointAttributes) {
 				String value = point.getValue(string);
 				int idx = pointAttributes.indexOf(string);
-				addPointToLine(idx, (double)daytime.getTime(), Double.valueOf(value));
+				addPointToLine(idx, (double)daytime.getTime(), Double.valueOf(value));						
 			}
 		}
-		
+
+		for (String attribute : pointAttributes) {
+			try {
+				if(!Boolean.valueOf(FileManager.readPath(context, title + "." + attribute))){
+					hide(attribute);
+				}
+			} catch (IOException e) {
+				FileManager.writePath(context, title + "." + attribute, "true");
+				add(graphData, title);
+				e.printStackTrace();
+			}			
+		}
 		invalidate();
 	}
 	

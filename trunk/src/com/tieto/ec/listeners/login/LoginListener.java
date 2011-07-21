@@ -34,7 +34,7 @@ public class LoginListener implements OnClickListener {
 		try {
 			namespace = FileManager.readPath(login, "Input Options.Webservice Namespace");
 			url = FileManager.readPath(login, "Input Options.Webservice URL");
-			String usernameAndPassword = FileManager.readPath(login, "DMR Report.Security");
+			String usernameAndPassword = FileManager.readPath(login, "DMR Report.Security Options");
 
 			if(!usernameAndPassword.equalsIgnoreCase("Clear Username\nAnd Password") && !usernameAndPassword.equalsIgnoreCase("null")){
 				Log.d("tieto", usernameAndPassword);
@@ -110,13 +110,13 @@ public class LoginListener implements OnClickListener {
 		
 		//Saving username and password
 		try {
-			if(Boolean.valueOf(FileManager.readPath(login, "DMR Report.Security.Remember Login\nCredentials"))){
+			if(Boolean.valueOf(FileManager.readPath(login, "DMR Report.Security Options.Remember Login\nCredentials"))){
 				if(!username.equalsIgnoreCase("") && !password.equalsIgnoreCase("")){
-					FileManager.writePath(login, "DMR Report.Security", username + "123456789" + password);					
+					FileManager.writePath(login, "DMR Report.Security Options", username + "123456789" + password);					
 				}
 			}
 		} catch (IOException e) {
-			FileManager.writePath(login, "DMR Report.Security.Remember Login\nCredentials", "true");
+			FileManager.writePath(login, "DMR Report.Security Options.Remember Login\nCredentials", "true");
 			e.printStackTrace();
 		}
 		

@@ -18,12 +18,14 @@ public class DialogActionListener implements OnClickListener, OnCheckedChangeLis
 	private OptionDialog dialog;
 	private boolean goBack;
 	private String optionTitle;
+	private String path;
 
 	public DialogActionListener(OptionDialog dialog, boolean goBack) {
 		this.dialog = dialog;
 		this.goBack = goBack;
 		
 		optionTitle = dialog.getOptionTitle();
+		path = dialog.getPath();
 		if(!goBack){
 			nextState = dialog.getNextState();			
 		}
@@ -31,7 +33,8 @@ public class DialogActionListener implements OnClickListener, OnCheckedChangeLis
 
 	public void onClick(View v) {
 		if(goBack){
-			FileManager.writePath(dialog.getContext(), dialog.getPath(), optionTitle);
+			FileManager.writePath(dialog.getContext(), path, optionTitle);
+			Log.d("tieto", "Writing value: " + optionTitle + " to path: " + path);
 			dialog.dismiss();
 		}
 		else{
@@ -40,8 +43,8 @@ public class DialogActionListener implements OnClickListener, OnCheckedChangeLis
 	}
 
 	public void onCheckedChanged(CompoundButton buttonView, boolean value) {
-		Log.d("tieto", "Writing value: " + value + " to path: " + dialog.getPath());
-		FileManager.writePath(dialog.getContext(), dialog.getPath(), Boolean.toString(value));
+		Log.d("tieto", "Writing value: " + value + " to path: " + path + "." + optionTitle);
+		FileManager.writePath(dialog.getContext(), path + "." + optionTitle, Boolean.toString(value));
 	}
 
 }
