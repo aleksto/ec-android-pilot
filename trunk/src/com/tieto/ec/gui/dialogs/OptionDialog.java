@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.tieto.ec.enums.OptionRowType;
+import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.listeners.dialogs.DatePickerSetListener;
 import com.tieto.ec.listeners.dialogs.DialogActionListener;
 import com.tieto.ec.logic.FileManager;
@@ -27,7 +28,8 @@ import android.widget.TextView;
 
 public class OptionDialog extends Dialog {
 
-	private String title, path;
+	private String title;
+	private String path;
 	private TreeMap<String, OptionRowType> option;
 	private List<OptionDialog> childs;
 	private OptionDialog parent;
@@ -38,6 +40,10 @@ public class OptionDialog extends Dialog {
 	private Dialog nextState;
 	private boolean goBack;
 
+	public OptionDialog(Context context, OptionTitle title){
+		this(context, title.toString());
+	}
+	
 	public OptionDialog(Context context, String title){
 		//Super
 		super(context);
@@ -45,7 +51,7 @@ public class OptionDialog extends Dialog {
 		//Init
 		this.title = title;
 		this.context = context;
-		path = title;
+		path = title.toString();
 		table = new TableLayout(context);
 		ScrollView scroll = new ScrollView(context);
 		childs = new ArrayList<OptionDialog>();
@@ -54,7 +60,7 @@ public class OptionDialog extends Dialog {
 		
 		//This
 		setContentView(scroll);
-		setTitle(title);
+		setTitle(title.toString());
 		
 		//Scroll
 		scroll.addView(table);
@@ -71,6 +77,72 @@ public class OptionDialog extends Dialog {
 	public void onBackPressed() {
 		dismiss();
 		super.onBackPressed();
+	}
+	
+	public void refresh() {
+		table.removeAllViews();
+		populateOptionDialog();
+	}
+	
+	public void addChild(OptionDialog child){
+		childs.add(child);
+		child.parent = this;
+		child.path = this.path + "." + child.title;
+	}
+	
+	public List<OptionDialog> getChilds(){
+		return childs;
+	}
+	
+	public OptionDialog getChild(String title){
+		for (OptionDialog child : childs) {
+			if(child.title.toString().equalsIgnoreCase(title)){
+				return child;
+			}
+		}
+		return null;
+	}
+	
+	public OptionDialog getParent(){
+		return parent;
+	}
+	
+	public boolean hasParent(){
+		if(parent == null){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	public TreeMap<String, OptionRowType> getOptions(){
+		return option;
+	}
+
+	public void addOption(String text, OptionRowType optionRowType){
+		option.put(text, optionRowType);
+	}
+	
+	public void addOption(Enum<?> type, OptionRowType optionRowType){
+		String text = type.toString();
+		option.put(text, optionRowType);
+	}
+	
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public String getOptionTitle() {
+		return optionsTitle;
+	}
+
+	public Dialog getNextState() {
+		return nextState;
 	}
 
 	private void populateOptionDialog() {
@@ -104,7 +176,7 @@ public class OptionDialog extends Dialog {
 			//Text
 			optionsTextView.setTextSize(20);
 			optionsSubTextView.setTextSize(10);
-			optionsTextView.setText(optionsTitle);
+			optionsTextView.setText(optionsTitle.toString());
 			
 			switch (option.get(optionsTitle)) {
 			case EDIT_BUTTON:
@@ -121,7 +193,7 @@ public class OptionDialog extends Dialog {
 					e.printStackTrace();
 				}
 				
-				nextState = new EditTextDialog(context, this, path, optionsTitle);
+				nextState = new EditTextDialog(context, this, path, optionsTitle.toString());
 				
 				//Listener
 				goBack = false;
@@ -190,7 +262,7 @@ public class OptionDialog extends Dialog {
 				optionRow.addView(checkBox, buttonSpaceParameters);
 				break;
 			case NONE:
-				nextState = getChild(optionsTitle);
+				nextState = getChild(optionsTitle.toString());
 
 				goBack = false;
 				optionsTextView.setOnClickListener(new DialogActionListener(this, goBack));
@@ -201,63 +273,5 @@ public class OptionDialog extends Dialog {
 		}
 	}
 
-	public void refresh() {
-		table.removeAllViews();
-		populateOptionDialog();
-	}
-	
-	public void addChild(OptionDialog child){
-		childs.add(child);
-		child.parent = this;
-		child.path = this.path + "." + child.title;
-	}
-	
-	public List<OptionDialog> getChilds(){
-		return childs;
-	}
-	
-	public OptionDialog getChild(String title){
-		for (OptionDialog child : childs) {
-			if(child.title.equalsIgnoreCase(title)){
-				return child;
-			}
-		}
-		return null;
-	}
-	
-	public OptionDialog getParent(){
-		return parent;
-	}
-	
-	public boolean hasParent(){
-		if(parent == null){
-			return false;
-		}else{
-			return true;
-		}
-	}
 
-	public TreeMap<String, OptionRowType> getOptions(){
-		return option;
-	}
-
-	public void addOption(String text, OptionRowType type){
-		option.put(text, type);
-	}
-	
-	public String getTitle() {
-		return title;
-	}
-
-	public String getPath() {
-		return path;
-	}
-
-	public String getOptionTitle() {
-		return optionsTitle;
-	}
-
-	public Dialog getNextState() {
-		return nextState;
-	}
 }
