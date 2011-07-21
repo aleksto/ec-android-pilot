@@ -2,19 +2,23 @@ package com.tieto.ec.gui.dialogs;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
 import com.tieto.ec.enums.OptionRowType;
+import com.tieto.ec.listeners.dialogs.DatePickerSetListener;
 import com.tieto.ec.listeners.dialogs.DialogActionListener;
 import com.tieto.ec.logic.FileManager;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ScrollView;
@@ -65,7 +69,6 @@ public class OptionDialog extends Dialog {
 	
 	@Override
 	public void onBackPressed() {
-		Log.d("tieto", "Option Dialog on back pressed");
 		dismiss();
 		super.onBackPressed();
 	}
@@ -127,6 +130,33 @@ public class OptionDialog extends Dialog {
 				//Child
 				optionRow.addView(editButton, buttonSpaceParameters);
 				break;
+			case DATE_BUTTON:
+				//Init
+				Button dateButton = new Button(context);
+				
+				//Text
+				dateButton.setText("Edit");
+				try {
+					optionsSubTextView.setText(FileManager.readPath(context, path + "." + optionsTitle));
+					Log.d("tieto", "Read path: " + path + "." + optionsTitle + " for subtext. \tString read: " + optionsSubTextView.getText());
+				} catch (IOException e) {
+					optionsSubTextView.setText("");
+					e.printStackTrace();
+				}
+				
+
+				Calendar c = Calendar.getInstance();
+				nextState = new DatePickerDialog(context, new DatePickerSetListener(this, path + "." + optionsTitle), c.get(Calendar.YEAR),
+						c.get(Calendar.MONTH),
+						c.get(Calendar.DATE));
+				
+				//Listener
+				goBack = false;
+				dateButton.setOnClickListener(new DialogActionListener(this, goBack));
+				
+				//Child
+				optionRow.addView(dateButton, buttonSpaceParameters);
+				break;
 			case CHOOSE_BUTTON:
 				//Init
 				Button chooseButton = new Button(context);
@@ -179,7 +209,7 @@ public class OptionDialog extends Dialog {
 	public void addChild(OptionDialog child){
 		childs.add(child);
 		child.parent = this;
-		child.path = this.path + "." + child.path;
+		child.path = this.path + "." + child.title;
 	}
 	
 	public List<OptionDialog> getChilds(){

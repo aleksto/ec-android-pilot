@@ -10,6 +10,10 @@ import android.content.Context;
 
 public class FileManager {
 
+	public static void writePath(Context context, String path, OptionTitle text){
+		writePath(context, path, text.toString());
+	}
+	
 	public static void writePath(Context context, String path, String text) {
 		try {
 			byte[] write = text.getBytes();

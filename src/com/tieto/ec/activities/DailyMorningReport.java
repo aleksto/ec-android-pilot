@@ -119,21 +119,21 @@ public class DailyMorningReport extends Activity{
 	
 	public void updateColors(){
 		try {
-			backgroundColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Background Color"));
-			textColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Text Color"));
-			cellTextColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Text Color"));
-			cellBackgroundColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Cell Background Color"));
-			cellBorderColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Colors.Cell Border Color"));
+			backgroundColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Color Options.Background Color"));
+			textColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Color Options.Text Color"));
+			cellTextColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Color Options.Text Color"));
+			cellBackgroundColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Color Options.Cell Background Color"));
+			cellBorderColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Color Options.Cell Border Color"));
 		} catch (IOException e) {
 			backgroundColor = Color.BLACK;
 			textColor = Color.GRAY;
 			cellBackgroundColor = Color.WHITE;
 			cellTextColor = Color.BLACK;
 			cellBorderColor = Color.BLACK;
-			FileManager.writePath(this, "DMR Report.Colors.Background Color", "Light Blue");
-			FileManager.writePath(this, "DMR Report.Colors.Text Color", "Black");
-			FileManager.writePath(this, "DMR Report.Colors.Cell Background Color", "White");
-			FileManager.writePath(this, "DMR Report.Colors.Cell Border Color", "Black");
+			FileManager.writePath(this, "DMR Report.Color Options.Background Color", "Light Blue");
+			FileManager.writePath(this, "DMR Report.Color Options.Text Color", "Black");
+			FileManager.writePath(this, "DMR Report.Color Options.Cell Background Color", "White");
+			FileManager.writePath(this, "DMR Report.Color Options.Cell Border Color", "Black");
 			e.printStackTrace();
 		}
 		
@@ -166,7 +166,7 @@ public class DailyMorningReport extends Activity{
 		
 		//Values
 		if(section instanceof TextSection){
-			TextData textData = webservice.getTextData((TextSection)section, fromdate, toDate, resolution);
+			TextData textData = webservice.getTextData((TextSection)section, fromdate, toDate, resolution);				
 			addTextData(textData, table);
 		}
 		else if(section instanceof TableSection){
@@ -189,8 +189,8 @@ public class DailyMorningReport extends Activity{
 			//Line Graph
 			graph = new LineGraph(this, "");
 			graph.setDomainValueFormat(new SimpleDateFormat("yyyy-MM-dd"));
-			graph.setOnLongClickListener(new GraphLineChooserListener(this, graph));
-			((LineGraph) graph).add(graphData);			
+			((LineGraph) graph).add(graphData, title);			
+			graph.setOnLongClickListener(new GraphLineChooserListener(this, graph, title));
 		}else{
 			//Bar graph
 			graph = new BarGraph(this, "", Color.GREEN);
