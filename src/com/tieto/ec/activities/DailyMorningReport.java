@@ -21,6 +21,8 @@ import com.ec.prod.android.pilot.model.TextSection;
 import com.ec.prod.android.pilot.service.ExampleViewService;
 import com.ec.prod.android.pilot.service.ViewService;
 import com.tieto.R;
+import com.tieto.ec.enums.ColorType;
+import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.gui.graphs.BarGraph;
 import com.tieto.ec.gui.graphs.Graph;
 import com.tieto.ec.gui.graphs.LineGraph;
@@ -118,22 +120,24 @@ public class DailyMorningReport extends Activity{
 	}
 	
 	public void updateColors(){
+		String basePath = "DMR Report.Color Options.";
 		try {
-			backgroundColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Color Options.Background Color"));
-			textColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Color Options.Text Color"));
-			cellTextColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Color Options.Text Color"));
-			cellBackgroundColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Color Options.Cell Background Color"));
-			cellBorderColor = ColorConverter.parseColor(FileManager.readPath(this, "DMR Report.Color Options.Cell Border Color"));
+			backgroundColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.BackgroundColor.toString()));
+			textColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.TextColor.toString()));
+			cellTextColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.TextColor.toString()));
+			cellBackgroundColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.CellBackgroundColor.toString()));
+			cellBorderColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.CellBorderColor.toString()));
 		} catch (IOException e) {
+			Log.d("tieto", "Setting default color");
 			backgroundColor = Color.BLACK;
 			textColor = Color.GRAY;
 			cellBackgroundColor = Color.WHITE;
 			cellTextColor = Color.BLACK;
 			cellBorderColor = Color.BLACK;
-			FileManager.writePath(this, "DMR Report.Color Options.Background Color", "Light Blue");
-			FileManager.writePath(this, "DMR Report.Color Options.Text Color", "Black");
-			FileManager.writePath(this, "DMR Report.Color Options.Cell Background Color", "White");
-			FileManager.writePath(this, "DMR Report.Color Options.Cell Border Color", "Black");
+			FileManager.writePath(this, basePath + OptionTitle.BackgroundColor.toString(), ColorType.LightBlue.toString());
+			FileManager.writePath(this, basePath + OptionTitle.TextColor.toString(), ColorType.Black.toString());
+			FileManager.writePath(this, basePath + OptionTitle.CellBackgroundColor.toString(), ColorType.White.toString());
+			FileManager.writePath(this, basePath + OptionTitle.CellBorderColor.toString(), ColorType.Black.toString());
 			e.printStackTrace();
 		}
 		

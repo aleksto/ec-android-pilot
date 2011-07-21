@@ -1,5 +1,6 @@
 package com.tieto.ec.listeners.dialogs;
 
+import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.gui.dialogs.OptionDialog;
 import com.tieto.ec.logic.FileManager;
 

@@ -4,7 +4,9 @@ import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 
 import com.tieto.ec.activities.DailyMorningReport;
+import com.tieto.ec.enums.ColorType;
 import com.tieto.ec.enums.OptionRowType;
+import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.gui.dialogs.OptionDialog;
 
 public class DmrOptionsButtonListener implements OnMenuItemClickListener {
@@ -18,19 +20,19 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 
 	public boolean onMenuItemClick(MenuItem arg0) {
 		//Init
-		root = new OptionDialog(dailyMorningReport, "DMR Report");
+		root = new OptionDialog(dailyMorningReport, OptionTitle.DMRReport);
 
-		OptionDialog security = new OptionDialog(dailyMorningReport, "Security Options");
-		OptionDialog color = new OptionDialog(dailyMorningReport, "Color Options");
-		OptionDialog reportOption = new OptionDialog(dailyMorningReport, "Report Options");
+		OptionDialog security = new OptionDialog(dailyMorningReport, OptionTitle.SecurityOptions);
+		OptionDialog color = new OptionDialog(dailyMorningReport, OptionTitle.ColorOptions);
+		OptionDialog reportOption = new OptionDialog(dailyMorningReport, OptionTitle.ReportOptions);
 
-		OptionDialog textColor = new OptionDialog(dailyMorningReport, "Text Color");
-		OptionDialog backgroundColor = new OptionDialog(dailyMorningReport, "Background Color");
-		OptionDialog cellTextColor = new OptionDialog(dailyMorningReport, "Cell Background Color");
-		OptionDialog cellBackgroundColor = new OptionDialog(dailyMorningReport, "Cell Border Color");
+		OptionDialog textColor = new OptionDialog(dailyMorningReport, OptionTitle.TextColor);
+		OptionDialog backgroundColor = new OptionDialog(dailyMorningReport, OptionTitle.BackgroundColor);
+		OptionDialog cellTextColor = new OptionDialog(dailyMorningReport, OptionTitle.CellBackgroundColor);
+		OptionDialog cellBackgroundColor = new OptionDialog(dailyMorningReport, OptionTitle.CellBorderColor);
 
-		OptionDialog intervalDialog = new OptionDialog(dailyMorningReport, "Interval");
-		OptionDialog datesDialog = new OptionDialog(dailyMorningReport, "Dates");
+		OptionDialog intervalDialog = new OptionDialog(dailyMorningReport, OptionTitle.Interval);
+		OptionDialog datesDialog = new OptionDialog(dailyMorningReport, OptionTitle.Dates);
 
 
 		// Root options
@@ -69,53 +71,55 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		return false;
 	}
 
+	
+	private void createReportOptions(OptionDialog section) {
+		section.addOption(OptionTitle.Interval, OptionRowType.NONE);
+		section.addOption(OptionTitle.Dates, OptionRowType.NONE);
+	}
+	
 	private void createDateOptions(OptionDialog section) {
-		section.addOption("From Date", OptionRowType.DATE_BUTTON);
-		section.addOption("To Date", OptionRowType.DATE_BUTTON);
+		section.addOption(OptionTitle.FromDate, OptionRowType.DATE_BUTTON);
+		section.addOption(OptionTitle.ToDate, OptionRowType.DATE_BUTTON);
 	}
 
-	private void createReportOptions(OptionDialog section) {
-		section.addOption("Interval", OptionRowType.NONE);
-		section.addOption("Dates", OptionRowType.NONE);
-	}
 
 	private void createIntervalOptions(OptionDialog section) {
-		section.addOption("Daily", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Weekly", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Monthly", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Yearly", OptionRowType.CHOOSE_BUTTON);
+		section.addOption(OptionTitle.Daily, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(OptionTitle.Weekly, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(OptionTitle.Monthly, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(OptionTitle.Yearly, OptionRowType.CHOOSE_BUTTON);
 	}
 
 	private void createSubColorOptions(OptionDialog section) {
-		section.addOption("Black", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Blue", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Light Blue", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Cyan", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Dark Gray", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Light Gray", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Gray", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Green", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Magenta", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Red", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("White", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Yellow", OptionRowType.CHOOSE_BUTTON);
+		section.addOption(ColorType.Black, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(ColorType.Blue, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(ColorType.LightBlue, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(ColorType.Cyan, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(ColorType.DarkGray, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(ColorType.LightGray, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(ColorType.Gray, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(ColorType.Green, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(ColorType.Magenta, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(ColorType.Red, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(ColorType.White, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(ColorType.Yellow, OptionRowType.CHOOSE_BUTTON);
 	}
 
 	private void createSecurityOptions(OptionDialog section) {
-		section.addOption("Clear Username\nAnd Password", OptionRowType.CHOOSE_BUTTON);
-		section.addOption("Remember Login\nCredentials", OptionRowType.CHECK_BOX);
+		section.addOption(OptionTitle.ClearUsernameAndPassword, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(OptionTitle.RememberLoginCredentials, OptionRowType.CHECK_BOX);
 	}
 
 	private void createColorOptions(OptionDialog section) {
-		section.addOption("Text Color", OptionRowType.NONE);
-		section.addOption("Background Color", OptionRowType.NONE);
-		section.addOption("Cell Background Color", OptionRowType.NONE);
-		section.addOption("Cell Border Color", OptionRowType.NONE);
+		section.addOption(OptionTitle.TextColor, OptionRowType.NONE);
+		section.addOption(OptionTitle.BackgroundColor, OptionRowType.NONE);
+		section.addOption(OptionTitle.CellBackgroundColor, OptionRowType.NONE);
+		section.addOption(OptionTitle.CellBorderColor, OptionRowType.NONE);
 	}
 
 	private void createRootOptions() {
-		root.addOption("Security Options", OptionRowType.NONE);
-		root.addOption("Color Options", OptionRowType.NONE);
-		root.addOption("Report Options", OptionRowType.NONE);
+		root.addOption(OptionTitle.SecurityOptions, OptionRowType.NONE);
+		root.addOption(OptionTitle.ColorOptions, OptionRowType.NONE);
+		root.addOption(OptionTitle.ReportOptions, OptionRowType.NONE);
 	}
 }

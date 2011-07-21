@@ -5,14 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.tieto.ec.enums.OptionTitle;
+
 import android.app.Activity;
 import android.content.Context;
 
 public class FileManager {
-
-	public static void writePath(Context context, String path, OptionTitle text){
-		writePath(context, path, text.toString());
-	}
 	
 	public static void writePath(Context context, String path, String text) {
 		try {
