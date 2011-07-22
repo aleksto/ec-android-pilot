@@ -1,6 +1,7 @@
 package com.tieto.ec.service;
 
 import com.tieto.ec.activities.DailyMorningReport;
+import com.tieto.ec.activities.Login;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -18,10 +19,12 @@ public class ServiceNotification {
 	private Context applicationContext;
 	private String contentTitle;
 	private PendingIntent contentIntent;
+	private final Context context;
 	
 
 	public ServiceNotification(Context context, String username, String password, String url, String namespace) {
 		//Init
+		this.context = context;
 		String notificationService = Context.NOTIFICATION_SERVICE;
 		applicationContext = context.getApplicationContext();
 		
@@ -34,19 +37,13 @@ public class ServiceNotification {
 		notificationManager = (NotificationManager) context.getSystemService(notificationService);
 		
 		//Intent
-		Intent notificationIntent = new Intent(context, DailyMorningReport.class);
+		Intent notificationIntent = new Intent(context, Login.class);
 		contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
-		
-		//Extras
-		notificationIntent.putExtra("Username", username);
-		notificationIntent.putExtra("Password", password);
-		notificationIntent.putExtra("Url", url);
-		notificationIntent.putExtra("Namespace", namespace);
 	}
 
 	public void dislplayNotification(String message) {
 		//Init
-		notification = new Notification(icon, tickerText, System.currentTimeMillis());		
+		notification = new Notification(icon, tickerText, System.currentTimeMillis());
 		
 		//Display
 		notification.setLatestEventInfo(applicationContext, contentTitle, message, contentIntent);

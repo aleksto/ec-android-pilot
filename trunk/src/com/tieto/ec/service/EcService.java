@@ -11,21 +11,17 @@ public class EcService extends Service{
 
 	@Override
 	public void onStart(Intent intent, int startId){
-		//Log
-		Log.d("tieto", "Service Started");
-		
 		//Super
 		super.onStart(intent, startId);
 		
 		//Init
-		long UpdateInterval = intent.getExtras().getInt("Update interval");
 		String username = intent.getExtras().getString("username");
 		String password = intent.getExtras().getString("password");
 		String namespace = intent.getExtras().getString("namespace");
 		String url = intent.getExtras().getString("url");
 		
 		//Thread
-		serviceThread = new ServiceThread(this, UpdateInterval, username, password, url, namespace);
+		serviceThread = new ServiceThread(this, username, password, url, namespace);
 		serviceThread.getThread().start();
 	}
 	
