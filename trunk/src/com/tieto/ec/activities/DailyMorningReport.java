@@ -1,6 +1,5 @@
 package com.tieto.ec.activities;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,11 +7,25 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.HorizontalScrollView;
+import android.widget.RelativeLayout.LayoutParams;
+import android.widget.ScrollView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+
 import com.ec.prod.android.pilot.client.DMRViewServiceUnmarshalled;
 import com.ec.prod.android.pilot.client.WebserviceDateConverter;
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphSection;
-import com.ec.prod.android.pilot.model.Resolution;
 import com.ec.prod.android.pilot.model.Section;
 import com.ec.prod.android.pilot.model.TableColumn;
 import com.ec.prod.android.pilot.model.TableData;
@@ -34,27 +47,16 @@ import com.tieto.ec.listeners.dmr.DmrOptionsButtonListener;
 import com.tieto.ec.listeners.dmr.GraphFullScreenListener;
 import com.tieto.ec.listeners.dmr.GraphLineChooserListener;
 import com.tieto.ec.listeners.dmr.ShowHideSection;
-import com.tieto.ec.listeners.dmr.TableMetaDataListener;
+import com.tieto.ec.listeners.dmr.TableOptionDialogListener;
 import com.tieto.ec.logic.ColorConverter;
 import com.tieto.ec.logic.FileManager;
 import com.tieto.ec.logic.ResolutionConverter;
-
-import android.app.Activity;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.RelativeLayout.LayoutParams;
-import android.widget.HorizontalScrollView;
-import android.widget.ScrollView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
+import com.tieto.ec.service.EcService;
 
 public class DailyMorningReport extends Activity{
 
+	private Intent serviceIntent;
+	
 	private List<Section> sections;
 	private ViewService webservice;
 	private String username, password, namespace, url;
@@ -76,6 +78,13 @@ public class DailyMorningReport extends Activity{
 			webservice = new ExampleViewService();
 		}else{
 			webservice = new DMRViewServiceUnmarshalled(username, password, namespace, url);			
+		}
+		
+		//Service
+		if(serviceIntent == null){
+			serviceIntent = new Intent(this, EcService.class);
+			serviceIntent.putExtra("Update interval", 10000);
+			startService(serviceIntent);			
 		}
 		
 		//This
@@ -100,6 +109,12 @@ public class DailyMorningReport extends Activity{
 	protected void onResume() {
 		super.onResume();
 		onCreate(null);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		stopService(serviceIntent);
+		super.onDestroy();
 	}
 	
 	@Override
@@ -198,7 +213,7 @@ public class DailyMorningReport extends Activity{
 		}
 		else if(section instanceof TableSection){
 			TableData tableData = webservice.getTableData((TableSection)section, fromdate, toDate, resolution);
-			sectionTitle.setOnLongClickListener(new TableMetaDataListener(this, section.getSectionHeader(), tableData));
+			sectionTitle.setOnLongClickListener(new TableOptionDialogListener(this, section.getSectionHeader(), tableData));
 			addTableData(tableData, table, section.getSectionHeader());
 		}
 		else if(section instanceof GraphSection){
@@ -246,7 +261,7 @@ public class DailyMorningReport extends Activity{
 		table.setBackgroundColor(backgroundColor);
 		
 		//Active columns
-		ArrayList<String> activeColumns = activeColumns(title, tableData);
+		ArrayList<String> activeColumns = activeColumns(title + "." + OptionTitle.VisibleColumns, tableData);
 		
 		//Headers
 		List<TableColumn> tableColumns = tableData.getTableColumns();
@@ -312,7 +327,6 @@ public class DailyMorningReport extends Activity{
 			
 			for (TableColumn tableColumn : tableColumns) {
 				FileManager.writePath(this,  title + "." + tableColumn.getHeader(), "true");
-				
 			}			
 			
 			return activeColumns(title, tableData);

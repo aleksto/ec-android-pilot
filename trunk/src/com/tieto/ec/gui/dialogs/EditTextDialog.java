@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 
 public class EditTextDialog extends Dialog{
 
@@ -56,7 +55,6 @@ public class EditTextDialog extends Dialog{
 		try {
 			editText.setText(FileManager.readPath(context, basePath + "." + title));
 		} catch (IOException e) {
-			editText.setText("http://");
 			e.printStackTrace();
 		}
 		
