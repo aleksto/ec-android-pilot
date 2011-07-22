@@ -84,6 +84,10 @@ public class DailyMorningReport extends Activity{
 		if(serviceIntent == null){
 			serviceIntent = new Intent(this, EcService.class);
 			serviceIntent.putExtra("Update interval", 10000);
+			serviceIntent.putExtra("username", username);
+			serviceIntent.putExtra("password", password);
+			serviceIntent.putExtra("namespace", namespace);
+			serviceIntent.putExtra("url", url);
 			startService(serviceIntent);			
 		}
 		
