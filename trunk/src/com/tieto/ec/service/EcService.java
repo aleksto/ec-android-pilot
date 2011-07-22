@@ -19,9 +19,13 @@ public class EcService extends Service{
 		
 		//Init
 		long UpdateInterval = intent.getExtras().getInt("Update interval");
+		String username = intent.getExtras().getString("username");
+		String password = intent.getExtras().getString("password");
+		String namespace = intent.getExtras().getString("namespace");
+		String url = intent.getExtras().getString("url");
 		
 		//Thread
-		serviceThread = new ServiceThread(UpdateInterval);
+		serviceThread = new ServiceThread(this, UpdateInterval, username, password, url, namespace);
 		serviceThread.getThread().start();
 	}
 	

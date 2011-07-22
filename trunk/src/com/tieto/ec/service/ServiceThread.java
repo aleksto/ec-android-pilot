@@ -2,15 +2,19 @@ package com.tieto.ec.service;
 
 import java.util.Timer;
 
+import android.content.Context;
+
 public class ServiceThread implements Runnable{
 
 	private Timer timer;
 	private Thread thread;
 	private long updateInterval;
+	private ValueChecker valueChecker;
 	
-	public ServiceThread(long updateInterval){
+	public ServiceThread(Context context, long updateInterval, String username, String password, String url, String namespace){
 		//Init
 		this.updateInterval = updateInterval;
+		valueChecker = new ValueChecker(context, username, password, url, namespace);
 		
 		//Thread
 		thread = new Thread(this);
@@ -26,6 +30,6 @@ public class ServiceThread implements Runnable{
 	
 	public void run() {
 		timer = new Timer();
-		timer.scheduleAtFixedRate(new ValueChecker(), 0, updateInterval);		
+		timer.scheduleAtFixedRate(valueChecker, 0, updateInterval);		
 	}
 }
