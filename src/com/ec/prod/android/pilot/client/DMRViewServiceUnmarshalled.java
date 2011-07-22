@@ -22,8 +22,10 @@ public class DMRViewServiceUnmarshalled implements ViewService {
 
 	private HashMap<Section, Object> data;
 	private ViewServiceMarshalled viewService;
+	private final boolean saveData;
 
-	public DMRViewServiceUnmarshalled(String username, String password, String namespace, String url){
+	public DMRViewServiceUnmarshalled(boolean saveData, String username, String password, String namespace, String url){
+		this.saveData = saveData;
 		data = new HashMap<Section, Object>();
 		viewService = new AndroidViewServiceMarshalled(username, password, namespace, url);
 	}
@@ -41,7 +43,9 @@ public class DMRViewServiceUnmarshalled implements ViewService {
 			String tableSection = MarshalService.marshalTableSection(section);		
 			List<String> tableData = viewService.getTableData(tableSection, fromdate, toDate, resolution);
 			TableData unMarshalTableData = MarshalService.unMarshalTableData(tableData);
-			data.put(section, unMarshalTableData);
+			if(saveData){
+				data.put(section, unMarshalTableData);				
+			}
 			return unMarshalTableData;			
 		}
 	}
@@ -54,7 +58,9 @@ public class DMRViewServiceUnmarshalled implements ViewService {
 			String graphSection = MarshalService.marshalGraphSection(section);		
 			List<String> graphData = viewService.getGraphDataBySection(graphSection, fromDate, toDate, resolution);
 			GraphData unMarshalGraphData = MarshalService.unMarshalGraphData(graphData);
-			data.put(section, unMarshalGraphData);
+			if(saveData){
+				data.put(section, unMarshalGraphData);				
+			}
 			return unMarshalGraphData;
 		}
 	}
@@ -73,7 +79,9 @@ public class DMRViewServiceUnmarshalled implements ViewService {
 			String textSection = MarshalService.marshalTextSection(section);		
 			List<String> textData = viewService.getTextData(textSection, fromDate, toDate, resolution);
 			TextData unMarshalTextData = MarshalService.unMarshalTextData(textData);
-			data.put(section, unMarshalTextData);
+			if(saveData){
+				data.put(section, unMarshalTextData);				
+			}
 			return unMarshalTextData;
 		}
 	}

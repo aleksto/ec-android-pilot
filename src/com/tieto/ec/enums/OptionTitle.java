@@ -54,6 +54,11 @@ public enum OptionTitle {
 	    }
 	},
 	Interval,
+	UpdateInterval{
+		public String toString(){
+			return "Update Interval";
+		}
+	},
 	Dates,
 	ToDate{
 		public String toString() {

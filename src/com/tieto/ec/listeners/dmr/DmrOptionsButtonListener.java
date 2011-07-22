@@ -7,6 +7,7 @@ import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.enums.ColorType;
 import com.tieto.ec.enums.OptionRowType;
 import com.tieto.ec.enums.OptionTitle;
+import com.tieto.ec.enums.TimeType;
 import com.tieto.ec.gui.dialogs.OptionDialog;
 
 public class DmrOptionsButtonListener implements OnMenuItemClickListener {
@@ -19,26 +20,29 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 	}
 
 	public boolean onMenuItemClick(MenuItem arg0) {
-		//Init
+		//Level1
 		root = new OptionDialog(dailyMorningReport, OptionTitle.DMRReport);
 
+		//Level2
 		OptionDialog security = new OptionDialog(dailyMorningReport, OptionTitle.SecurityOptions);
 		OptionDialog color = new OptionDialog(dailyMorningReport, OptionTitle.ColorOptions);
 		OptionDialog reportOption = new OptionDialog(dailyMorningReport, OptionTitle.ReportOptions);
 
+		//Level3
 		OptionDialog textColor = new OptionDialog(dailyMorningReport, OptionTitle.TextColor);
 		OptionDialog backgroundColor = new OptionDialog(dailyMorningReport, OptionTitle.BackgroundColor);
 		OptionDialog cellTextColor = new OptionDialog(dailyMorningReport, OptionTitle.CellBackgroundColor);
 		OptionDialog cellBackgroundColor = new OptionDialog(dailyMorningReport, OptionTitle.CellBorderColor);
-
 		OptionDialog intervalDialog = new OptionDialog(dailyMorningReport, OptionTitle.Interval);
 		OptionDialog datesDialog = new OptionDialog(dailyMorningReport, OptionTitle.Dates);
+		OptionDialog updateIntervalDialog = new OptionDialog(dailyMorningReport, OptionTitle.UpdateInterval);
 
 
 		// Root options
 		createRootOptions();
 		createColorOptions(color);
 		createReportOptions(reportOption);
+		createUpdateIntervalDialog(updateIntervalDialog);
 		createIntervalOptions(intervalDialog);
 		createDateOptions(datesDialog);
 		createSecurityOptions(security);
@@ -51,6 +55,7 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		root.addChild(color);
 		root.addChild(reportOption);
 
+		reportOption.addChild(updateIntervalDialog);
 		reportOption.addChild(intervalDialog);
 		reportOption.addChild(datesDialog);
 
@@ -66,6 +71,7 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		cellTextColor.setOnDismissListener(listener);
 		cellBackgroundColor.setOnDismissListener(listener);
 		intervalDialog.setOnDismissListener(listener);
+		updateIntervalDialog.setOnDismissListener(new DmrServiceRestartListener(dailyMorningReport));
 		datesDialog.setOnDismissListener(listener);
 
 		root.show();
@@ -73,9 +79,26 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 	}
 
 	
+	private void createUpdateIntervalDialog(OptionDialog section) {
+		section.addOption(TimeType.off, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(TimeType.min15, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(TimeType.min30, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(TimeType.min45, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(TimeType.hour1, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(TimeType.hour2, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(TimeType.hour5, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(TimeType.hour10, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(TimeType.hour12, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(TimeType.day1, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(TimeType.day2, OptionRowType.CHOOSE_BUTTON);
+		section.addOption(TimeType.day3, OptionRowType.CHOOSE_BUTTON);
+		section.addOption("Debug: 20 sec", OptionRowType.CHOOSE_BUTTON);
+	}
+
 	private void createReportOptions(OptionDialog section) {
 		section.addOption(OptionTitle.Interval, OptionRowType.NONE);
 		section.addOption(OptionTitle.Dates, OptionRowType.NONE);
+		section.addOption(OptionTitle.UpdateInterval, OptionRowType.NONE);
 	}
 	
 	private void createDateOptions(OptionDialog section) {
