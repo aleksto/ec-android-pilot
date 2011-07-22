@@ -69,6 +69,16 @@ public enum OptionTitle {
 	Weekly,
 	Monthly,
 	Yearly,
+	VisibleColumns{
+		public String toString(){
+			return "Visible Columns";
+		}
+	},
+	WarningLevels{
+		public String toString(){
+			return "Warning Levels";
+		}
+	},
 
 	//Login 
 	InputOptions {
