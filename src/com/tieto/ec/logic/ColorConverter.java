@@ -1,8 +1,8 @@
 package com.tieto.ec.logic;
 
-import com.tieto.ec.enums.ColorType;
-
 import android.graphics.Color;
+
+import com.tieto.ec.enums.ColorType;
 
 public class ColorConverter {
 

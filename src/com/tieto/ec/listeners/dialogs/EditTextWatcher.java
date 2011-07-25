@@ -1,12 +1,12 @@
 package com.tieto.ec.listeners.dialogs;
 
-import com.tieto.ec.logic.FileManager;
-
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.EditText;
+
+import com.tieto.ec.logic.FileManager;
 
 public class EditTextWatcher implements TextWatcher {
 

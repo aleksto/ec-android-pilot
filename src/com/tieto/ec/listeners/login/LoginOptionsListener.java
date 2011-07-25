@@ -1,11 +1,11 @@
 package com.tieto.ec.listeners.login;
 
-import com.tieto.ec.enums.OptionRowType;
-import com.tieto.ec.gui.dialogs.OptionDialog;
-
 import android.content.Context;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
+
+import com.tieto.ec.enums.OptionRowType;
+import com.tieto.ec.gui.dialogs.OptionDialog;
 
 public class LoginOptionsListener implements OnMenuItemClickListener {
 

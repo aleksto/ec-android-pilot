@@ -1,9 +1,9 @@
 package com.tieto.ec.activities;
 
-import com.tieto.ec.gui.animation3D.WelcomeAnimation;
-
 import android.app.Activity;
 import android.os.Bundle;
+
+import com.tieto.ec.gui.animation3D.WelcomeAnimation;
 
 public class Welcome extends Activity{
 

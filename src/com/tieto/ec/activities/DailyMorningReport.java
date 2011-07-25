@@ -3,7 +3,6 @@ package com.tieto.ec.activities;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -12,17 +11,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.renderscript.Font;
-import android.renderscript.RenderScript;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
@@ -45,6 +41,7 @@ import com.ec.prod.android.pilot.service.ViewService;
 import com.tieto.R;
 import com.tieto.ec.enums.ColorType;
 import com.tieto.ec.enums.OptionTitle;
+import com.tieto.ec.enums.Webservice;
 import com.tieto.ec.gui.graphs.BarGraph;
 import com.tieto.ec.gui.graphs.Graph;
 import com.tieto.ec.gui.graphs.LineGraph;
@@ -85,10 +82,10 @@ public class DailyMorningReport extends Activity{
 		
 		//Init
 		main = new TableLayout(this);
-		username = getIntent().getExtras().getString("username");
-		password = getIntent().getExtras().getString("password");
-		namespace = getIntent().getExtras().getString("namespace");
-		url = getIntent().getExtras().getString("url");
+		username = getIntent().getExtras().getString(Webservice.username.toString());
+		password = getIntent().getExtras().getString(Webservice.password.toString());
+		namespace = getIntent().getExtras().getString(Webservice.namespace.toString());
+		url = getIntent().getExtras().getString(Webservice.url.toString());
 		
 		if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
 			webservice = new ExampleViewService(false);
@@ -206,10 +203,10 @@ public class DailyMorningReport extends Activity{
 	public void restartService() {
 		if(serviceIntent == null){
 			serviceIntent = new Intent(this, EcService.class);
-			serviceIntent.putExtra("username", username);
-			serviceIntent.putExtra("password", password);
-			serviceIntent.putExtra("namespace", namespace);
-			serviceIntent.putExtra("url", url);			
+			serviceIntent.putExtra(Webservice.username.toString(), username);
+			serviceIntent.putExtra(Webservice.password.toString(), password);
+			serviceIntent.putExtra(Webservice.namespace.toString(), namespace);
+			serviceIntent.putExtra(Webservice.url.toString(), url);			
 		}else{
 			stopService(serviceIntent);
 		}

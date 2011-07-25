@@ -2,13 +2,13 @@ package com.tieto.ec.listeners.dialogs;
 
 import java.util.Date;
 
-import com.ec.prod.android.pilot.client.WebserviceDateConverter;
-import com.tieto.ec.gui.dialogs.OptionDialog;
-import com.tieto.ec.logic.FileManager;
-
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.util.Log;
 import android.widget.DatePicker;
+
+import com.ec.prod.android.pilot.client.WebserviceDateConverter;
+import com.tieto.ec.gui.dialogs.OptionDialog;
+import com.tieto.ec.logic.FileManager;
 
 public class DatePickerSetListener implements OnDateSetListener {
 

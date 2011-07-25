@@ -3,13 +3,13 @@ package com.tieto.ec.service;
 import java.io.IOException;
 import java.util.Timer;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.enums.TimeType;
 import com.tieto.ec.logic.FileManager;
 import com.tieto.ec.logic.UpdateTimeConverter;
-
-import android.content.Context;
-import android.util.Log;
 
 public class ServiceThread implements Runnable{
 

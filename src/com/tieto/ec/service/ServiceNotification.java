@@ -1,13 +1,12 @@
 package com.tieto.ec.service;
 
-import com.tieto.ec.activities.DailyMorningReport;
-import com.tieto.ec.activities.Login;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+
+import com.tieto.ec.activities.Login;
 
 public class ServiceNotification {
 
@@ -19,12 +18,10 @@ public class ServiceNotification {
 	private Context applicationContext;
 	private String contentTitle;
 	private PendingIntent contentIntent;
-	private final Context context;
 	
 
 	public ServiceNotification(Context context, String username, String password, String url, String namespace) {
 		//Init
-		this.context = context;
 		String notificationService = Context.NOTIFICATION_SERVICE;
 		applicationContext = context.getApplicationContext();
 		
