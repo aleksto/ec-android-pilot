@@ -1,6 +1,7 @@
 package com.tieto.ec.activities;
 
 import com.tieto.R;
+import com.tieto.ec.gui.login.LoginSlider;
 import com.tieto.ec.listeners.login.ExitListener;
 import com.tieto.ec.listeners.login.LoginListener;
 import com.tieto.ec.listeners.login.LoginOptionsListener;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
@@ -55,9 +57,14 @@ public class Login extends Activity{
     	username.setTextColor(Color.BLACK);
     	password.setTextColor(Color.BLACK);
     	
+    	//Login slider
+    	LoginSlider slider = new LoginSlider(this);
+    	relativ.addView(slider);
+    	
     	//Buttons
     	Button login = (Button) findViewById(R.id.login);
     	Button exit = (Button) findViewById(R.id.exit);
+
     	
     	login.setOnClickListener(new LoginListener(username, password, this));
     	exit.setOnClickListener(new ExitListener(this));

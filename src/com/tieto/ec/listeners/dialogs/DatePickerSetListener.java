@@ -21,8 +21,8 @@ public class DatePickerSetListener implements OnDateSetListener {
 	}
 
 	public void onDateSet(DatePicker arg0, int year, int month, int day) {
-		Log.d("tieto", "Writing date " + WebserviceDateConverter.parse(new Date(year-1900, month, day)) + " to path: " + path);
-		FileManager.writePath(dialog.getContext(), path, WebserviceDateConverter.parse(new Date(year-1900, month, day)));
+		Log.d("tieto", "Writing date " + WebserviceDateConverter.parse(new Date(year-1900, month, day), WebserviceDateConverter.Type.DATE) + " to path: " + path);
+		FileManager.writePath(dialog.getContext(), path, WebserviceDateConverter.parse(new Date(year-1900, month, day), WebserviceDateConverter.Type.DATE));
 		dialog.refresh();
 	}
 }

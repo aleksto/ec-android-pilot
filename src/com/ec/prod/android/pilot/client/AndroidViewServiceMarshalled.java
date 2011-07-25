@@ -18,16 +18,16 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 
 	public List<String> getTableData(String section, Date fromdate, Date toDate, int resolution) {
 		Object response = executeWebservice("getTableData",  "arg0", section,
-														 	 "arg1", WebserviceDateConverter.parse(fromdate),
-															 "arg2", WebserviceDateConverter.parse(toDate),
+														 	 "arg1", WebserviceDateConverter.parse(fromdate, WebserviceDateConverter.Type.DATE),
+															 "arg2", WebserviceDateConverter.parse(toDate, WebserviceDateConverter.Type.DATE),
 															 "arg3", Integer.toString(resolution));
 				return generateResponseList(response);
 	}
 
 	public List<String> getGraphDataBySection(String section, Date fromDate, Date toDate, int resolution) {
 		Object response = executeWebservice("getGraphDataBySection",  "arg0", section,
-																 	  "arg1", WebserviceDateConverter.parse(fromDate),
-																	  "arg2", WebserviceDateConverter.parse(toDate),
+																 	  "arg1", WebserviceDateConverter.parse(fromDate, WebserviceDateConverter.Type.DATE),
+																	  "arg2", WebserviceDateConverter.parse(toDate, WebserviceDateConverter.Type.DATE),
 																	  "arg3", Integer.toString(resolution));
 		return generateResponseList(response);
 	}
@@ -40,8 +40,8 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 
 	public List<String> getTextData(String section, Date fromDate, Date toDate, int resolution) {
 		Object response = executeWebservice("getTextData",  "arg0", section,
-															"arg1", WebserviceDateConverter.parse(fromDate),
-															"arg2", WebserviceDateConverter.parse(toDate),
+															"arg1", WebserviceDateConverter.parse(fromDate, WebserviceDateConverter.Type.DATE),
+															"arg2", WebserviceDateConverter.parse(toDate, WebserviceDateConverter.Type.DATE),
 															"arg3", Integer.toString(resolution));
 		return generateResponseList(response);
 	}

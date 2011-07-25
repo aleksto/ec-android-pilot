@@ -17,7 +17,7 @@ public class ServiceThread implements Runnable{
 	private Thread thread;
 	private long updateInterval;
 	private ValueChecker valueChecker;
-	
+
 	public ServiceThread(Context context, String username, String password, String url, String namespace){
 		//Init
 		String updateTime = "";
@@ -27,28 +27,28 @@ public class ServiceThread implements Runnable{
 			updateInterval = UpdateTimeConverter.parse(updateTime);
 		} catch (IOException e) {
 			FileManager.writePath(context, OptionTitle.DMRReport + "." + OptionTitle.ReportOptions + "." + OptionTitle.UpdateInterval, TimeType.off+"");
-			updateInterval = -1;
+			updateInterval = 1;
 			e.printStackTrace();
 		}
-		
+
 		Log.d("tieto", "Service Started with update interval:" + updateTime);
-		
+
 		//Thread
 		if(updateInterval > 0){
 			thread = new Thread(this);			
 		}
 	}
-	
+
 	public Thread getThread(){
 		return thread;
 	}
-	
+
 	public Timer getTimer(){
 		return timer;
 	}
-	
+
 	public void run() {
-		timer = new Timer();
-		timer.scheduleAtFixedRate(valueChecker, 0, updateInterval);		
+		timer = new Timer();	
+		timer.scheduleAtFixedRate(valueChecker, updateInterval, updateInterval);		
 	}
 }

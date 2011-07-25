@@ -2,18 +2,17 @@ package com.tieto.ec.listeners.login;
 
 import java.io.IOException;
 
-import com.ec.prod.android.pilot.client.DMRViewServiceUnmarshalled;
-import com.ec.prod.android.pilot.service.ViewService;
-import com.tieto.ec.activities.DailyMorningReport;
-import com.tieto.ec.activities.Login;
-import com.tieto.ec.gui.dialogs.InfoDialog;
-import com.tieto.ec.logic.FileManager;
-
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+
+import com.ec.prod.android.pilot.service.ViewService;
+import com.tieto.ec.activities.DailyMorningReport;
+import com.tieto.ec.activities.Login;
+import com.tieto.ec.gui.dialogs.InfoDialog;
+import com.tieto.ec.logic.FileManager;
 
 public class LoginListener implements OnClickListener {
 
@@ -35,15 +34,16 @@ public class LoginListener implements OnClickListener {
 			namespace = FileManager.readPath(login, "Input Options.Webservice Namespace");
 			url = FileManager.readPath(login, "Input Options.Webservice URL");
 			String usernameAndPassword = FileManager.readPath(login, "DMR Report.Security Options");
-
-			if(!usernameAndPassword.equalsIgnoreCase("Clear Username\nAnd Password") && !usernameAndPassword.equalsIgnoreCase("null")){
+			
+			if(!usernameAndPassword.equalsIgnoreCase("Clear Username\nAnd Password")){
 				Log.d("tieto", usernameAndPassword);
-				String[] split = usernameAndPassword.split("123456789");
+				String[] split = usernameAndPassword.split("¤#@#¤");
 				if(split.length == 2){
 					login(split[0], split[1]);					
 				}
 			}
 		} catch (IOException e) {
+			Log.d("tieto", "Found no username and password");
 			e.printStackTrace();
 		}
 	}
@@ -60,7 +60,7 @@ public class LoginListener implements OnClickListener {
 		if(namespace != null && url != null){
 			if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
 				//DEBUG loggin
-				login("", "");				
+				login(username.getText().toString(), password.getText().toString());				
 			}else{
 				//Normal login
 				login(username.getText().toString(), password.getText().toString());
@@ -69,39 +69,6 @@ public class LoginListener implements OnClickListener {
 			//URL and namespace is not defined
 			InfoDialog.showInfoDialog(login, "if this is the first startup, please go to \nmenu->Options\n and set up url and namespace");
 		}
-		
-//		if(namespace != null && url != null){
-//			service = new DMRViewServiceUnmarshalled(username.getText().toString(), password.getText().toString(), namespace, url);
-//
-//			try{
-//				if(service.getSections() == null){
-//					login.toastFromOtherThreads("Not valid username/password");
-//				}else{
-//					try {
-//						if(FileManager.readPath(login, "com.tieto.ec.options.rememberUsernameAndPassword").equalsIgnoreCase("true")){
-//							//Writing username and password
-//							FileManager.writePath(login, "com.tieto.ec.username", username.getText().toString());
-//							FileManager.writePath(login, "com.tieto.ec.password", password.getText().toString());				
-//						}
-//
-//						//Loggin inn
-//						login(username.getText().toString(), password.getText().toString());
-//					} catch (IOException e) {
-//						FileManager.writePath(login, "com.tieto.ec.options.rememberUsernameAndPassword", "true");
-//						onClick(v);
-//						e.printStackTrace();
-//					}
-//				}
-//			} catch(java.lang.NullPointerException e){
-//				InfoDialog.showInfoDialog(login, "Check webservice url and/or namespace");
-//			}
-//		}else{
-//			if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
-//				login("", "");
-//			}else{
-//				InfoDialog.showInfoDialog(login, "if this is the first startup, please go to \nmenu->Options\n and set up url and namespace");				
-//			}
-//		}
 	}
 
 	private void login(String username, String password) {
@@ -112,11 +79,15 @@ public class LoginListener implements OnClickListener {
 		try {
 			if(Boolean.valueOf(FileManager.readPath(login, "DMR Report.Security Options.Remember Login\nCredentials"))){
 				if(!username.equalsIgnoreCase("") && !password.equalsIgnoreCase("")){
-					FileManager.writePath(login, "DMR Report.Security Options", username + "123456789" + password);					
+					FileManager.writePath(login, "DMR Report.Security Options", username + "¤#@#¤" + password);		
+					Log.d("tieto", "Writing username and password");			
 				}
+			}else{
+				Log.d("tieto", "Not writing username and password");
 			}
 		} catch (IOException e) {
 			FileManager.writePath(login, "DMR Report.Security Options.Remember Login\nCredentials", "true");
+			login(username, password);
 			e.printStackTrace();
 		}
 		

@@ -14,6 +14,9 @@ public class EcService extends Service{
 		//Super
 		super.onStart(intent, startId);
 		
+		//Log
+		Log.d("tieto", "Starting service");
+		
 		//Init
 		String username = intent.getExtras().getString("username");
 		String password = intent.getExtras().getString("password");
@@ -22,16 +25,20 @@ public class EcService extends Service{
 		
 		//Thread
 		serviceThread = new ServiceThread(this, username, password, url, namespace);
-		serviceThread.getThread().start();
+		if(serviceThread.getThread() != null){
+			serviceThread.getThread().start();			
+		}
 	}
 	
 	@Override
-	public void onDestroy() {
+	public void onDestroy(){
 		//Log
 		Log.d("tieto", "Stopping service");
 		
 		//Stopping timer
-		serviceThread.getTimer().cancel();
+		if(serviceThread.getTimer() != null){
+			serviceThread.getTimer().cancel();			
+		}
 		
 		//Super
 		super.onDestroy();
