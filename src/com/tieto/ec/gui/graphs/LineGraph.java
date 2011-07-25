@@ -20,7 +20,7 @@ import android.util.Log;
 
 public class LineGraph extends Graph{
 	
-	private final int STEP_VALUE = 5;
+	private final double STEP_VALUE = 4.5;
 	
 	public LineGraph(Context context, String title) {
 		super(context, title);

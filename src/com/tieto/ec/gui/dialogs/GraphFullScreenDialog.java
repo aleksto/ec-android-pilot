@@ -8,4 +8,6 @@ public class GraphFullScreenDialog extends Dialog{
 	public GraphFullScreenDialog(Context context) {
 		super(context);		
 	}
+	
+	
 }

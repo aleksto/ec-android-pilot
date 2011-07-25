@@ -50,6 +50,7 @@ public class Login extends Activity{
     	TextView passwordLabel = (TextView) findViewById(R.id.passwordlabel);
     	EditText username = (EditText) findViewById(R.id.username);
     	EditText password = (EditText) findViewById(R.id.password);
+    	username.requestFocus();
     	
     	usernameLabel.setTextColor(Color.BLACK);
     	passwordLabel.setTextColor(Color.BLACK);
