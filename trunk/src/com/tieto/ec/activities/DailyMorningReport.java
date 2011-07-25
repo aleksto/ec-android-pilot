@@ -10,13 +10,20 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.renderscript.Font;
+import android.renderscript.RenderScript;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.HorizontalScrollView;
-import android.widget.RelativeLayout.LayoutParams;
+import android.widget.LinearLayout;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -42,6 +49,7 @@ import com.tieto.ec.gui.graphs.BarGraph;
 import com.tieto.ec.gui.graphs.Graph;
 import com.tieto.ec.gui.graphs.LineGraph;
 import com.tieto.ec.gui.table.Cell;
+import com.tieto.ec.listeners.dmr.ChangeDayListener;
 import com.tieto.ec.listeners.dmr.DmrMapButtonListener;
 import com.tieto.ec.listeners.dmr.DmrOptionsButtonListener;
 import com.tieto.ec.listeners.dmr.GraphFullScreenListener;
@@ -60,9 +68,15 @@ public class DailyMorningReport extends Activity{
 	private List<Section> sections;
 	private ViewService webservice;
 	private String username, password, namespace, url;
-	private TableLayout table;
+	private TableLayout table, main;
 	private int backgroundColor, textColor, cellTextColor, cellBackgroundColor, cellBorderColor;
 	private ScrollView scroll;
+
+	private Date date;
+
+	private RelativeLayout buttonRow;
+
+	private TextView currentDay;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,33 +84,80 @@ public class DailyMorningReport extends Activity{
 		super.onCreate(savedInstanceState);
 		
 		//Init
+		main = new TableLayout(this);
 		username = getIntent().getExtras().getString("username");
 		password = getIntent().getExtras().getString("password");
 		namespace = getIntent().getExtras().getString("namespace");
 		url = getIntent().getExtras().getString("url");
+		
 		if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
-			webservice = new ExampleViewService();
+			webservice = new ExampleViewService(false);
 		}else{
-			webservice = new DMRViewServiceUnmarshalled(username, password, namespace, url);			
+			webservice = new DMRViewServiceUnmarshalled(true, username, password, namespace, url);
 		}
 		
 		//Service
 		if(serviceIntent == null){
-			serviceIntent = new Intent(this, EcService.class);
-			serviceIntent.putExtra("Update interval", 10000);
-			serviceIntent.putExtra("username", username);
-			serviceIntent.putExtra("password", password);
-			serviceIntent.putExtra("namespace", namespace);
-			serviceIntent.putExtra("url", url);
-			startService(serviceIntent);			
+			restartService();			
 		}
 		
 		//This
-		setContentView(R.layout.daily_management_report);
+		setContentView(main);
+		
+		//Date
+		date = new Date(System.currentTimeMillis());
 		
 		//Background
-		scroll = (ScrollView) findViewById(R.id.dmr_scroll);
-		table = (TableLayout) findViewById(R.id.dmr_table);
+		scroll = new ScrollView(this);
+		table = new TableLayout(this);
+		
+		//ButtonRow
+		buttonRow = new RelativeLayout(this);
+		buttonRow.setBackgroundResource(android.R.drawable.title_bar);
+		RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams params4 = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams params5 = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		Button previousDay = new Button(this);
+		Button nextDay = new Button(this);
+		TextView dmrTitle = new TextView(this);
+		currentDay = new TextView(this);
+		dmrTitle.setId(1);
+		
+		//Layout Rules
+		params2.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		params2.addRule(RelativeLayout.CENTER_VERTICAL);
+		params3.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+		params3.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		params4.addRule(RelativeLayout.BELOW, dmrTitle.getId());
+		params4.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		params5.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		params5.addRule(RelativeLayout.CENTER_VERTICAL);
+		
+		//Buttons
+		previousDay.setBackgroundResource(android.R.drawable.ic_media_rew);
+		nextDay.setBackgroundResource(android.R.drawable.ic_media_ff);
+		currentDay.setText(date.getDate() + "-" + (date.getMonth()+1) + "-" + (date.getYear()+1900));
+		currentDay.setTextColor(Color.BLACK);
+		dmrTitle.setText("Daily Morining Report");
+		dmrTitle.setTextColor(Color.BLACK);
+		nextDay.setOnClickListener(new ChangeDayListener(this, ChangeDayListener.Action.NEXT_DAY));
+		previousDay.setOnClickListener(new ChangeDayListener(this, ChangeDayListener.Action.PREVIOUS_DAY));
+		currentDay.setOnClickListener(new ChangeDayListener(this, ChangeDayListener.Action.CHOOSE_DAY));
+		dmrTitle.setOnClickListener(new ChangeDayListener(this, ChangeDayListener.Action.CHOOSE_DAY));
+		
+		
+		//ButtonRow Childs
+		buttonRow.addView(previousDay, params2);
+		buttonRow.addView(dmrTitle, params3);
+		buttonRow.addView(currentDay, params4);
+		buttonRow.addView(nextDay, params5);
+		
+		//Main
+		LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 80);
+		main.addView(buttonRow, params1);
+		main.addView(scroll);
+		scroll.addView(table);
 		
 		//Options
 		updateColors();
@@ -104,9 +165,20 @@ public class DailyMorningReport extends Activity{
 		//Building report
 		sections = webservice.getSections();
 		
-		
 		//List Sections
 		listSections();
+	}
+	
+	public void setDate(Date date){
+		this.date = date;
+	}
+	
+	public Date getDate(){
+		return date;
+	}
+	
+	public void refreshWebserviceValues(){
+		onCreate(null);
 	}
 	
 	@Override
@@ -114,13 +186,7 @@ public class DailyMorningReport extends Activity{
 		super.onResume();
 		onCreate(null);
 	}
-	
-	@Override
-	protected void onDestroy() {
-		stopService(serviceIntent);
-		super.onDestroy();
-	}
-	
+		
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = new MenuInflater(this);
@@ -135,6 +201,19 @@ public class DailyMorningReport extends Activity{
 		mapButton.setOnMenuItemClickListener(new DmrMapButtonListener(this));
 		mapButton.setIcon(android.R.drawable.ic_menu_mapmode);
 		return super.onCreateOptionsMenu(menu);
+	}
+	
+	public void restartService() {
+		if(serviceIntent == null){
+			serviceIntent = new Intent(this, EcService.class);
+			serviceIntent.putExtra("username", username);
+			serviceIntent.putExtra("password", password);
+			serviceIntent.putExtra("namespace", namespace);
+			serviceIntent.putExtra("url", url);			
+		}else{
+			stopService(serviceIntent);
+		}
+		startService(serviceIntent);
 	}
 	
 	public void refresh(){
@@ -171,25 +250,17 @@ public class DailyMorningReport extends Activity{
 	
 	public void listSections(){
 		table.removeAllViews();
+		currentDay.setText(date.getDate() + "-" + (date.getMonth()+1) + "-" + (date.getYear()+1900));
+		
 		String basePath = OptionTitle.DMRReport + "." + OptionTitle.ReportOptions + ".";
 		try {
 			int resolution = ResolutionConverter.convert(FileManager.readPath(this, basePath + OptionTitle.Interval));
-			Date fromDate = WebserviceDateConverter.parse(FileManager.readPath(this, basePath + OptionTitle.Dates + "." + OptionTitle.FromDate));
-			Date toDate = WebserviceDateConverter.parse(FileManager.readPath(this, basePath + OptionTitle.Dates + "." + OptionTitle.ToDate));
-			Log.d("tieto", "Getting sections: From Date: " + fromDate + "\tTo Date: " + toDate + "\tResolution: " + FileManager.readPath(this, "DMR Report.Report Options.Interval"));
 			for (Section section : sections) {
-				addSection(section, fromDate, toDate, resolution);			
+				addSection(section, date, date, resolution);			
 			}
 		} catch (IOException e) {
 			Log.d("tieto", "Setting default time and resolution");
-			Date fromDate = Calendar.getInstance().getTime();
-			Date toDate = Calendar.getInstance().getTime();
-			fromDate.setYear(101);
-			
 			FileManager.writePath(this, basePath + OptionTitle.Interval, "Weekly");
-			FileManager.writePath(this, basePath + OptionTitle.Dates + "." + OptionTitle.FromDate, WebserviceDateConverter.parse(fromDate));
-			FileManager.writePath(this, basePath + OptionTitle.Dates + "." + OptionTitle.ToDate, WebserviceDateConverter.parse(toDate));
-			
 			listSections();
 			e.printStackTrace();
 		}		
@@ -203,9 +274,12 @@ public class DailyMorningReport extends Activity{
 		sectionTitle.setText(section.getSectionHeader() + ":");
 		sectionTitle.setTextSize(30);
 		sectionTitle.setTextColor(textColor);
+		sectionTitle.setTypeface(Typeface.create("arial", Typeface.NORMAL));
+		sectionTitle.setPadding(0, 20, 0, 0);
 		
 		//Childs
 		table.addView(sectionTitle);
+		table.setPadding(10, 10, 0, 0);
 		
 		//Listeners
 		sectionTitle.setOnClickListener(new ShowHideSection(section.getSectionHeader(), table));
@@ -306,8 +380,9 @@ public class DailyMorningReport extends Activity{
 		List<TextElement> textElements = textData.getTextElements();
 		for (TextElement text : textElements) {
 			TextView view = new TextView(this);
-			view.setText(text.getDaytime() + ":\n" + text.getText());
+			view.setText(WebserviceDateConverter.parse(text.getDaytime(), WebserviceDateConverter.Type.TIME) + "\n" + text.getText() + "\n");
 			view.setTextColor(textColor);
+			view.setTypeface(Typeface.create("arial", Typeface.NORMAL));
 			table.addView(view);
 		}
 		sectionTable.addView(table);
@@ -336,4 +411,5 @@ public class DailyMorningReport extends Activity{
 			return activeColumns(title, tableData);
 		}
 	}
+
 }

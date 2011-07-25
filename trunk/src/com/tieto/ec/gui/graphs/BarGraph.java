@@ -91,7 +91,7 @@ public class BarGraph extends Graph{
 			}
 		}
 		
-		addBars(WebserviceDateConverter.parse(graphData.getGraphPoints().get(0).getDaytime()), vals);
+		addBars(WebserviceDateConverter.parse(graphData.getGraphPoints().get(0).getDaytime(), WebserviceDateConverter.Type.DATE), vals);
 		
 		invalidate();
 	}

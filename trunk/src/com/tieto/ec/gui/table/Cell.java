@@ -1,6 +1,7 @@
 package com.tieto.ec.gui.table;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,11 +18,20 @@ public class Cell extends RelativeLayout{
 		textView.setText(text);
 		textView.setBackgroundColor(backgroundColor);
 		textView.setTextColor(textColor);
-		textView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-		textView.setGravity(RelativeLayout.CENTER_IN_PARENT);
+		textView.setPadding(10, 5, 10, 5);
+		textView.setTypeface(Typeface.create("arial", Typeface.NORMAL));
 		
+		//Params
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+		
+		//Background
+		RelativeLayout background = new RelativeLayout(context);
+		background.setBackgroundColor(backgroundColor);
+		background.addView(textView, layoutParams);
+
 		//This
-		addView(textView);
+		addView(background, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 		setBackgroundColor(borderColor);
 		setPadding(2, 2, 2, 2);
 	}

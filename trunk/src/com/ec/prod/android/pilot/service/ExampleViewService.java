@@ -24,8 +24,10 @@ import com.ec.prod.android.pilot.model.TextSection;
 public class ExampleViewService implements ViewService {
 
 	private HashMap<Section, Object> data;
+	private final boolean saveData;
 
-	public ExampleViewService(){
+	public ExampleViewService(boolean saveData){
+		this.saveData = saveData;
 		data = new HashMap<Section, Object>();
 	}
 
@@ -62,7 +64,9 @@ public class ExampleViewService implements ViewService {
 				data.addTableRow(new TableRow("Well PR87D", "24", "62", "160", "6008.8", "895.0", "256.7"));
 				data.addTableRow(new TableRow("Well PP12A", "23", "54", "180", "3789.0", "902.1", "189.4"));
 				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				this.data.put(section, data);
+				if(saveData){
+					this.data.put(section, data);					
+				}
 				return data;	
 
 			}else if(Math.random() < 0.66){
@@ -85,7 +89,9 @@ public class ExampleViewService implements ViewService {
 				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
 				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
 				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				this.data.put(section, data);
+				if(saveData){
+					this.data.put(section, data);					
+				}
 				return data;	
 
 			}else{
@@ -105,7 +111,9 @@ public class ExampleViewService implements ViewService {
 				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
 				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
 				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				this.data.put(section, data);
+				if(saveData){
+					this.data.put(section, data);					
+				}
 				return data;	
 			}
 		}
@@ -125,7 +133,9 @@ public class ExampleViewService implements ViewService {
 			textData.addTextElement(new TextElement(today, "High Oil level"));
 			today.setDate(today.getDate()-1);
 			textData.addTextElement(new TextElement(today, "Everything is working ok"));	
-			this.data.put(section, textData);
+			if(saveData){
+				this.data.put(section, data);					
+			}
 			return textData;
 		}
 	}
@@ -157,7 +167,9 @@ public class ExampleViewService implements ViewService {
 					data.addGraphPoint(graphPoint1);
 				}			
 			}
-			this.data.put(section, data);
+			if(saveData){
+				this.data.put(section, data);					
+			}
 			return data;
 		}
 	}

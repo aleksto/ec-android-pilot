@@ -34,7 +34,6 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		OptionDialog cellTextColor = new OptionDialog(dailyMorningReport, OptionTitle.CellBackgroundColor);
 		OptionDialog cellBackgroundColor = new OptionDialog(dailyMorningReport, OptionTitle.CellBorderColor);
 		OptionDialog intervalDialog = new OptionDialog(dailyMorningReport, OptionTitle.Interval);
-		OptionDialog datesDialog = new OptionDialog(dailyMorningReport, OptionTitle.Dates);
 		OptionDialog updateIntervalDialog = new OptionDialog(dailyMorningReport, OptionTitle.UpdateInterval);
 
 
@@ -44,7 +43,6 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		createReportOptions(reportOption);
 		createUpdateIntervalDialog(updateIntervalDialog);
 		createIntervalOptions(intervalDialog);
-		createDateOptions(datesDialog);
 		createSecurityOptions(security);
 		createSubColorOptions(textColor);
 		createSubColorOptions(backgroundColor);
@@ -57,7 +55,6 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 
 		reportOption.addChild(updateIntervalDialog);
 		reportOption.addChild(intervalDialog);
-		reportOption.addChild(datesDialog);
 
 		color.addChild(textColor);
 		color.addChild(backgroundColor);
@@ -72,7 +69,6 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		cellBackgroundColor.setOnDismissListener(listener);
 		intervalDialog.setOnDismissListener(listener);
 		updateIntervalDialog.setOnDismissListener(new DmrServiceRestartListener(dailyMorningReport));
-		datesDialog.setOnDismissListener(listener);
 
 		root.show();
 		return false;
@@ -100,12 +96,6 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		section.addOption(OptionTitle.Dates, OptionRowType.NONE);
 		section.addOption(OptionTitle.UpdateInterval, OptionRowType.NONE);
 	}
-	
-	private void createDateOptions(OptionDialog section) {
-		section.addOption(OptionTitle.FromDate, OptionRowType.DATE_BUTTON);
-		section.addOption(OptionTitle.ToDate, OptionRowType.DATE_BUTTON);
-	}
-
 
 	private void createIntervalOptions(OptionDialog section) {
 		section.addOption(OptionTitle.Daily, OptionRowType.CHOOSE_BUTTON);
