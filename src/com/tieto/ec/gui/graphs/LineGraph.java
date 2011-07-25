@@ -16,6 +16,7 @@ import com.tieto.ec.logic.FileManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 public class LineGraph extends Graph{
 	
@@ -50,7 +51,7 @@ public class LineGraph extends Graph{
 		List<GraphPoint> graphPoints = graphData.getGraphPoints();
 		List<String> pointAttributes = graphData.getPointAttributes();
 		
-		this.setDomainValueFormat(new SimpleDateFormat("yyyy-MM-dd"));
+		this.setDomainValueFormat(new SimpleDateFormat("yyyy-MM-dd-hh-mm"));
 		this.setDomainStepValue(STEP_VALUE);
 		
 		for (String string : pointAttributes) {
@@ -59,6 +60,7 @@ public class LineGraph extends Graph{
 		
 		for (GraphPoint point : graphPoints) {
 			Date daytime = point.getDaytime();
+			Log.d("tieto", daytime.getTime()+"");
 			for (String string : pointAttributes) {
 				String value = point.getValue(string);
 				int idx = pointAttributes.indexOf(string);

@@ -302,6 +302,7 @@ public class DailyMorningReport extends Activity{
 		Graph graph = null;
 		
 		//Add data
+		Log.d("tieto", "Adding graph with size: " + graphData.getGraphPoints().size());
 		if(graphData.getGraphPoints().size()>1){
 			//Line Graph
 			graph = new LineGraph(this, "");
