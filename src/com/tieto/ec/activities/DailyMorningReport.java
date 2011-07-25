@@ -305,7 +305,6 @@ public class DailyMorningReport extends Activity{
 		if(graphData.getGraphPoints().size()>1){
 			//Line Graph
 			graph = new LineGraph(this, "");
-			graph.setDomainValueFormat(new SimpleDateFormat("yyyy-MM-dd"));
 			((LineGraph) graph).add(graphData, title);			
 			graph.setOnLongClickListener(new GraphLineChooserListener(this, graph, title));
 		}else{
