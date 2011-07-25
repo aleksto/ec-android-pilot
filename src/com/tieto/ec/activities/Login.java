@@ -57,16 +57,8 @@ public class Login extends Activity{
     	password.setTextColor(Color.BLACK);
     	
     	//Login slider
-    	LoginSlider slider = new LoginSlider(this);
+    	LoginSlider slider = new LoginSlider(this, new LoginListener(username, password, this));
     	relativ.addView(slider);
-    	
-    	//Buttons
-    	Button login = (Button) findViewById(R.id.login);
-    	Button exit = (Button) findViewById(R.id.exit);
-
-    	
-    	login.setOnClickListener(new LoginListener(username, password, this));
-    	exit.setOnClickListener(new ExitListener(this));
     }
 	
 	@Override
