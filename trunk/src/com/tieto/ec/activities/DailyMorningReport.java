@@ -88,7 +88,7 @@ public class DailyMorningReport extends Activity{
 		url = getIntent().getExtras().getString(Webservice.url.toString());
 		
 		if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
-			webservice = new ExampleViewService(false);
+			webservice = new ExampleViewService(true);
 		}else{
 			webservice = new DMRViewServiceUnmarshalled(true, username, password, namespace, url);
 		}
@@ -103,6 +103,7 @@ public class DailyMorningReport extends Activity{
 		
 		//Date
 		date = new Date(System.currentTimeMillis());
+		date.setDate(date.getDate()-1);
 		
 		//Background
 		scroll = new ScrollView(this);
@@ -119,15 +120,14 @@ public class DailyMorningReport extends Activity{
 		Button nextDay = new Button(this);
 		TextView dmrTitle = new TextView(this);
 		currentDay = new TextView(this);
-		dmrTitle.setId(1);
+		currentDay.setId(1);
 		
 		//Layout Rules
 		params2.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 		params2.addRule(RelativeLayout.CENTER_VERTICAL);
-		params3.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+		params3.addRule(RelativeLayout.ABOVE, currentDay.getId());
 		params3.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		params4.addRule(RelativeLayout.BELOW, dmrTitle.getId());
-		params4.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		params4.addRule(RelativeLayout.CENTER_IN_PARENT);
 		params5.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 		params5.addRule(RelativeLayout.CENTER_VERTICAL);
 		
@@ -276,7 +276,7 @@ public class DailyMorningReport extends Activity{
 		
 		//Childs
 		table.addView(sectionTitle);
-		table.setPadding(10, 10, 0, 0);
+		table.setPadding(10, 10, 10, 0);
 		
 		//Listeners
 		sectionTitle.setOnClickListener(new ShowHideSection(section.getSectionHeader(), table));
@@ -315,7 +315,7 @@ public class DailyMorningReport extends Activity{
 		
 		//LayoutParams
 		int width = getWindowManager().getDefaultDisplay().getWidth();
-		graph.setLayoutParams(new LayoutParams(width, 200));
+		graph.setLayoutParams(new LayoutParams(width-20, 200));
 		
 		//Childs
 		sectionTable.addView(graph);

@@ -13,7 +13,7 @@ import com.tieto.ec.activities.Login;
 import com.tieto.ec.gui.dialogs.InfoDialog;
 import com.tieto.ec.logic.FileManager;
 
-public class LoginListener implements OnClickListener {
+public class LoginListener implements Runnable {
 
 	//Webservice
 	//private ViewService service;
@@ -35,7 +35,6 @@ public class LoginListener implements OnClickListener {
 			String usernameAndPassword = FileManager.readPath(login, "DMR Report.Security Options");
 			
 			if(!usernameAndPassword.equalsIgnoreCase("Clear Username\nAnd Password")){
-				Log.d("tieto", usernameAndPassword);
 				String[] split = usernameAndPassword.split("¤#@#¤");
 				if(split.length == 2){
 					login(split[0], split[1]);					
@@ -44,29 +43,6 @@ public class LoginListener implements OnClickListener {
 		} catch (IOException e) {
 			Log.d("tieto", "Found no username and password");
 			e.printStackTrace();
-		}
-	}
-
-	public void onClick(View v){
-		try {
-			//Reading new url and namespace if it is changed
-			namespace = FileManager.readPath(login, "Input Options.Webservice Namespace");
-			url = FileManager.readPath(login, "Input Options.Webservice URL");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		if(namespace != null && url != null){
-			if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
-				//DEBUG loggin
-				login(username.getText().toString(), password.getText().toString());				
-			}else{
-				//Normal login
-				login(username.getText().toString(), password.getText().toString());
-			}
-		}else{
-			//URL and namespace is not defined
-			InfoDialog.showInfoDialog(login, "if this is the first startup, please go to \nmenu->Options\n and set up url and namespace");
 		}
 	}
 
@@ -97,5 +73,28 @@ public class LoginListener implements OnClickListener {
 		intent.putExtra("namespace", namespace);
 		intent.putExtra("url", url);
 		login.startActivity(intent);
+	}
+
+	public void run() {
+		try {
+			//Reading new url and namespace if it is changed
+			namespace = FileManager.readPath(login, "Input Options.Webservice Namespace");
+			url = FileManager.readPath(login, "Input Options.Webservice URL");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(namespace != null && url != null){
+			if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
+				//DEBUG loggin
+				login(username.getText().toString(), password.getText().toString());				
+			}else{
+				//Normal login
+				login(username.getText().toString(), password.getText().toString());
+			}
+		}else{
+			//URL and namespace is not defined
+			InfoDialog.showInfoDialog(login, "if this is the first startup, please go to \nmenu->Options\n and set up url and namespace");
+		}
 	}
 }

@@ -49,73 +49,24 @@ public class ExampleViewService implements ViewService {
 		if(data.containsKey(section)){
 			return (TableData) data.get(section);
 		}else{
-			if(Math.random() < 0.33){
-				List<TableColumn> tableColumns = new LinkedList<TableColumn>();
-				tableColumns.add(new TableColumn("Well"));
-				tableColumns.add(new TableColumn("On Stream Hours"));
-				tableColumns.add(new TableColumn("AVG Well Head Temperature"));
-				tableColumns.add(new TableColumn("AVG Well Head Pressure"));
-				tableColumns.add(new TableColumn("Allocated Oil Volume"));
-				tableColumns.add(new TableColumn("Allocated Gas Volume"));
-				tableColumns.add(new TableColumn("Allocated Water Volume"));				
-				TableData data = new TableData(tableColumns);
-				data.addTableRow(new TableRow("Well PH65R", "24", "60", "159", "5595.5", "656.8", "300.2"));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PR87D", "24", "62", "160", "6008.8", "895.0", "256.7"));
-				data.addTableRow(new TableRow("Well PP12A", "23", "54", "180", "3789.0", "902.1", "189.4"));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				if(saveData){
-					this.data.put(section, data);					
-				}
-				return data;	
-
-			}else if(Math.random() < 0.66){
-				List<TableColumn> tableColumns = new LinkedList<TableColumn>();
-				tableColumns.add(new TableColumn("Well"));
-				tableColumns.add(new TableColumn("Size"));
-				tableColumns.add(new TableColumn("CO2"));
-				tableColumns.add(new TableColumn("C6H12O6"));			
-				tableColumns.add(new TableColumn("H2O"));
-				tableColumns.add(new TableColumn("People on shore"));
-				tableColumns.add(new TableColumn("People"));			
-				TableData data = new TableData(tableColumns);
-
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				if(saveData){
-					this.data.put(section, data);					
-				}
-				return data;	
-
-			}else{
-				List<TableColumn> tableColumns = new LinkedList<TableColumn>();
-				tableColumns.add(new TableColumn("Platform"));
-				tableColumns.add(new TableColumn("Longitude"));
-				tableColumns.add(new TableColumn("Latitude"));
-				tableColumns.add(new TableColumn("Tempature"));
-				tableColumns.add(new TableColumn("Workers"));
-				tableColumns.add(new TableColumn("Managers"));
-				tableColumns.add(new TableColumn("Engineers"));			
-				TableData data = new TableData(tableColumns);
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				if(saveData){
-					this.data.put(section, data);					
-				}
-				return data;	
+			List<TableColumn> tableColumns = new LinkedList<TableColumn>();
+			tableColumns.add(new TableColumn("Well"));
+			tableColumns.add(new TableColumn("On Stream Hours"));
+			tableColumns.add(new TableColumn("AVG Well Head Temperature"));
+			tableColumns.add(new TableColumn("AVG Well Head Pressure"));
+			tableColumns.add(new TableColumn("Allocated Oil Volume"));
+			tableColumns.add(new TableColumn("Allocated Gas Volume"));
+			tableColumns.add(new TableColumn("Allocated Water Volume"));				
+			TableData data = new TableData(tableColumns);
+			data.addTableRow(new TableRow("Well PH65R", "24", "60", "159", "5595.5", "656.8", "300.2"));
+			data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
+			data.addTableRow(new TableRow("Well PR87D", "24", "62", "160", "6008.8", "895.0", "256.7"));
+			data.addTableRow(new TableRow("Well PP12A", "23", "54", "180", "3789.0", "902.1", "189.4"));
+			data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
+			if(saveData){
+				this.data.put(section, data);					
 			}
+			return data;	
 		}
 	}
 
@@ -134,7 +85,7 @@ public class ExampleViewService implements ViewService {
 			today.setDate(today.getDate()-1);
 			textData.addTextElement(new TextElement(today, "Everything is working ok"));	
 			if(saveData){
-				this.data.put(section, data);					
+				this.data.put(section, textData);					
 			}
 			return textData;
 		}
