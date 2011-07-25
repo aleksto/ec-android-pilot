@@ -1,6 +1,7 @@
 package com.tieto.ec.gui.graphs;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -18,8 +19,12 @@ import android.graphics.Paint;
 
 public class LineGraph extends Graph{
 	
+	private final int STEP_VALUE = 5;
+	
 	public LineGraph(Context context, String title) {
 		super(context, title);
+		
+		
 	}
 	
 	public LineGraph(LineGraph graph){
@@ -36,11 +41,17 @@ public class LineGraph extends Graph{
 				addSeries(graphLines.get(inx), formats.get(inx));
 			}
 		}
+		
+		this.setDomainValueFormat(new SimpleDateFormat("yyyy-MM-dd"));
+		this.setDomainStepValue(STEP_VALUE);
 	}
 	
 	public void add(GraphData graphData, String title) {
 		List<GraphPoint> graphPoints = graphData.getGraphPoints();
 		List<String> pointAttributes = graphData.getPointAttributes();
+		
+		this.setDomainValueFormat(new SimpleDateFormat("yyyy-MM-dd"));
+		this.setDomainStepValue(STEP_VALUE);
 		
 		for (String string : pointAttributes) {
 			addEmptyGraphLine(string, Color.rgb((int)(Math.random()*255.0), (int)(Math.random()*255.0), (int)(Math.random()*255.0)));
