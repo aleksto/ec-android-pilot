@@ -27,7 +27,7 @@ public class ServiceThread implements Runnable{
 			updateInterval = UpdateTimeConverter.parse(updateTime);
 		} catch (IOException e) {
 			FileManager.writePath(context, OptionTitle.DMRReport + "." + OptionTitle.ReportOptions + "." + OptionTitle.UpdateInterval, TimeType.off+"");
-			updateInterval = 1;
+			updateInterval = -1;
 			e.printStackTrace();
 		}
 
