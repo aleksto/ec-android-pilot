@@ -1,10 +1,10 @@
 package com.tieto.ec.listeners.dialogs;
 
-import com.tieto.ec.gui.dialogs.EditTextDialog;
-import com.tieto.ec.gui.dialogs.OptionDialog;
-
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import com.tieto.ec.gui.dialogs.EditTextDialog;
+import com.tieto.ec.gui.dialogs.OptionDialog;
 
 public class OkListener implements OnClickListener {
 

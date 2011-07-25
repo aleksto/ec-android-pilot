@@ -2,13 +2,13 @@ package com.tieto.ec.listeners.dialogs;
 
 import java.io.IOException;
 
-import com.tieto.ec.logic.FileManager;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import com.tieto.ec.logic.FileManager;
 
 public class CancelListener implements OnClickListener{
 

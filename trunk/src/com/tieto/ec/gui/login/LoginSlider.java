@@ -1,18 +1,15 @@
 package com.tieto.ec.gui.login;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.view.View.OnTouchListener;
 
 public class LoginSlider extends RelativeLayout implements OnTouchListener{
 
 	private ImageButton sliderButton;
-	private float x0;
 	private int padding;
 
 	public LoginSlider(Context context) {

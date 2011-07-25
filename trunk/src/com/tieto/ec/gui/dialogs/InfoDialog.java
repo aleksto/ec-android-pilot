@@ -11,6 +11,10 @@ import android.widget.TextView;
 
 public class InfoDialog{
 	
+	private final static int TEXT_SIZE = 20;
+	private final static String TITLE = "Info";
+	private final static String OK_TEXT = "Ok";
+	
 	public static Dialog showInfoDialog(Context context, String msg){
 		//Init
 		final Dialog dialog = new Dialog(context);
@@ -20,7 +24,7 @@ public class InfoDialog{
 		Button ok = new Button(context);
 		
 		//Dialog
-		dialog.setTitle("Info");
+		dialog.setTitle(TITLE);
 		dialog.setContentView(scroll);
 		dialog.show();
 		
@@ -30,9 +34,9 @@ public class InfoDialog{
 		table.addView(ok);
 		
 		//Text
-		text.setTextSize(20);
+		text.setTextSize(TEXT_SIZE);
 		text.setText(msg);
-		ok.setText("Ok");
+		ok.setText(OK_TEXT);
 		
 		ok.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {

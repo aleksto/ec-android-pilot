@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.tieto.ec.enums.Webservice;
+
 public class EcService extends Service{
 	
 	private ServiceThread serviceThread;
@@ -18,10 +20,10 @@ public class EcService extends Service{
 		Log.d("tieto", "Starting service");
 		
 		//Init
-		String username = intent.getExtras().getString("username");
-		String password = intent.getExtras().getString("password");
-		String namespace = intent.getExtras().getString("namespace");
-		String url = intent.getExtras().getString("url");
+		String username = intent.getExtras().getString(Webservice.username.toString());
+		String password = intent.getExtras().getString(Webservice.password.toString());
+		String namespace = intent.getExtras().getString(Webservice.namespace.toString());
+		String url = intent.getExtras().getString(Webservice.url.toString());
 		
 		//Thread
 		serviceThread = new ServiceThread(this, username, password, url, namespace);

@@ -1,10 +1,10 @@
 package com.tieto.ec.activities;
 
+import android.os.Bundle;
+
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.tieto.ec.gui.dialogs.InfoDialog;
-
-import android.os.Bundle;
 
 public class Map extends MapActivity{
 

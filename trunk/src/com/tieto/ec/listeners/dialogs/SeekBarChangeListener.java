@@ -1,12 +1,12 @@
 package com.tieto.ec.listeners.dialogs;
 
-import com.tieto.ec.logic.FileManager;
-
 import android.content.Context;
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+
+import com.tieto.ec.logic.FileManager;
 
 public class SeekBarChangeListener implements OnSeekBarChangeListener{
 

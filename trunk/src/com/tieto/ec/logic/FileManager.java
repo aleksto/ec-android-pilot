@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.tieto.ec.enums.OptionTitle;
-
 import android.app.Activity;
 import android.content.Context;
 

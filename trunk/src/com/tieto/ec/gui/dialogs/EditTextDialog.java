@@ -19,6 +19,8 @@ import android.widget.TableLayout;
 
 public class EditTextDialog extends Dialog{
 
+	private final float BUTTON_WEIGHT = 1f;
+	
 	public EditTextDialog(Context context, OptionDialog optionDialog, String basePath, String title) {
 		//Super
 		super(context);
@@ -31,7 +33,7 @@ public class EditTextDialog extends Dialog{
 		Button ok = new Button(context);
 		Button cancel = new Button(context);
 		LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-		LinearLayout.LayoutParams param2 = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1f);
+		LinearLayout.LayoutParams param2 = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, BUTTON_WEIGHT);
 
 		//this
 		setTitle(title);

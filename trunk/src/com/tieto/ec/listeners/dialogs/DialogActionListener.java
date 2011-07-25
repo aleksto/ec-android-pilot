@@ -1,16 +1,14 @@
 package com.tieto.ec.listeners.dialogs;
 
-import com.tieto.ec.enums.OptionTitle;
-import com.tieto.ec.gui.dialogs.OptionDialog;
-import com.tieto.ec.logic.FileManager;
-
 import android.app.Dialog;
-
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+
+import com.tieto.ec.gui.dialogs.OptionDialog;
+import com.tieto.ec.logic.FileManager;
 
 
 public class DialogActionListener implements OnClickListener, OnCheckedChangeListener {

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 
-import com.ec.prod.android.pilot.service.ViewService;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.activities.Login;
 import com.tieto.ec.gui.dialogs.InfoDialog;
@@ -17,7 +16,7 @@ import com.tieto.ec.logic.FileManager;
 public class LoginListener implements OnClickListener {
 
 	//Webservice
-	private ViewService service;
+	//private ViewService service;
 	private String namespace, url; 
 	private EditText username, password;
 	private Login login;
