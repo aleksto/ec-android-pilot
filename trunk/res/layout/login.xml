@@ -18,7 +18,7 @@
         <EditText android:inputType="textPassword" 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
-        android:width="100dip"
+        android:width="180dip"
         android:id="@+id/password" 
         android:layout_centerInParent="true">
         </EditText>
@@ -32,7 +32,7 @@
         <EditText android:id="@+id/username" 
         android:layout_width="wrap_content" 
         android:layout_height="wrap_content"
-        android:width="100dip"
+        android:width="180dip"
         android:layout_above="@id/passwordlabel"
         android:layout_centerHorizontal="true">
         </EditText>
@@ -43,7 +43,7 @@
         android:layout_above="@id/username"
         android:layout_centerHorizontal="true">
         </TextView>
-        <Button android:text="Login" 
+        <Button android:text="Login"
         android:id="@+id/login" 
         android:layout_width="wrap_content" 
         android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="100dip">
         </Button>
-        <Button android:text="Exit" 
+        <Button android:text="Exit"
         android:id="@+id/exit" 
         android:layout_width="wrap_content" 
         android:layout_height="wrap_content"
