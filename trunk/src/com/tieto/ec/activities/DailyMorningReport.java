@@ -116,27 +116,31 @@ public class DailyMorningReport extends Activity{
 		RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		RelativeLayout.LayoutParams params4 = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		RelativeLayout.LayoutParams params5 = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams params6 = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		Button previousDay = new Button(this);
 		Button nextDay = new Button(this);
+		RelativeLayout titleLayout = new RelativeLayout(this);
 		TextView dmrTitle = new TextView(this);
 		currentDay = new TextView(this);
-		currentDay.setId(1);
+		dmrTitle.setId(1);
 		
 		//Layout Rules
 		params2.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 		params2.addRule(RelativeLayout.CENTER_VERTICAL);
-		params3.addRule(RelativeLayout.ABOVE, currentDay.getId());
 		params3.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		params4.addRule(RelativeLayout.CENTER_IN_PARENT);
-		params5.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-		params5.addRule(RelativeLayout.CENTER_VERTICAL);
+		params3.addRule(RelativeLayout.CENTER_VERTICAL);
+		params4.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		params5.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		params5.addRule(RelativeLayout.BELOW, dmrTitle.getId());
+		params6.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		params6.addRule(RelativeLayout.CENTER_VERTICAL);
 		
 		//Buttons
 		previousDay.setBackgroundResource(android.R.drawable.ic_media_rew);
 		nextDay.setBackgroundResource(android.R.drawable.ic_media_ff);
 		currentDay.setText(date.getDate() + "-" + (date.getMonth()+1) + "-" + (date.getYear()+1900));
 		currentDay.setTextColor(Color.BLACK);
-		dmrTitle.setText("Daily Morining Report");
+		dmrTitle.setText("Daily Morning Report");
 		dmrTitle.setTextColor(Color.BLACK);
 		nextDay.setOnClickListener(new ChangeDayListener(this, ChangeDayListener.Action.NEXT_DAY));
 		previousDay.setOnClickListener(new ChangeDayListener(this, ChangeDayListener.Action.PREVIOUS_DAY));
@@ -146,9 +150,10 @@ public class DailyMorningReport extends Activity{
 		
 		//ButtonRow Childs
 		buttonRow.addView(previousDay, params2);
-		buttonRow.addView(dmrTitle, params3);
-		buttonRow.addView(currentDay, params4);
-		buttonRow.addView(nextDay, params5);
+		buttonRow.addView(titleLayout, params3);
+		titleLayout.addView(dmrTitle, params4);
+		titleLayout.addView(currentDay, params5);
+		buttonRow.addView(nextDay, params6);
 		
 		//Main
 		LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 80);

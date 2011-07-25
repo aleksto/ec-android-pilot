@@ -33,18 +33,19 @@
         	android:layout_height="wrap_content" 
         	android:width="180dip"
         	android:layout_centerHorizontal="true"
-        	android:layout_below="@id/passwordlabel">
+        	android:layout_below="@id/passwordlabel"
+        	android:windowSoftInputMode="stateHidden">
         </EditText>
         
         <EditText 
-            android:focusable="true"
-        	android:focusableInTouchMode="true"
         	android:id="@+id/username" 
         	android:layout_width="wrap_content" 
         	android:layout_height="wrap_content"
         	android:width="180dip"
         	android:layout_above="@id/passwordlabel"
-       		android:layout_centerHorizontal="true">
+       		android:layout_centerHorizontal="true"
+       		android:focusable="true"
+       		android:windowSoftInputMode="stateHidden">
         </EditText>
         
         <TextView 
