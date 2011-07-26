@@ -40,6 +40,10 @@ public class SectionBuilder {
 	private DailyMorningReport dmr;
 	private Date date; 
 	
+	/**
+	 * Initialize the {@link SectionBuilder}
+	 * @param dmr {@link DailyMorningReport} for refreshing the report
+	 */
 	public SectionBuilder(DailyMorningReport dmr){
 		this.dmr = dmr;
 	}
