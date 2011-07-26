@@ -12,17 +12,20 @@ public enum ColorType {
 	White,
 	Yellow,
 	DarkGray{
-	    public String toString() {
+	    @Override
+		public String toString() {
 	        return "Dark Gray";
 	    }
 	},
 	LightGray{
-	    public String toString() {
+	    @Override
+		public String toString() {
 	        return "Light Gray";
 	    }
 	},
 	LightBlue{
-	    public String toString() {
+	    @Override
+		public String toString() {
 	        return "Light Blue";
 	    }
 	

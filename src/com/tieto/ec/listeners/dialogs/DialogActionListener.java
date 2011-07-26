@@ -19,14 +19,14 @@ public class DialogActionListener implements OnClickListener, OnCheckedChangeLis
 	private String optionTitle;
 	private String path;
 
-	public DialogActionListener(OptionDialog dialog, boolean goBack) {
+	public DialogActionListener(OptionDialog dialog, boolean goBack, String optionTitle, Dialog nextState) {
 		this.dialog = dialog;
 		this.goBack = goBack;
 		
-		optionTitle = dialog.getOptionTitle();
+		this.optionTitle = optionTitle;
 		path = dialog.getPath();
 		if(!goBack){
-			nextState = dialog.getNextState();			
+			this.nextState = nextState;			
 		}
 	}
 

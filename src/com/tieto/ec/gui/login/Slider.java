@@ -34,7 +34,7 @@ public class Slider extends RelativeLayout implements OnTouchListener{
 		
 		//Text
 		text = new TextView(context);
-		LayoutParams textBoxParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		LayoutParams textBoxParams = new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		textBoxParams.addRule(ALIGN_PARENT_RIGHT);
 		textBoxParams.addRule(CENTER_VERTICAL);
 		textBoxParams.setMargins(0, 0, 15, 0);
@@ -50,7 +50,7 @@ public class Slider extends RelativeLayout implements OnTouchListener{
 		addView(sliderButton, sliderParams);
 
 		//This
-		LayoutParams thisParams = new LayoutParams(LayoutParams.FILL_PARENT, BUTTON_WIDTH/2);
+		LayoutParams thisParams = new LayoutParams(android.view.ViewGroup.LayoutParams.FILL_PARENT, BUTTON_WIDTH/2);
 		thisParams.addRule(ALIGN_PARENT_BOTTOM);
 		thisParams.addRule(CENTER_HORIZONTAL);
 		setLayoutParams(thisParams);

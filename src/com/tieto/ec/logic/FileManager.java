@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Context;
 
 public class FileManager {
@@ -13,7 +12,7 @@ public class FileManager {
 	public static void writePath(Context context, String path, String text) {
 		try {
 			byte[] write = text.getBytes();
-			FileOutputStream ut = context.openFileOutput(path, Activity.MODE_PRIVATE);
+			FileOutputStream ut = context.openFileOutput(path, Context.MODE_PRIVATE);
 			ut.write(write);
 			ut.close();
 		} catch (IOException e) {

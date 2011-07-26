@@ -4,68 +4,81 @@ public enum OptionTitle {
 	
 	//Daily Morning Report
 	SecurityOptions{
-	    public String toString() {
+	    @Override
+		public String toString() {
 	        return "Security Options";
 	    }
 	}, 
 	ColorOptions{
-	    public String toString() {
+	    @Override
+		public String toString() {
 	        return "Color Options";
 	    }
 	}, 
 	ReportOptions{
-	    public String toString() {
+	    @Override
+		public String toString() {
 	        return "Report Options";
 	    }
 	},
 	TextColor{
-	    public String toString() {
+	    @Override
+		public String toString() {
 	        return "Text Color";
 	    }
 	}, 
 	BackgroundColor{
-	    public String toString() {
+	    @Override
+		public String toString() {
 	        return "Background Color";
 	    }
 	}, 
 	CellBackgroundColor{
-	    public String toString() {
+	    @Override
+		public String toString() {
 	        return "Cell Background Color";
 	    }
 	}, 
 	CellBorderColor{
-	    public String toString() {
+	    @Override
+		public String toString() {
 	        return "Cell Border Color";
 	    }
 	},
 	DMRReport{
-	    public String toString() {
+	    @Override
+		public String toString() {
 	        return "DMR Report";
 	    }
 	},
 	ClearUsernameAndPassword {
+		@Override
 		public String toString() {
 	        return "Clear Username\nAnd Password";
 	    }
 	},
 	RememberLoginCredentials {
+		@Override
 		public String toString() {
 	        return "Remember Login\nCredentials";
 	    }
 	},
 	Interval,
 	UpdateInterval{
+		@Override
 		public String toString(){
 			return "Update Interval";
 		}
 	},
 	Dates,
 	ToDate{
+		@Override
 		public String toString() {
 	        return "To Date";
 	    }
 	},
 	FromDate{
+		@Override
 		public String toString() {
 	        return "From Date";
 	    }
@@ -75,11 +88,13 @@ public enum OptionTitle {
 	Monthly,
 	Yearly,
 	VisibleColumns{
+		@Override
 		public String toString(){
 			return "Visible Columns";
 		}
 	},
 	WarningLevels{
+		@Override
 		public String toString(){
 			return "Warning Levels";
 		}
@@ -87,16 +102,19 @@ public enum OptionTitle {
 
 	//Login 
 	InputOptions {
+		@Override
 		public String toString() {
 	        return "Input Options";
 	    }
 	},
 	WebserviceURL {
+		@Override
 		public String toString() {
 	        return "Webservice URL";
 	    }
 	},
 	WebserviceNamespace {
+		@Override
 		public String toString() {
 	        return "Webservice Namespace";
 	    }

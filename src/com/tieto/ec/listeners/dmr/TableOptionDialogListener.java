@@ -22,13 +22,13 @@ public class TableOptionDialogListener implements OnLongClickListener{
 		
 		//Sub option dialogs
 		for (TableColumn column : data.getTableColumns()) {
-			visibleLines.addOption(column.getHeader(), OptionRowType.CHECK_BOX);
-			warningLevels.addOption(column.getHeader(), OptionRowType.EDIT_BUTTON);
+			visibleLines.addOptionRow(column.getHeader(), OptionRowType.CHECK_BOX);
+			warningLevels.addOptionRow(column.getHeader(), OptionRowType.EDIT_BUTTON);
 		}
 		
 		//Main Dialog
-		tableDialog.addOption(OptionTitle.VisibleColumns, OptionRowType.NONE);
-		tableDialog.addOption(OptionTitle.WarningLevels, OptionRowType.NONE);
+		tableDialog.addOptionRow(OptionTitle.VisibleColumns, OptionRowType.NONE);
+		tableDialog.addOptionRow(OptionTitle.WarningLevels, OptionRowType.NONE);
 		
 		//Childs
 		tableDialog.addChild(visibleLines);

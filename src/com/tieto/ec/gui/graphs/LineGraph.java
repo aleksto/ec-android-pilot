@@ -76,7 +76,7 @@ public class LineGraph extends Graph{
 			for (String string : pointAttributes) {
 				String value = point.getValue(string);
 				int idx = pointAttributes.indexOf(string);
-				addPointToLine(idx, (double)daytime.getTime(), Double.valueOf(value));						
+				addPointToLine(idx, daytime.getTime(), Double.valueOf(value));						
 			}
 		}
 

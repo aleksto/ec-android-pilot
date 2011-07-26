@@ -88,29 +88,31 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 	 * @param dialog {@link OptionDialog} dialog
 	 */
 	private void createUpdateIntervalDialog(OptionDialog dialog) {
-		dialog.addOption(TimeType.off, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(TimeType.min15, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(TimeType.min30, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(TimeType.min45, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(TimeType.hour1, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(TimeType.hour2, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(TimeType.hour5, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(TimeType.hour10, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(TimeType.hour12, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(TimeType.day1, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(TimeType.day2, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(TimeType.day3, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption("Debug: 20 sec", OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.off, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.min15, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.min30, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.min45, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.hour1, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.hour2, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.hour5, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.hour10, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.hour12, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.day1, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.day2, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.day3, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow("Debug: 20 sec", OptionRowType.CHOOSE_BUTTON);
 	}
+
+
 
 	/**
 	 * Creates sub dialog report options
 	 * @param dialog {@link OptionDialog} dialog
 	 */
 	private void createReportOptions(OptionDialog dialog) {
-		dialog.addOption(OptionTitle.Interval, OptionRowType.NONE);
-		dialog.addOption(OptionTitle.Dates, OptionRowType.NONE);
-		dialog.addOption(OptionTitle.UpdateInterval, OptionRowType.NONE);
+		dialog.addOptionRow(OptionTitle.Interval, OptionRowType.NONE);
+		dialog.addOptionRow(OptionTitle.Dates, OptionRowType.NONE);
+		dialog.addOptionRow(OptionTitle.UpdateInterval, OptionRowType.NONE);
 	}
 
 	/**
@@ -118,10 +120,10 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 	 * @param dialog {@link OptionDialog} dialog
 	 */
 	private void createIntervalOptions(OptionDialog dialog) {
-		dialog.addOption(OptionTitle.Daily, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(OptionTitle.Weekly, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(OptionTitle.Monthly, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(OptionTitle.Yearly, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(OptionTitle.Daily, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(OptionTitle.Weekly, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(OptionTitle.Monthly, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(OptionTitle.Yearly, OptionRowType.CHOOSE_BUTTON);
 	}
 
 	/**
@@ -129,18 +131,18 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 	 * @param dialog {@link OptionDialog} dialog
 	 */
 	private void createSubColorOptions(OptionDialog dialog) {
-		dialog.addOption(ColorType.Black, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(ColorType.Blue, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(ColorType.LightBlue, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(ColorType.Cyan, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(ColorType.DarkGray, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(ColorType.LightGray, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(ColorType.Gray, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(ColorType.Green, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(ColorType.Magenta, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(ColorType.Red, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(ColorType.White, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(ColorType.Yellow, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(ColorType.Black, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(ColorType.Blue, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(ColorType.LightBlue, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(ColorType.Cyan, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(ColorType.DarkGray, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(ColorType.LightGray, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(ColorType.Gray, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(ColorType.Green, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(ColorType.Magenta, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(ColorType.Red, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(ColorType.White, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(ColorType.Yellow, OptionRowType.CHOOSE_BUTTON);
 	}
 
 	/**
@@ -148,8 +150,8 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 	 * @param dialog {@link OptionDialog} dialog
 	 */
 	private void createSecurityOptions(OptionDialog dialog) {
-		dialog.addOption(OptionTitle.ClearUsernameAndPassword, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOption(OptionTitle.RememberLoginCredentials, OptionRowType.CHECK_BOX);
+		dialog.addOptionRow(OptionTitle.ClearUsernameAndPassword, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(OptionTitle.RememberLoginCredentials, OptionRowType.CHECK_BOX);
 	}
 
 	/**
@@ -157,10 +159,10 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 	 * @param dialog {@link OptionDialog} dialog
 	 */
 	private void createColorOptions(OptionDialog dialog) {
-		dialog.addOption(OptionTitle.TextColor, OptionRowType.NONE);
-		dialog.addOption(OptionTitle.BackgroundColor, OptionRowType.NONE);
-		dialog.addOption(OptionTitle.CellBackgroundColor, OptionRowType.NONE);
-		dialog.addOption(OptionTitle.CellBorderColor, OptionRowType.NONE);
+		dialog.addOptionRow(OptionTitle.TextColor, OptionRowType.NONE);
+		dialog.addOptionRow(OptionTitle.BackgroundColor, OptionRowType.NONE);
+		dialog.addOptionRow(OptionTitle.CellBackgroundColor, OptionRowType.NONE);
+		dialog.addOptionRow(OptionTitle.CellBorderColor, OptionRowType.NONE);
 	}
 
 	/**
@@ -168,8 +170,8 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 	 * @param dialog {@link OptionDialog} dialog
 	 */
 	private void createRootOptions() {
-		root.addOption(OptionTitle.SecurityOptions, OptionRowType.NONE);
-		root.addOption(OptionTitle.ColorOptions, OptionRowType.NONE);
-		root.addOption(OptionTitle.ReportOptions, OptionRowType.NONE);
+		root.addOptionRow(OptionTitle.SecurityOptions, OptionRowType.NONE);
+		root.addOptionRow(OptionTitle.ColorOptions, OptionRowType.NONE);
+		root.addOptionRow(OptionTitle.ReportOptions, OptionRowType.NONE);
 	}
 }
