@@ -10,11 +10,14 @@ import android.content.Context;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 
-import com.tieto.ec.enums.OptionRowType;
 import com.tieto.ec.enums.OptionTitle;
+import com.tieto.ec.gui.dialogs.OptionRow.OptionRowType;
 
 public class OptionDialog extends Dialog {
 
+
+
+	
 	private String title;
 	private String path;
 	private TreeMap<String, OptionRowType> optionRows;
@@ -189,7 +192,7 @@ public class OptionDialog extends Dialog {
 	}
 
 	/**
-	 * This method populates this {@link OptionDialog} with {@link OptionRow}
+	 * This method populates this {@link OptionDialog} with instances of {@link OptionRow}
 	 */
 	private void buildOptionDialogRows() {
 		table.removeAllViews();

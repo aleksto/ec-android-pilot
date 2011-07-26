@@ -1,10 +1,10 @@
 package com.tieto.ec.listeners.dmr;
 
-import com.tieto.ec.gui.dialogs.InfoDialog;
-
 import android.app.Activity;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
+
+import com.tieto.ec.gui.dialogs.InfoDialog;
 
 public class DmrMapButtonListener implements OnMenuItemClickListener {
 

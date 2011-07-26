@@ -2,13 +2,13 @@ package com.tieto.ec.listeners.dmr;
 
 import java.util.Date;
 
-import com.tieto.ec.activities.DailyMorningReport;
-
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.DatePicker;
+
+import com.tieto.ec.activities.DailyMorningReport;
 
 public class ChangeDayListener implements OnClickListener, OnDateSetListener{
 	

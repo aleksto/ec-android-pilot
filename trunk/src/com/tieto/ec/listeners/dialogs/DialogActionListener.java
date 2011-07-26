@@ -8,6 +8,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.tieto.ec.gui.dialogs.OptionDialog;
+import com.tieto.ec.gui.dialogs.OptionRow;
 import com.tieto.ec.logic.FileManager;
 
 
@@ -19,6 +20,15 @@ public class DialogActionListener implements OnClickListener, OnCheckedChangeLis
 	private String optionTitle;
 	private String path;
 
+	/**
+	 * This Listener listens for actions in instances of {@link OptionDialog}. When a action takes place
+	 * in any {@link OptionRow}s it decides the options actions and if the option tree should go one step back, 
+	 * stay as it is or step forward to nextState. 
+	 * @param dialog
+	 * @param goBack
+	 * @param optionTitle
+	 * @param nextState
+	 */
 	public DialogActionListener(OptionDialog dialog, boolean goBack, String optionTitle, Dialog nextState) {
 		this.dialog = dialog;
 		this.goBack = goBack;
@@ -30,6 +40,9 @@ public class DialogActionListener implements OnClickListener, OnCheckedChangeLis
 		}
 	}
 
+	/**
+	 * This method decides the action taken when an {@link OptionRow} is pressed in an {@link OptionDialog}
+	 */
 	public void onClick(View v) {
 		if(goBack){
 			FileManager.writePath(dialog.getContext(), path, optionTitle);
@@ -39,8 +52,12 @@ public class DialogActionListener implements OnClickListener, OnCheckedChangeLis
 		else{
 			nextState.show();
 		}	
+	
 	}
 
+	/**
+	 * This method decides the action taken when checking a checkbox in an {@link OptionRow} inside an {@link OptionDialog}
+	 */
 	public void onCheckedChanged(CompoundButton buttonView, boolean value) {
 		Log.d("tieto", "Writing value: " + value + " to path: " + path + "." + optionTitle);
 		FileManager.writePath(dialog.getContext(), path + "." + optionTitle, Boolean.toString(value));

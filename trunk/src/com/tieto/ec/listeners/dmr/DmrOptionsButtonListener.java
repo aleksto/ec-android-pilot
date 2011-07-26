@@ -5,10 +5,10 @@ import android.view.MenuItem.OnMenuItemClickListener;
 
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.enums.ColorType;
-import com.tieto.ec.enums.OptionRowType;
 import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.enums.TimeType;
 import com.tieto.ec.gui.dialogs.OptionDialog;
+import com.tieto.ec.gui.dialogs.OptionRow.OptionRowType;
 
 public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 
