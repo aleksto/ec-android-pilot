@@ -27,6 +27,10 @@ public class Login extends Activity{
 	private boolean quit;
 	private Handler handler;
 	
+	/**
+	 * Main class for the login, this is the class started after introduction animation
+	 * OnCreate is the constructor for the Super class Activity, and where all the initialization starts.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
     	//Super
@@ -58,10 +62,14 @@ public class Login extends Activity{
     	password.setTextColor(Color.BLACK);
     	
     	//Login slider
-    	LoginSlider slider = new LoginSlider(this, new LoginListener(username, password, this));
+    	LoginSlider slider = new LoginSlider(this, new LoginListener(username, password, this), "Slide to login");
     	relativ.addView(slider);
     }
 	
+	/**
+	 * This method is executed when the user presses back in the subsequent activity. It allows the application to quit 
+	 * instead of returning to the login menu (which should only be active when entering the application). 
+	 */
 	@Override
 	protected void onRestart() {
 		super.onResume();
@@ -72,6 +80,11 @@ public class Login extends Activity{
 		}
 	}
 
+	/**
+	 * This method is executed when the user presses the menu button on the phone, and it builds up the menu,
+	 * and adds onClick listeners to the menu buttons
+	 * @param Menu menu
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = new MenuInflater(this);
@@ -83,6 +96,10 @@ public class Login extends Activity{
 		return super.onCreateOptionsMenu(menu);
 	}
 	
+	/**
+	 * Used in LoginListener.java when wrong username or password is written
+	 * @param msg
+	 */
 	public void toastFromOtherThreads(final String msg){
 		handler.post(new Runnable() {
 			public void run() {
@@ -91,6 +108,7 @@ public class Login extends Activity{
 		});
 	}
 
+	
 	public void setQuit(boolean quit) {
 		this.quit = quit;
 	}

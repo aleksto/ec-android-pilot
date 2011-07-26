@@ -12,13 +12,14 @@ import android.view.View.OnTouchListener;
 public class LoginSlider extends RelativeLayout implements OnTouchListener{
 
 	private final int BUTTON_WIDTH = 160;
+	private final int TEXT_SIZE = 25;
 	
 	private ImageButton sliderButton;
 	private int padding;
 	private Runnable onFinish;
 	private TextView text;
 
-	public LoginSlider(Context context, Runnable onFinish) {
+	public LoginSlider(Context context, Runnable onFinish, String messageText) {
 		//Super
 		super(context);
 		this.onFinish = onFinish;
@@ -31,9 +32,9 @@ public class LoginSlider extends RelativeLayout implements OnTouchListener{
 		LayoutParams textBoxParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		textBoxParams.addRule(ALIGN_PARENT_RIGHT);
 		textBoxParams.addRule(CENTER_VERTICAL);
-		textBoxParams.setMargins(0, 5, 0, 0);
-		text.setText("Slide to login   ");
-		text.setTextSize(25);
+		textBoxParams.setMargins(0, 0, 15, 0);
+		text.setText(messageText);
+		text.setTextSize(TEXT_SIZE);
 		addView(text, textBoxParams);
 
 		//SliderButton
@@ -56,7 +57,7 @@ public class LoginSlider extends RelativeLayout implements OnTouchListener{
 		//text.setVisibility(View.GONE);
 		
 		if(arg1.getAction() == MotionEvent.ACTION_MOVE){
-			text.setVisibility(GONE);
+			//text.setVisibility(GONE);
 			padding = (int) (getPaddingLeft() + arg1.getX() - BUTTON_WIDTH/2);
 		}else if(arg1.getAction() == MotionEvent.ACTION_UP){
 			if(padding > getWidth()-170){
