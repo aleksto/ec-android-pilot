@@ -12,7 +12,7 @@ public class ValueChecker extends TimerTask{
 	private ServiceNotification serviceNotification;
 
 	public ValueChecker(Context context, String username, String password, String url, String namespace){
-		serviceNotification = new ServiceNotification(context, username, password, url, namespace);
+		serviceNotification = new ServiceNotification(context);
 		new DMRViewServiceUnmarshalled(false, username, password, namespace, url);
 	}
 	
@@ -20,9 +20,6 @@ public class ValueChecker extends TimerTask{
 	public void run() {
 		//Log
 		Log.d("tieto", "Value Checker is running");
-		
-		
-		
 		
 		serviceNotification.dislplayNotification("Hello");	
 	}

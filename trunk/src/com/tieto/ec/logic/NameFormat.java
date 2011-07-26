@@ -5,18 +5,25 @@ import java.text.Format;
 import java.text.ParsePosition;
 import java.util.List;
 
+import com.tieto.ec.gui.graphs.BarGraph;
+
 public class NameFormat extends Format {
-	
-	/**
-	 * @author bogeeoiv
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private List<String> titles;
 	
+	/**
+	 * Format used in {@link BarGraph}, this will set a list of values
+	 * along the X-axis on the {@link BarGraph}
+	 * @param titles
+	 */
 	public NameFormat(List<String> titles){
 		this.titles = titles;
 	}
 
+	/**
+	 * Builds up the String
+	 */
 	@Override
 	public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
 		Number num = (Number) obj;
@@ -26,9 +33,12 @@ public class NameFormat extends Format {
 		toAppendTo.append(titles.get(roundNum));
 		return toAppendTo;
 	}
-
+	
+	/**
+	 * Not used
+	 */
 	@Override
 	public Object parseObject(String source, ParsePosition pos) {
-		return null;  // We don't use this so just return null for now.
+		return null;
 	}
 }

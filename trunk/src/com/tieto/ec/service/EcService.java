@@ -11,6 +11,9 @@ public class EcService extends Service{
 	
 	private ServiceThread serviceThread;
 
+	/**
+	 * Start a new {@link Service}
+	 */
 	@Override
 	public void onStart(Intent intent, int startId){
 		//Super
@@ -32,6 +35,10 @@ public class EcService extends Service{
 		}
 	}
 	
+	/**
+	 * Called when {@link Service} is stopped
+	 * This stops the timer that automatically checks for updates
+	 */
 	@Override
 	public void onDestroy(){
 		//Log
@@ -46,9 +53,11 @@ public class EcService extends Service{
 		super.onDestroy();
 	}
 	
+	/**
+	 * Not used
+	 */
 	@Override
 	public IBinder onBind(Intent intent) {
-		Log.d("tieto", "Service binded");
 		return null;
 	}
 }

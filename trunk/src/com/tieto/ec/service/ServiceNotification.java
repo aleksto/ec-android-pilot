@@ -20,7 +20,7 @@ public class ServiceNotification {
 	private PendingIntent contentIntent;
 	
 
-	public ServiceNotification(Context context, String username, String password, String url, String namespace) {
+	public ServiceNotification(Context context) {
 		//Init
 		String notificationService = Context.NOTIFICATION_SERVICE;
 		applicationContext = context.getApplicationContext();

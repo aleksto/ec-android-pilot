@@ -2,12 +2,12 @@ package com.tieto.ec.listeners.login;
 
 import java.io.IOException;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.EditText;
 
 import com.tieto.ec.activities.DailyMorningReport;
-import com.tieto.ec.activities.Login;
 import com.tieto.ec.gui.dialogs.InfoDialog;
 import com.tieto.ec.logic.FileManager;
 
@@ -17,20 +17,27 @@ public class LoginListener implements Runnable {
 	//private ViewService service;
 	private String namespace, url; 
 	private EditText username, password;
-	private Login login;
+	private Context context;
 
-	public LoginListener(EditText username, EditText password, Login login){
+	/**
+	 * Creates a new {@link Runnable} which performs the login,
+	 * if username and password is saved on the phone, the constructor will automatically login;
+	 * @param username {@link EditText} where user types in the username
+	 * @param password {@link EditText} where user types in the password
+	 * @param context {@link Context} used for Android framework actions 
+	 */
+	public LoginListener(EditText username, EditText password, Context context){
 		//Init
-		this.login = login;
+		this.context = context;
 		this.password = password;
 		this.username = username;
 		this.password = password;
 
 		//Reading saved data
 		try {
-			namespace = FileManager.readPath(login, "Input Options.Webservice Namespace");
-			url = FileManager.readPath(login, "Input Options.Webservice URL");
-			String usernameAndPassword = FileManager.readPath(login, "DMR Report.Security Options");
+			namespace = FileManager.readPath(context, "Input Options.Webservice Namespace");
+			url = FileManager.readPath(context, "Input Options.Webservice URL");
+			String usernameAndPassword = FileManager.readPath(context, "DMR Report.Security Options");
 			
 			if(!usernameAndPassword.equalsIgnoreCase("Clear Username\nAnd Password")){
 				String[] split = usernameAndPassword.split("¤#@#¤");
@@ -44,37 +51,47 @@ public class LoginListener implements Runnable {
 		}
 	}
 
+	/**
+	 * This method will login to the webservice,
+	 * and start the {@link DailyMorningReport} 
+	 * @param username The typed in username
+	 * @param password The typed in password
+	 */
 	private void login(String username, String password) {		
 		//Saving username and password
 		try {
-			if(Boolean.valueOf(FileManager.readPath(login, "DMR Report.Security Options.Remember Login\nCredentials"))){
+			if(Boolean.valueOf(FileManager.readPath(context, "DMR Report.Security Options.Remember Login\nCredentials"))){
 				if(!username.equalsIgnoreCase("") && !password.equalsIgnoreCase("")){
-					FileManager.writePath(login, "DMR Report.Security Options", username + "¤#@#¤" + password);		
+					FileManager.writePath(context, "DMR Report.Security Options", username + "¤#@#¤" + password);		
 					Log.d("tieto", "Writing username and password");			
 				}
 			}else{
 				Log.d("tieto", "Not writing username and password");
 			}
 		} catch (IOException e) {
-			FileManager.writePath(login, "DMR Report.Security Options.Remember Login\nCredentials", "true");
+			FileManager.writePath(context, "DMR Report.Security Options.Remember Login\nCredentials", "true");
 			login(username, password);
 			e.printStackTrace();
 		}
 		
 		//Starting new intent
-		Intent intent = new Intent(login, DailyMorningReport.class);
+		Intent intent = new Intent(context, DailyMorningReport.class);
 		intent.putExtra("username", username);
 		intent.putExtra("password", password);
 		intent.putExtra("namespace", namespace);
 		intent.putExtra("url", url);
-		login.startActivity(intent);
+		context.startActivity(intent);
 	}
 
+	/**
+	 * This method will check the given username and password against the webservice
+	 * and login if successful
+	 */
 	public void run() {
 		try {
 			//Reading new url and namespace if it is changed
-			namespace = FileManager.readPath(login, "Input Options.Webservice Namespace");
-			url = FileManager.readPath(login, "Input Options.Webservice URL");
+			namespace = FileManager.readPath(context, "Input Options.Webservice Namespace");
+			url = FileManager.readPath(context, "Input Options.Webservice URL");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -89,7 +106,7 @@ public class LoginListener implements Runnable {
 			}
 		}else{
 			//URL and namespace is not defined
-			InfoDialog.showInfoDialog(login, "if this is the first startup, please go to \nmenu->Options\n and set up url and namespace");
+			InfoDialog.showInfoDialog(context, "if this is the first startup, please go to \nmenu->Options\n and set up url and namespace");
 		}
 	}
 }
