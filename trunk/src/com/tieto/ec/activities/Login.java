@@ -1,5 +1,7 @@
 package com.tieto.ec.activities;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,7 +10,6 @@ import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -17,10 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tieto.R;
+import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.gui.login.LoginSlider;
-import com.tieto.ec.listeners.login.ExitListener;
 import com.tieto.ec.listeners.login.LoginListener;
 import com.tieto.ec.listeners.login.LoginOptionsListener;
+import com.tieto.ec.logic.FileManager;
 
 public class Login extends Activity{
 
@@ -29,7 +31,7 @@ public class Login extends Activity{
 	
 	/**
 	 * Main class for the login, this is the class started after introduction animation
-	 * OnCreate is the constructor for the Super class Activity, and where all the initialization starts.
+	 * OnCreate is the constructor for the Super class Activity, and where all initializations start.
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +75,18 @@ public class Login extends Activity{
 	@Override
 	protected void onRestart() {
 		super.onResume();
-		if(quit){
-			onBackPressed();			
-		}else{
-			onCreate(null);
+		try {
+			String exist = FileManager.readPath(this, OptionTitle.DMRReport + "." + OptionTitle.SecurityOptions);
+			if(exist.equalsIgnoreCase(OptionTitle.ClearUsernameAndPassword.toString())){
+				onCreate(null);	
+			}
+			else{
+				onBackPressed();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		
 	}
 
 	/**
@@ -97,7 +106,7 @@ public class Login extends Activity{
 	}
 	
 	/**
-	 * Used in LoginListener.java when wrong username or password is written
+	 * Used in {@link LoginListener} when wrong username or password is written
 	 * @param msg
 	 */
 	public void toastFromOtherThreads(final String msg){
@@ -108,7 +117,11 @@ public class Login extends Activity{
 		});
 	}
 
-	
+	/**
+	 * This method will set the quit state. If the state is true the method will quit in the
+	 * onRestart() in this class. 
+	 * @param quit
+	 */
 	public void setQuit(boolean quit) {
 		this.quit = quit;
 	}
