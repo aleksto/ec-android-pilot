@@ -1,60 +1,33 @@
 package com.tieto.ec.activities;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.ec.prod.android.pilot.client.DMRViewServiceUnmarshalled;
-import com.ec.prod.android.pilot.client.WebserviceDateConverter;
-import com.ec.prod.android.pilot.model.GraphData;
-import com.ec.prod.android.pilot.model.GraphSection;
 import com.ec.prod.android.pilot.model.Section;
-import com.ec.prod.android.pilot.model.TableColumn;
-import com.ec.prod.android.pilot.model.TableData;
-import com.ec.prod.android.pilot.model.TableSection;
-import com.ec.prod.android.pilot.model.TextData;
-import com.ec.prod.android.pilot.model.TextElement;
-import com.ec.prod.android.pilot.model.TextSection;
 import com.ec.prod.android.pilot.service.ExampleViewService;
 import com.ec.prod.android.pilot.service.ViewService;
 import com.tieto.R;
-import com.tieto.ec.enums.ColorType;
-import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.enums.Webservice;
-import com.tieto.ec.gui.graphs.BarGraph;
-import com.tieto.ec.gui.graphs.Graph;
-import com.tieto.ec.gui.graphs.LineGraph;
-import com.tieto.ec.gui.table.Cell;
 import com.tieto.ec.listeners.dmr.ChangeDayListener;
 import com.tieto.ec.listeners.dmr.DmrMapButtonListener;
 import com.tieto.ec.listeners.dmr.DmrOptionsButtonListener;
-import com.tieto.ec.listeners.dmr.GraphFullScreenListener;
-import com.tieto.ec.listeners.dmr.GraphLineChooserListener;
-import com.tieto.ec.listeners.dmr.ShowHideSection;
-import com.tieto.ec.listeners.dmr.TableOptionDialogListener;
-import com.tieto.ec.logic.ColorConverter;
-import com.tieto.ec.logic.FileManager;
-import com.tieto.ec.logic.ResolutionConverter;
+import com.tieto.ec.logic.SectionBuilder;
 import com.tieto.ec.service.EcService;
 
 public class DailyMorningReport extends Activity{
@@ -69,11 +42,14 @@ public class DailyMorningReport extends Activity{
 	private ScrollView scroll;
 
 	private Date date;
-
 	private RelativeLayout buttonRow;
-
 	private TextView currentDay;
+	private SectionBuilder sectionBuilder;
 	
+	/**
+	 * Main class for the daily morning report, this is the class started when you have logged in.
+	 * OnCreate is the constructor for the Super class Activity, and there all the initialization is.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		//Super
@@ -81,6 +57,7 @@ public class DailyMorningReport extends Activity{
 		
 		//Init
 		main = new TableLayout(this);
+		sectionBuilder = new SectionBuilder(this);
 		username = getIntent().getExtras().getString(Webservice.username.toString());
 		password = getIntent().getExtras().getString(Webservice.password.toString());
 		namespace = getIntent().getExtras().getString(Webservice.namespace.toString());
@@ -161,33 +138,56 @@ public class DailyMorningReport extends Activity{
 		scroll.addView(table);
 		
 		//Options
-		updateColors();
+		sectionBuilder.updateColors();
 		
 		//Building report
 		sections = webservice.getSections();
 		
 		//List Sections
-		listSections();
+		sectionBuilder.listSections();
 	}
 	
+	/**
+	 * Setting the date showed in the button row at top of activity
+	 * @param date
+	 */
 	public void setDate(Date date){
 		this.date = date;
 	}
 	
+	/**
+	 * Getting the date showed in the button row at top of activity
+	 * @return Current Date in button row
+	 */
 	public Date getDate(){
 		return date;
 	}
+
+	public void setSections(List<Section> sections) {
+		this.sections = sections;
+	}
 	
+	/**
+	 * Refreshes all value in the entire activity
+	 */
 	public void refreshWebserviceValues(){
 		onCreate(null);
 	}
 	
+	/**
+	 * This method is executed when the activity is resumed, and refreshes all the values in the activity
+	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
-		onCreate(null);
+		refreshWebserviceValues();
 	}
-		
+	
+	/**
+	 * This method is executed when the user presses the menu button on the phone, and it builds up the menu,
+	 * and adds onClick listeners to the menu buttons
+	 * @param Menu menu
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = new MenuInflater(this);
@@ -204,6 +204,9 @@ public class DailyMorningReport extends Activity{
 		return super.onCreateOptionsMenu(menu);
 	}
 	
+	/**
+	 * Restarts the background service, used when user sets new update interval on the service
+	 */
 	public void restartService() {
 		if(serviceIntent == null){
 			serviceIntent = new Intent(this, EcService.class);
@@ -217,200 +220,122 @@ public class DailyMorningReport extends Activity{
 		startService(serviceIntent);
 	}
 	
+	/**
+	 * Refreshing the sections and colors of the report
+	 */
 	public void refresh(){
-		Log.d("tieto", "Refreshing DMR");
-		updateColors();
-		listSections();
+		Log.d("tieto", "Refreshing Daily Moring Report");
+		sectionBuilder.updateColors();
+		sectionBuilder.listSections();
+	}
+
+	/**
+	 * Sets the background color of the report, but doesn't update the UI {@link refresh()} 
+	 * @param backgroundColor
+	 */
+	public void setBackgroundColor(int backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
+
+	/**
+	 * @return the background color of the report {@link Color}
+	 */
+	public int getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	/**
+	 * Sets the text color of the report, but doesn't update the UI {@link refresh()}
+	 * @param backgroundColor
+	 */
+	public void setTextColor(int textColor) {
+		this.textColor = textColor;
+	}
+
+	/**
+	 * @return the text color of the report {@link Color}
+	 */
+	public int getTextColor() {
+		return textColor;
+	}
+
+	/**
+	 * Sets the cell text color of the report, but doesn't update the UI {@link refresh()} 
+	 * @param backgroundColor
+	 */
+	public void setCellTextColor(int cellTextColor) {
+		this.cellTextColor = cellTextColor;
+	}
+
+	/**
+	 * @return the cell text color of the report {@link Color}
+	 */
+	public int getCellTextColor() {
+		return cellTextColor;
+	}
+
+	/**
+	 * Sets the cell background color of the report, but doesn't update the UI {@link refresh()} 
+	 * @param backgroundColor
+	 */
+	public void setCellBackgroundColor(int cellBackgroundColor) {
+		this.cellBackgroundColor = cellBackgroundColor;
+	}
+
+	/**
+	 * @return the cell background color of the report {@link Color}
+	 */
+	public int getCellBackgroundColor() {
+		return cellBackgroundColor;
+	}
+
+	/**
+	 * Sets the cell border color of the report, but doesn't update the UI {@link refresh()} 
+	 * @param backgroundColor
+	 */
+	public void setCellBorderColor(int cellBorderColor) {
+		this.cellBorderColor = cellBorderColor;
+	}
+
+	/**
+	 * @return the cell border color of the report {@link Color}
+	 */
+	public int getCellBorderColor() {
+		return cellBorderColor;
+	}
+
+	/**
+	 * @return the table {@link TableLayout} for the report, this is used for adding each section
+	 */
+	public TableLayout getTable(){
+		return table;
+	}
+
+	/**
+	 * @return the scrollView {@link ScrollView} of the report, used in {@link SectionBuilder} to set color 
+	 */
+	public ScrollView getScrollView(){
+		return scroll;
 	}
 	
-	public void updateColors(){
-		String basePath = OptionTitle.DMRReport + "." + OptionTitle.ColorOptions + ".";
-		try {
-			backgroundColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.BackgroundColor));
-			textColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.TextColor));
-			cellTextColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.TextColor));
-			cellBackgroundColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.CellBackgroundColor));
-			cellBorderColor = ColorConverter.parseColor(FileManager.readPath(this, basePath + OptionTitle.CellBorderColor));
-		} catch (IOException e) {
-			Log.d("tieto", "Setting default color");
-			backgroundColor = Color.BLACK;
-			textColor = Color.GRAY;
-			cellBackgroundColor = Color.WHITE;
-			cellTextColor = Color.BLACK;
-			cellBorderColor = Color.BLACK;
-			FileManager.writePath(this, basePath + OptionTitle.BackgroundColor, ColorType.LightBlue.toString());
-			FileManager.writePath(this, basePath + OptionTitle.TextColor, ColorType.Black.toString());
-			FileManager.writePath(this, basePath + OptionTitle.CellBackgroundColor, ColorType.White.toString());
-			FileManager.writePath(this, basePath + OptionTitle.CellBorderColor, ColorType.Black.toString());
-			e.printStackTrace();
-		}
-		
-		scroll.setBackgroundColor(backgroundColor);
-		table.setBackgroundColor(backgroundColor);
+	/**
+	 * @return The webservice instance, used in {@link SectionBuilder} to build the section UI.
+	 */
+	public ViewService getWebservice(){
+		return webservice;
+	}
+
+	/**
+	 * @return The sections, used in {@link SectionBuilder} to build the section UI.
+	 */
+	public List<Section> getSections() {
+		return sections;
 	}
 	
-	public void listSections(){
-		table.removeAllViews();
-		currentDay.setText(date.getDate() + "-" + (date.getMonth()+1) + "-" + (date.getYear()+1900));
-		
-		String basePath = OptionTitle.DMRReport + "." + OptionTitle.ReportOptions + ".";
-		try {
-			int resolution = ResolutionConverter.convert(FileManager.readPath(this, basePath + OptionTitle.Interval));
-			for (Section section : sections) {
-				addSection(section, date, date, resolution);			
-			}
-		} catch (IOException e) {
-			Log.d("tieto", "Setting default time and resolution");
-			FileManager.writePath(this, basePath + OptionTitle.Interval, "Weekly");
-			listSections();
-			e.printStackTrace();
-		}		
+	/**
+	 * @return The Currentday Label {@link TextView}
+	 */
+	public TextView getCurrentdayLabel(){
+		return currentDay;
 	}
-	
-	private void addSection(Section section, Date fromdate, Date toDate, int resolution){
-		//Init
-		TextView sectionTitle = new TextView(this);
-		
-		//Title
-		sectionTitle.setText(section.getSectionHeader() + ":");
-		sectionTitle.setTextSize(30);
-		sectionTitle.setTextColor(textColor);
-		sectionTitle.setTypeface(Typeface.create("arial", Typeface.NORMAL));
-		sectionTitle.setPadding(0, 20, 0, 0);
-		
-		//Childs
-		table.addView(sectionTitle);
-		table.setPadding(10, 10, 10, 0);
-		
-		//Listeners
-		sectionTitle.setOnClickListener(new ShowHideSection(section.getSectionHeader(), table));
-		
-		//Values
-		if(section instanceof TextSection){
-			TextData textData = webservice.getTextData((TextSection)section, fromdate, toDate, resolution);				
-			addTextData(textData, table);
-		}
-		else if(section instanceof TableSection){
-			TableData tableData = webservice.getTableData((TableSection)section, fromdate, toDate, resolution);
-			sectionTitle.setOnLongClickListener(new TableOptionDialogListener(this, section.getSectionHeader(), tableData));
-			addTableData(tableData, table, section.getSectionHeader());
-		}
-		else if(section instanceof GraphSection){
-			GraphData graphData = webservice.getGraphDataBySection((GraphSection)section, fromdate, toDate, resolution);	
-			addGraphData(graphData, table, section.getSectionHeader());
-		}
-	}
-
-	private void addGraphData(GraphData graphData, TableLayout sectionTable, String title) {
-		//Init
-		Graph graph = null;
-		
-		//Add data
-		Log.d("tieto", "Adding graph with size: " + graphData.getGraphPoints().size());
-		if(graphData.getGraphPoints().size()>1){
-			//Line Graph
-			graph = new LineGraph(this, "");
-			((LineGraph) graph).add(graphData, title);			
-			graph.setOnLongClickListener(new GraphLineChooserListener(this, graph, title));
-		}else{
-			//Bar graph
-			graph = new BarGraph(this, "", Color.GREEN);
-			((BarGraph) graph).add(graphData);	
-		}
-		
-		//LayoutParams
-		int width = getWindowManager().getDefaultDisplay().getWidth();
-		graph.setLayoutParams(new LayoutParams(width-20, 200));
-		
-		//Childs
-		sectionTable.addView(graph);
-		
-		//Listener
-		graph.setOnClickListener(new GraphFullScreenListener(this, graph, title));
-	}
-
-	private void addTableData(TableData tableData, TableLayout sectionTable, String title) {
-		//Init
-		HorizontalScrollView hScroll = new HorizontalScrollView(this);
-		TableLayout table = new TableLayout(this);
-		List<com.ec.prod.android.pilot.model.TableRow> tableRows = tableData.getTableRows();
-		
-		//Table
-		table.setStretchAllColumns(true);
-		table.setBackgroundColor(backgroundColor);
-		
-		//Active columns
-		ArrayList<String> activeColumns = activeColumns(title + "." + OptionTitle.VisibleColumns, tableData);
-		
-		//Headers
-		List<TableColumn> tableColumns = tableData.getTableColumns();
-		TableRow headerRow = new TableRow(this);
-		for (TableColumn column: tableColumns) {
-			//Init
-			if(activeColumns.contains(column.getHeader())){
-				headerRow.addView(new Cell(this, column.getHeader(), cellBackgroundColor, cellTextColor, cellBorderColor));				
-			}
-		}
-		table.addView(headerRow);
-		
-		//Rows
-		for (com.ec.prod.android.pilot.model.TableRow tableRow : tableRows) {
-			//Init
-			TableRow row = new TableRow(this);
-			List<String> values = tableRow.getValues();
-			
-			for (int i = 0; i < values.size(); i++) {
-				//Add Cell
-				String header = tableColumns.get(i).getHeader();
-				if(activeColumns.contains(header)){
-					row.addView(new Cell(this, values.get(i), cellBackgroundColor, cellTextColor, cellBorderColor));					
-				}
-			}
-			
-			//Childs
-			table.addView(row);
-		}
-		
-		//Childs
-		hScroll.addView(table);
-		sectionTable.addView(hScroll);
-	}
-
-	private void addTextData(TextData textData, TableLayout sectionTable) {
-		TableLayout table = new TableLayout(this);
-		List<TextElement> textElements = textData.getTextElements();
-		for (TextElement text : textElements) {
-			TextView view = new TextView(this);
-			view.setText(WebserviceDateConverter.parse(text.getDaytime(), WebserviceDateConverter.Type.TIME) + "\n" + text.getText() + "\n");
-			view.setTextColor(textColor);
-			view.setTypeface(Typeface.create("arial", Typeface.NORMAL));
-			table.addView(view);
-		}
-		sectionTable.addView(table);
-	}
-
-	private ArrayList<String> activeColumns(String title, TableData tableData){
-		ArrayList<String> columns = new ArrayList<String>();
-		try {
-			List<TableColumn> columnsList = tableData.getTableColumns();
-			for (int i = 0; i < columnsList.size(); i++) {
-				boolean active = Boolean.valueOf(FileManager.readPath(this, title + "." + columnsList.get(i).getHeader()));
-				
-				if(active){
-					columns.add(columnsList.get(i).getHeader());
-				}
-			}
-			
-			return columns;
-		} catch (IOException e) {
-			List<TableColumn> tableColumns = tableData.getTableColumns();
-			
-			for (TableColumn tableColumn : tableColumns) {
-				FileManager.writePath(this,  title + "." + tableColumn.getHeader(), "true");
-			}			
-			
-			return activeColumns(title, tableData);
-		}
-	}
-
 }

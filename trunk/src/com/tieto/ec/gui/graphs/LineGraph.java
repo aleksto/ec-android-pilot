@@ -22,12 +22,19 @@ public class LineGraph extends Graph{
 	
 	private final double STEP_VALUE = 4.5;
 	
+	/**
+	 * Creates a new empty {@link LineGraph}
+	 * @param context {@link Context} needed for Android frameword actions
+	 * @param title The title of the graph
+	 */
 	public LineGraph(Context context, String title) {
 		super(context, title);
-		
-		
 	}
 	
+	/**
+	 * Clones and creates a new given {@link LineGraph}
+	 * @param graph
+	 */
 	public LineGraph(LineGraph graph){
 		super(graph.context, graph.title);
 		
@@ -47,6 +54,11 @@ public class LineGraph extends Graph{
 		this.setDomainStepValue(STEP_VALUE);
 	}
 	
+	/**
+	 * Adds lines to the graph by a given {@link GraphData}
+	 * @param graphData The {@link GraphData} used
+	 * @param title Title of this line
+	 */
 	public void add(GraphData graphData, String title) {
 		List<GraphPoint> graphPoints = graphData.getGraphPoints();
 		List<String> pointAttributes = graphData.getPointAttributes();
@@ -82,6 +94,11 @@ public class LineGraph extends Graph{
 		invalidate();
 	}
 	
+	/**
+	 * Adds a new graph line with no values
+	 * @param title The title of the graph line
+	 * @param color The {@link Color} of the graph line
+	 */
 	private void addEmptyGraphLine(String title, int color){
 		SimpleXYSeries line = new SimpleXYSeries(title);
 		LineAndPointFormatter format = new LineAndPointFormatter(color, color, color);
@@ -97,6 +114,12 @@ public class LineGraph extends Graph{
 		formats.add(format);
 	}
 	
+	/**
+	 * Adds a singel point to a given graph line
+	 * @param lineNr Index of the graph line
+	 * @param x X Value
+	 * @param y Y Value
+	 */
 	private void addPointToLine(int lineNr, double x, double y){
 		SimpleXYSeries line = graphLines.get(lineNr);
 		line.addLast(x, y);

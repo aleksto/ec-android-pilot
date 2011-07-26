@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import android.content.Intent;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.EditText;
 
 import com.tieto.ec.activities.DailyMorningReport;
@@ -46,10 +44,7 @@ public class LoginListener implements Runnable {
 		}
 	}
 
-	private void login(String username, String password) {
-		//Setting login to quit when resuming
-		login.setQuit(true);
-		
+	private void login(String username, String password) {		
 		//Saving username and password
 		try {
 			if(Boolean.valueOf(FileManager.readPath(login, "DMR Report.Security Options.Remember Login\nCredentials"))){

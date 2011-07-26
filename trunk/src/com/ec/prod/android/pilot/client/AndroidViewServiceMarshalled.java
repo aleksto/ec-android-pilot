@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import com.ec.prod.android.pilot.service.ViewServiceMarshalled;
+import com.tieto.ec.logic.DateConverter;
 
 public class AndroidViewServiceMarshalled extends Webservice implements ViewServiceMarshalled{
 
@@ -18,16 +19,16 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 
 	public List<String> getTableData(String section, Date fromdate, Date toDate, int resolution) {
 		Object response = executeWebservice("getTableData",  "arg0", section,
-														 	 "arg1", WebserviceDateConverter.parse(fromdate, WebserviceDateConverter.Type.DATE),
-															 "arg2", WebserviceDateConverter.parse(toDate, WebserviceDateConverter.Type.DATE),
+														 	 "arg1", DateConverter.parse(fromdate, DateConverter.Type.DATE),
+															 "arg2", DateConverter.parse(toDate, DateConverter.Type.DATE),
 															 "arg3", Integer.toString(resolution));
 				return generateResponseList(response);
 	}
 
 	public List<String> getGraphDataBySection(String section, Date fromDate, Date toDate, int resolution) {
 		Object response = executeWebservice("getGraphDataBySection",  "arg0", section,
-																 	  "arg1", WebserviceDateConverter.parse(fromDate, WebserviceDateConverter.Type.DATE),
-																	  "arg2", WebserviceDateConverter.parse(toDate, WebserviceDateConverter.Type.DATE),
+																 	  "arg1", DateConverter.parse(fromDate, DateConverter.Type.DATE),
+																	  "arg2", DateConverter.parse(toDate, DateConverter.Type.DATE),
 																	  "arg3", Integer.toString(resolution));
 		return generateResponseList(response);
 	}
@@ -40,8 +41,8 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 
 	public List<String> getTextData(String section, Date fromDate, Date toDate, int resolution) {
 		Object response = executeWebservice("getTextData",  "arg0", section,
-															"arg1", WebserviceDateConverter.parse(fromDate, WebserviceDateConverter.Type.DATE),
-															"arg2", WebserviceDateConverter.parse(toDate, WebserviceDateConverter.Type.DATE),
+															"arg1", DateConverter.parse(fromDate, DateConverter.Type.DATE),
+															"arg2", DateConverter.parse(toDate, DateConverter.Type.DATE),
 															"arg3", Integer.toString(resolution));
 		return generateResponseList(response);
 	}

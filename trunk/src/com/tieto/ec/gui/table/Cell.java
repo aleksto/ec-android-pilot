@@ -1,14 +1,23 @@
 package com.tieto.ec.gui.table;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class Cell extends RelativeLayout{
 	
-	private TextView textView;
+	private TextView textView;	
 	
+	/**
+	 * Creates a new Cell for a table, 
+	 * @param context {@link Context} needed for Android framework actions
+	 * @param text {@link String} text of the cell
+	 * @param backgroundColor {@link Color} of the background
+	 * @param textColor {@link Color} of the text
+	 * @param borderColor {@link Color} of the border
+	 */
 	public Cell(Context context, String text, int backgroundColor, int textColor, int borderColor) {
 		//Super
 		super(context);

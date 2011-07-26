@@ -18,15 +18,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tieto.R;
+import com.tieto.ec.gui.login.Slider;
 import com.tieto.ec.enums.OptionTitle;
-import com.tieto.ec.gui.login.LoginSlider;
 import com.tieto.ec.listeners.login.LoginListener;
 import com.tieto.ec.listeners.login.LoginOptionsListener;
 import com.tieto.ec.logic.FileManager;
 
 public class Login extends Activity{
 
-	private boolean quit;
 	private Handler handler;
 	
 	/**
@@ -41,7 +40,6 @@ public class Login extends Activity{
     	
     	//Init
     	handler = new Handler(Looper.getMainLooper());
-    	quit = false;
     	
     	//Image
     	ImageView image = (ImageView) findViewById(R.id.background);
@@ -64,7 +62,7 @@ public class Login extends Activity{
     	password.setTextColor(Color.BLACK);
     	
     	//Login slider
-    	LoginSlider slider = new LoginSlider(this, new LoginListener(username, password, this), "Slide to login");
+    	Slider slider = new Slider(this, new LoginListener(username, password, this), "Slide to login");
     	relativ.addView(slider);
     }
 	
@@ -115,14 +113,5 @@ public class Login extends Activity{
 				Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
 			}
 		});
-	}
-
-	/**
-	 * This method will set the quit state. If the state is true the method will quit in the
-	 * onRestart() in this class. 
-	 * @param quit
-	 */
-	public void setQuit(boolean quit) {
-		this.quit = quit;
 	}
 }

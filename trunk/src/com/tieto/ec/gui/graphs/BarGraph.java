@@ -6,10 +6,10 @@ import java.util.List;
 import com.androidplot.xy.BarFormatter;
 import com.androidplot.xy.BarRenderer;
 import com.androidplot.xy.SimpleXYSeries;
-import com.ec.prod.android.pilot.client.WebserviceDateConverter;
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphPoint;
 import com.tieto.ec.logic.NameFormat;
+import com.tieto.ec.logic.DateConverter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -19,6 +19,12 @@ public class BarGraph extends Graph{
 	private int color;
 	private GraphData data;
 	
+	/**
+	 * Creates a new empty Bar graph with given title and color.
+	 * @param context {@link Context} needed for Android framework actions
+	 * @param title The title of the graph
+	 * @param color The color of the graph
+	 */
 	public BarGraph(Context context, String title, int color) {
 		//Super
 		super(context, title);
@@ -44,6 +50,10 @@ public class BarGraph extends Graph{
         formats.add(new BarFormatter(1, 1));
 	}
 	
+	/**
+	 * Clones and creates a new {@link BarGraph}
+	 * @param graph
+	 */
 	public BarGraph(BarGraph graph){
 		//This
 		this(graph.context, graph.title, graph.color);
@@ -51,6 +61,11 @@ public class BarGraph extends Graph{
 		add(graph.data);
 	}
 	
+	/**
+	 * Adds an array of values to the {@link BarGraph}
+	 * @param title Title of the bars
+	 * @param vals The array of values
+	 */
 	private void addBars(String title, Number ... vals){
 		//Init
 		SimpleXYSeries bar = new SimpleXYSeries(Arrays.asList(vals), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, title);
@@ -73,6 +88,10 @@ public class BarGraph extends Graph{
 		bar.setModel(Arrays.asList(vals), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
 	}
 	
+	/**
+	 * Adds bars to the graph by a given {@link GraphData}
+	 * @param graphData data
+	 */
 	public void add(GraphData graphData) {
 		//Init
 		this.data = graphData;
@@ -91,7 +110,7 @@ public class BarGraph extends Graph{
 			}
 		}
 		
-		addBars(WebserviceDateConverter.parse(graphData.getGraphPoints().get(0).getDaytime(), WebserviceDateConverter.Type.DATE), vals);
+		addBars(DateConverter.parse(graphData.getGraphPoints().get(0).getDaytime(), DateConverter.Type.DATE), vals);
 		
 		invalidate();
 	}
