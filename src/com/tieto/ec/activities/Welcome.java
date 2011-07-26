@@ -9,6 +9,10 @@ public class Welcome extends Activity{
 
 	private WelcomeAnimation animation;
 
+	/**
+	 * Main class for the welcome animation, this is the class started when the application is started. 
+	 * OnCreate is the constructor for the Super class Activity, and where all initializations start.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		//Super
@@ -19,6 +23,7 @@ public class Welcome extends Activity{
 		
 		setContentView(animation);
 	}
+	
 	
 	@Override
 	protected void onPause() {
