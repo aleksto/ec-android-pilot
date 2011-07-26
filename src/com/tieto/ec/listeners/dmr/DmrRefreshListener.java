@@ -1,11 +1,11 @@
 package com.tieto.ec.listeners.dmr;
 
-import com.tieto.ec.activities.DailyMorningReport;
-
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.util.Log;
+
+import com.tieto.ec.activities.DailyMorningReport;
 
 public class DmrRefreshListener implements OnDismissListener {
 

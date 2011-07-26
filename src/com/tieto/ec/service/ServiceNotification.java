@@ -19,7 +19,11 @@ public class ServiceNotification {
 	private String contentTitle;
 	private PendingIntent contentIntent;
 	
-
+	/**
+	 * This class makes a notification service which notifies the user of information when the application is closed.
+	 * Context is needed for Androids framework actions. 
+	 * @param context
+	 */
 	public ServiceNotification(Context context) {
 		//Init
 		String notificationService = Context.NOTIFICATION_SERVICE;
@@ -38,6 +42,10 @@ public class ServiceNotification {
 		contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 	}
 
+	/**
+	 * This method displays the a message in this service notification
+	 * @param message
+	 */
 	public void dislplayNotification(String message) {
 		//Init
 		notification = new Notification(icon, tickerText, System.currentTimeMillis());

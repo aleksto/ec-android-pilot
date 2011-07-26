@@ -1,15 +1,26 @@
 package com.tieto.ec.logic;
 
 import com.ec.prod.android.pilot.model.Resolution;
+import com.tieto.ec.enums.OptionTitle;
 
+/**
+ * Class for converting a String to a resolution integer representing a time interval
+ */
 public class ResolutionConverter {
 
+	/**
+	 * This method converts a String representing a time interval and converts it
+	 * into a resolution integer. Strings daily, weekly, monthly and yearly represents
+	 * the integers 1, 2, 3 and 4 respectively. 
+	 * @param resolution
+	 * @return
+	 */
 	public static int convert(String resolution){
-		if(resolution.equalsIgnoreCase("Daily")){
+		if(resolution.equalsIgnoreCase(OptionTitle.Daily.toString())){
 			return Resolution.DAILY;
-		}else if(resolution.equalsIgnoreCase("Weekly")){
+		}else if(resolution.equalsIgnoreCase(OptionTitle.Weekly.toString())){
 			return Resolution.WEEKLY;
-		}else if(resolution.equalsIgnoreCase("Monthly")){
+		}else if(resolution.equalsIgnoreCase(OptionTitle.Monthly.toString())){
 			return Resolution.MONTHLY;
 		}else{
 			return Resolution.YEARLY;

@@ -2,15 +2,15 @@ package com.tieto.ec.listeners.dmr;
 
 import java.util.ArrayList;
 
-import com.androidplot.xy.SimpleXYSeries;
-import com.tieto.ec.activities.DailyMorningReport;
-import com.tieto.ec.enums.OptionRowType;
-import com.tieto.ec.gui.dialogs.OptionDialog;
-import com.tieto.ec.gui.graphs.Graph;
-
-import android.app.Dialog;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+
+import com.androidplot.xy.SimpleXYSeries;
+import com.tieto.ec.activities.DailyMorningReport;
+import com.tieto.ec.gui.dialogs.OptionDialog;
+import com.tieto.ec.gui.dialogs.OptionRow.OptionRowType;
+import com.tieto.ec.gui.graphs.Graph;
+import android.app.Dialog;
 
 public class GraphLineChooserListener implements OnLongClickListener {
 

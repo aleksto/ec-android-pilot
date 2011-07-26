@@ -6,9 +6,9 @@ import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 
-import com.tieto.ec.enums.OptionRowType;
 import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.gui.dialogs.OptionDialog;
+import com.tieto.ec.gui.dialogs.OptionRow.OptionRowType;
 
 public class LoginOptionsListener implements OnMenuItemClickListener {
 

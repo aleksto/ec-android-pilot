@@ -11,19 +11,34 @@ import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tieto.ec.enums.OptionRowType;
 import com.tieto.ec.listeners.dialogs.DatePickerListener;
 import com.tieto.ec.listeners.dialogs.DialogActionListener;
 import com.tieto.ec.logic.FileManager;
 
 public class OptionRow extends RelativeLayout{
 
+	public enum OptionRowType {
+		NONE, 
+		EDIT_BUTTON, 
+		DATE_BUTTON, 
+		CHOOSE_BUTTON, 
+		CHECK_BOX
+	}
+	
+	/**
+	 * An instance of this class represents the Rows of an {@link OptionDialog}. The optionsTitle
+	 * represent the text inside the Row and the optionsRowType defines the type of Row. 
+	 * See {@link OptionRowType} for available types. 
+	 * @param optionDialog
+	 * @param optionsTitle
+	 * @param optionRowType
+	 */
 	public OptionRow(OptionDialog optionDialog, String optionsTitle, OptionRowType optionRowType){
 		super(optionDialog.getContext());
 		
 		boolean goBack;
 		Dialog nextState = null;
-		
+
 		//Init
 //		RelativeLayout optionRow = new RelativeLayout(optionDialog.getContext());
 		TextView optionsTextView = new TextView(optionDialog.getContext());

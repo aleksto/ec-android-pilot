@@ -54,6 +54,7 @@ public class HttpTransportBasicAuth extends HttpTransportSE {
 		this.password = password;
 	}
 
+	@Override
 	protected ServiceConnectionSE getServiceConnection() throws IOException {
 		ServiceConnectionSE midpConnection = new ServiceConnectionSE(url);
 		addBasicAuthentication(midpConnection);
