@@ -1,15 +1,14 @@
 package com.tieto.ec.gui.login;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.view.View.OnTouchListener;
 
-public class LoginSlider extends RelativeLayout implements OnTouchListener{
+public class Slider extends RelativeLayout implements OnTouchListener{
 
 	private final int BUTTON_WIDTH = 160;
 	private final int TEXT_SIZE = 25;
@@ -19,7 +18,13 @@ public class LoginSlider extends RelativeLayout implements OnTouchListener{
 	private Runnable onFinish;
 	private TextView text;
 
-	public LoginSlider(Context context, Runnable onFinish, String messageText) {
+	/**
+	 * Creates a new slider and runs the {@link Runnable} when the lock is glided over
+	 * @param context {@link Context} needed for Android framework actions
+	 * @param onFinish The {@link Runnable} to run when lock is glided over
+	 * @param messageText {@link String} message displayed on the {@link Slider}
+	 */
+	public Slider(Context context, Runnable onFinish, String messageText) {
 		//Super
 		super(context);
 		this.onFinish = onFinish;
@@ -53,6 +58,11 @@ public class LoginSlider extends RelativeLayout implements OnTouchListener{
 		setPadding(0, 5, 0, 0);
 	}
 
+	/**
+	 * Method called when the user touches the lock button
+	 * it takes the x coordinate of the finger and slides the button to the fingers x coordinate
+	 * and when finger is released it either slides the button back, or runs the {@link Runnable}
+	 */
 	public boolean onTouch(View arg0, MotionEvent arg1) {
 		//text.setVisibility(View.GONE);
 		

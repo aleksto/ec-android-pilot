@@ -7,6 +7,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 
 import com.tieto.ec.logic.FileManager;
 
@@ -18,6 +19,13 @@ public class CancelListener implements OnClickListener{
 	private final Context context;
 	private final String path;
 	
+	/**
+	 * Creates a {@link OnClickListener} for a cancel {@link Button}
+	 * @param dialog The parent {@link Dialog} to hide when clicked
+	 * @param context {@link Context} needed for Android framework actions
+	 * @param path {@link String} path to files to restore values when clicked
+	 * @param titles Titles of the files
+	 */
 	public CancelListener(Dialog dialog, Context context, String path, String ... titles) {
 		this.dialog = dialog;
 		this.context = context;
@@ -38,6 +46,9 @@ public class CancelListener implements OnClickListener{
 		}
 	}
 
+	/**
+	 * Restores given files when clicked
+	 */
 	public void onClick(View arg0) {
 		dialog.hide();
 		

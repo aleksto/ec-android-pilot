@@ -24,6 +24,11 @@ public class Graph extends XYPlot{
 	protected String title;
 	protected Context context;
 
+	/**
+	 * Creates a new empty graph
+	 * @param context {@link Context} needed for Android framework actions
+	 * @param title The title of the graph
+	 */
 	@SuppressWarnings("rawtypes")
 	public Graph(Context context, String title){
 		super(context, title);
@@ -53,11 +58,19 @@ public class Graph extends XYPlot{
 		widget.getRangeOriginLinePaint().setColor(Color.BLACK);
 	}
 
+	/**
+	 * Shows a graph line
+	 * @param graphNr The number of the graph line
+	 */
 	public void show(int graphNr){
 		addSeries(graphLines.get(graphNr), formats.get(graphNr));
 		invalidate();
 	}
 
+	/**
+	 * Shows a graph line
+	 * @param title The title of the graph line
+	 */
 	public void show(String title){
 		for (SimpleXYSeries line : graphLines) {
 			if(line.getTitle().equalsIgnoreCase(title)){
@@ -68,6 +81,10 @@ public class Graph extends XYPlot{
 
 	}
 
+	/**
+	 * Hides a graph line
+	 * @param graphNr The number of the graph line
+	 */
 	public void hide(int graphNr){
 		if(getSeriesSet().size() > 1){
 			removeSeries(graphLines.get(graphNr));		
@@ -75,6 +92,10 @@ public class Graph extends XYPlot{
 		}
 	}
 
+	/**
+	 * Hides a graph line
+	 * @param title The title of the graph line
+	 */
 	public void hide(String title){
 		for (SimpleXYSeries line : graphLines) {
 			if(line.getTitle().equalsIgnoreCase(title)){
@@ -84,6 +105,11 @@ public class Graph extends XYPlot{
 		}
 	}
 	
+	/**
+	 * Returns <code>true</code> if the graph line is showing
+	 * @param title The title of the graph line
+	 * @return <code>true</code> if the line is showing
+	 */
 	public boolean isShowing(String title){
 		Set<XYSeries> seriesSet = getSeriesSet();
 		
@@ -95,6 +121,10 @@ public class Graph extends XYPlot{
 		return false;
 	}
 	
+	/**
+	 * Clear all values from a graph line
+	 * @param title Title of the graph line
+	 */
 	public void clearGraphLine(String title){
 		for (SimpleXYSeries line : graphLines) {
 			if(line.getTitle().equalsIgnoreCase(title)){
@@ -103,6 +133,10 @@ public class Graph extends XYPlot{
 		}
 	}
 
+	/**
+	 * Clear all values from a graph line
+	 * @param nr The number of the graph line
+	 */
 	public void clearGraphLine(int nr){
 		SimpleXYSeries line = graphLines.get(nr);
 		int size = line.size();
@@ -111,6 +145,9 @@ public class Graph extends XYPlot{
 		}
 	}
 
+	/**
+	 * Clear all the graph lines
+	 */
 	public void clearAllGraphLines(){
 		if(graphLines != null)
 		{
@@ -120,10 +157,18 @@ public class Graph extends XYPlot{
 		}
 	}
 	
+	/**
+	 * @return {@link ArrayList} of all the lines {@link SimpleXYSeries}
+	 */
 	public ArrayList<SimpleXYSeries> getLines(){
 		return graphLines;
 	} 
 	
+	/**
+	 * Gets the index of a line from a given title
+	 * @param title The title of the graph line
+	 * @return index of the graph line
+	 */
 	protected int idxFromTitle(String title){
 		for (int i = 0; i < graphLines.size(); i++) {
 			if(graphLines.get(i).getTitle().equalsIgnoreCase(title)){

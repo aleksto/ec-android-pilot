@@ -21,11 +21,22 @@ public class ChangeDayListener implements OnClickListener, OnDateSetListener{
 	private Action action;
 	private Date date;
 
+	/**
+	 * Creates a new {@link OnClickListener} for changing day. Changing day depends on given {@link Action}
+	 * NEXT_DAY Increases date with one day, PREVIOUS_DAY decreases date with one day and CHOOSE_DAY displays
+	 * a {@link DatePickerDialog} for choosing a new {@link Date}
+	 * @param dmr {@link DailyMorningReport}
+	 * @param action {@link Action} action type
+	 */
 	public ChangeDayListener(DailyMorningReport dmr, Action action){
 		this.dmr = dmr;
 		this.action = action;
 	}
 	
+	/**
+	 * Increases, decreases or displays {@link DatePickerDialog}
+	 * and refreshes the report 
+	 */
 	public void onClick(View arg0) {
 		switch (action) {
 		case NEXT_DAY:
@@ -45,11 +56,14 @@ public class ChangeDayListener implements OnClickListener, OnDateSetListener{
 			break;
 		}
 		
-		dmr.listSections();
+		dmr.refresh();
 	}
 
+	/**
+	 * Sets new {@link Date} in the report when user clicks ok at {@link DatePickerDialog}
+	 */
 	public void onDateSet(DatePicker arg0, int year, int month, int day) {
 		dmr.setDate(new Date(year-1900, month, day));
-		dmr.listSections();
+		dmr.refresh();
 	}
 }
