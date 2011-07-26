@@ -21,10 +21,17 @@ public class EditTextDialog extends Dialog{
 
 	private final float BUTTON_WEIGHT = 1f;
 	
+	/**
+	 * Creates a dialog where user can enter text. The text is stored in local memory.
+	 * Context is needed for Androids framework actions. 
+	 * @param context
+	 * @param optionDialog
+	 * @param basePath
+	 * @param title
+	 */
 	public EditTextDialog(Context context, OptionDialog optionDialog, String basePath, String title) {
 		//Super
 		super(context);
-		
 		//Init
 		ScrollView scroll = new ScrollView(context);
 		TableLayout table = new TableLayout(context);

@@ -20,7 +20,7 @@ public class GraphLineChooserListener implements OnLongClickListener {
 		ArrayList<SimpleXYSeries> lines = graph.getLines();
 
 		for (SimpleXYSeries line : lines) {
-			dialog.addOption(line.getTitle(), OptionRowType.CHECK_BOX);
+			dialog.addOptionRow(line.getTitle(), OptionRowType.CHECK_BOX);
 		}
 		
 		dialog.setOnDismissListener(new DmrRefreshListener(dmr));

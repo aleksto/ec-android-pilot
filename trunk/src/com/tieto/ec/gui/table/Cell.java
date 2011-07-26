@@ -31,7 +31,7 @@ public class Cell extends RelativeLayout{
 		textView.setTypeface(Typeface.create("arial", Typeface.NORMAL));
 		
 		//Params
-		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		LayoutParams layoutParams = new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
 		
 		//Background
@@ -40,7 +40,7 @@ public class Cell extends RelativeLayout{
 		background.addView(textView, layoutParams);
 
 		//This
-		addView(background, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+		addView(background, new LayoutParams(android.view.ViewGroup.LayoutParams.FILL_PARENT, android.view.ViewGroup.LayoutParams.FILL_PARENT));
 		setBackgroundColor(borderColor);
 		setPadding(2, 2, 2, 2);
 	}

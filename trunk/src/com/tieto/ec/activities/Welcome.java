@@ -24,13 +24,20 @@ public class Welcome extends Activity{
 		setContentView(animation);
 	}
 	
-	
+	/**
+	 * This method defines that if the Welcome Activity is paused (for example by incoming telephone called)
+	 * the animation thread should also be paused. 
+	 */
 	@Override
 	protected void onPause() {
 		super.onPause();
 		animation.onPause();
 	}
 	
+	/**
+	 * This method defines that the Welcome animation should only run once, and on back pressed from subsequent
+	 * Activities this class should terminate.
+	 */
 	@Override
 	protected void onRestart() {
 		super.onRestart();

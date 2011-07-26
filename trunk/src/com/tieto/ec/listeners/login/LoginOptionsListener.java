@@ -5,6 +5,7 @@ import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 
 import com.tieto.ec.enums.OptionRowType;
+import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.gui.dialogs.OptionDialog;
 
 public class LoginOptionsListener implements OnMenuItemClickListener {
@@ -17,9 +18,9 @@ public class LoginOptionsListener implements OnMenuItemClickListener {
 	
 	public boolean onMenuItemClick(MenuItem arg0) {
 		// Root
-		OptionDialog dialog = new OptionDialog(context, "Input Options");
-		dialog.addOption("Webservice URL", OptionRowType.EDIT_BUTTON);
-		dialog.addOption("Webservice Namespace", OptionRowType.EDIT_BUTTON);
+		OptionDialog dialog = new OptionDialog(context, OptionTitle.InputOptions);
+		dialog.addOptionRow(OptionTitle.WebserviceURL, OptionRowType.EDIT_BUTTON);
+		dialog.addOptionRow(OptionTitle.WebserviceNamespace, OptionRowType.EDIT_BUTTON);
 		
 		// Dialog
 		dialog.show();

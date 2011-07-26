@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class InfoDialog{
 	
@@ -15,7 +16,15 @@ public class InfoDialog{
 	private final static String TITLE = "Info";
 	private final static String OK_TEXT = "Ok";
 	
-	public static Dialog showInfoDialog(Context context, String msg){
+	/**
+	 * Simply a dialog where a text message can be shown to a user. 
+	 * It is a substitute for Android {@link Toast}. 
+	 * Context is needed for Androids framework actions.
+	 * @param context
+	 * @param message
+	 * @return
+	 */
+	public static Dialog showInfoDialog(Context context, String message){
 		//Init
 		final Dialog dialog = new Dialog(context);
 		ScrollView scroll = new ScrollView(context);
@@ -35,7 +44,7 @@ public class InfoDialog{
 		
 		//Text
 		text.setTextSize(TEXT_SIZE);
-		text.setText(msg);
+		text.setText(message);
 		ok.setText(OK_TEXT);
 		
 		ok.setOnClickListener(new OnClickListener() {
