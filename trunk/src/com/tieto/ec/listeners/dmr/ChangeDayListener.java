@@ -4,6 +4,7 @@ import java.util.Date;
 
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.DatePicker;
@@ -38,16 +39,19 @@ public class ChangeDayListener implements OnClickListener, OnDateSetListener{
 	 * and refreshes the report 
 	 */
 	public void onClick(View arg0) {
+		Log.d("tieto", "ChangeDayListener: onClick()");
 		switch (action) {
 		case NEXT_DAY:
 			date = dmr.getDate();
 			date.setDate(date.getDate()+1);
-			dmr.setDate(date);			
+			dmr.setDate(date);		
+			dmr.refresh();	
 			break;
 		case PREVIOUS_DAY:
 			date = dmr.getDate();
 			date.setDate(date.getDate()-1);
 			dmr.setDate(date);
+			dmr.refresh();
 			break;
 		case CHOOSE_DAY:
 			date = dmr.getDate();
@@ -55,8 +59,6 @@ public class ChangeDayListener implements OnClickListener, OnDateSetListener{
 			dialog.show();
 			break;
 		}
-		
-		dmr.refresh();
 	}
 
 	/**
