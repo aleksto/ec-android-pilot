@@ -2,7 +2,7 @@ package com.tieto.ec.gui.dmr;
 
 import com.ec.prod.android.pilot.model.Resolution;
 import com.tieto.ec.activities.DailyMorningReport;
-import com.tieto.ec.listeners.dmr.SubButtonRowButtonsListener;
+import com.tieto.ec.listeners.dmr.ButtowRowListener;
 
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -38,10 +38,10 @@ public class ButtonRow extends LinearLayout{
 		LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1f);
 
 		//Listeners
-		daily.setOnClickListener(new SubButtonRowButtonsListener(dmr, Resolution.DAILY));
-		weekly.setOnClickListener(new SubButtonRowButtonsListener(dmr, Resolution.WEEKLY));
-		monthly.setOnClickListener(new SubButtonRowButtonsListener(dmr, Resolution.MONTHLY));
-		yearly.setOnClickListener(new SubButtonRowButtonsListener(dmr, Resolution.YEARLY));
+		daily.setOnClickListener(new ButtowRowListener(dmr, Resolution.DAILY));
+		weekly.setOnClickListener(new ButtowRowListener(dmr, Resolution.WEEKLY));
+		monthly.setOnClickListener(new ButtowRowListener(dmr, Resolution.MONTHLY));
+		yearly.setOnClickListener(new ButtowRowListener(dmr, Resolution.YEARLY));
 		
 		//This
 		setPadding(10, 10, 10, 0);
