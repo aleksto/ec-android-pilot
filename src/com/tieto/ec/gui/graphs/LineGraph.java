@@ -16,10 +16,10 @@ import com.tieto.ec.logic.FileManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 
 public class LineGraph extends Graph{
 	
+	private final int[] COLORS = {Color.BLACK, Color.BLUE, Color.RED, Color.DKGRAY};
 	private final double STEP_VALUE = 4.5;
 	
 	/**
@@ -67,12 +67,12 @@ public class LineGraph extends Graph{
 		this.setDomainStepValue(STEP_VALUE);
 		
 		for (String string : pointAttributes) {
-			addEmptyGraphLine(string, Color.rgb((int)(Math.random()*255.0), (int)(Math.random()*255.0), (int)(Math.random()*255.0)));
+			int idx = pointAttributes.indexOf(string)%COLORS.length;
+			addEmptyGraphLine(string, COLORS[idx]);
 		}
 		
 		for (GraphPoint point : graphPoints) {
 			Date daytime = point.getDaytime();
-			Log.d("tieto", daytime.getTime()+"");
 			for (String string : pointAttributes) {
 				String value = point.getValue(string);
 				int idx = pointAttributes.indexOf(string);

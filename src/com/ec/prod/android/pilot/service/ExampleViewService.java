@@ -188,7 +188,6 @@ public class ExampleViewService implements ViewService {
 				fromDate.setHours(0);
 				for (int i = 0; i < 23; i++) {
 					fromDate.setHours(fromDate.getHours()+1);
-					Log.d("tieto", fromDate+"");
 					GraphPoint graphPoint1 = new GraphPoint(new Date(fromDate.getYear(), fromDate.getMonth(), fromDate.getDate(), fromDate.getHours(), fromDate.getMinutes()));
 					graphPoint1.addValue("OIL", "" + Math.random()*10000);
 					graphPoint1.addValue("GAS", "" + Math.random()*5000);

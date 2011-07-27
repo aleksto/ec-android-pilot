@@ -35,7 +35,6 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		//Level2
 		OptionDialog security = new OptionDialog(dailyMorningReport, OptionTitle.SecurityOptions);
 		OptionDialog color = new OptionDialog(dailyMorningReport, OptionTitle.ColorOptions);
-		OptionDialog reportOption = new OptionDialog(dailyMorningReport, OptionTitle.ReportOptions);
 
 		//Level3
 		OptionDialog textColor = new OptionDialog(dailyMorningReport, OptionTitle.TextColor);
@@ -49,7 +48,6 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		// Root options
 		createRootOptions();
 		createColorOptions(color);
-		createReportOptions(reportOption);
 		createUpdateIntervalDialog(updateIntervalDialog);
 		createIntervalOptions(intervalDialog);
 		createSecurityOptions(security);
@@ -60,10 +58,6 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 
 		root.addChild(security);
 		root.addChild(color);
-		root.addChild(reportOption);
-
-		reportOption.addChild(updateIntervalDialog);
-		reportOption.addChild(intervalDialog);
 
 		color.addChild(textColor);
 		color.addChild(backgroundColor);
@@ -101,18 +95,6 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		dialog.addOptionRow(TimeType.day2, OptionRowType.CHOOSE_BUTTON);
 		dialog.addOptionRow(TimeType.day3, OptionRowType.CHOOSE_BUTTON);
 		dialog.addOptionRow("Debug: 20 sec", OptionRowType.CHOOSE_BUTTON);
-	}
-
-
-
-	/**
-	 * Creates sub dialog report options
-	 * @param dialog {@link OptionDialog} dialog
-	 */
-	private void createReportOptions(OptionDialog dialog) {
-		dialog.addOptionRow(OptionTitle.Interval, OptionRowType.NONE);
-		dialog.addOptionRow(OptionTitle.Dates, OptionRowType.NONE);
-		dialog.addOptionRow(OptionTitle.UpdateInterval, OptionRowType.NONE);
 	}
 
 	/**
@@ -172,6 +154,5 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 	private void createRootOptions() {
 		root.addOptionRow(OptionTitle.SecurityOptions, OptionRowType.NONE);
 		root.addOptionRow(OptionTitle.ColorOptions, OptionRowType.NONE);
-		root.addOptionRow(OptionTitle.ReportOptions, OptionRowType.NONE);
 	}
 }

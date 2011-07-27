@@ -8,6 +8,8 @@ import java.util.List;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.HorizontalScrollView;
 import android.widget.TableLayout;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphSection;
+import com.ec.prod.android.pilot.model.Resolution;
 import com.ec.prod.android.pilot.model.Section;
 import com.ec.prod.android.pilot.model.TableColumn;
 import com.ec.prod.android.pilot.model.TableData;
@@ -34,6 +37,7 @@ import com.tieto.ec.listeners.dmr.GraphFullScreenListener;
 import com.tieto.ec.listeners.dmr.GraphLineChooserListener;
 import com.tieto.ec.listeners.dmr.ShowHideSection;
 import com.tieto.ec.listeners.dmr.TableOptionDialogListener;
+import com.tieto.ec.logic.DateConverter.Type;
 
 public class SectionBuilder {
 
@@ -54,17 +58,40 @@ public class SectionBuilder {
 	public void listSections(){
 		dmr.getTable().removeAllViews();
 		date = dmr.getDate();
-		dmr.getCurrentdayLabel().setText(date.getDate() + "-" + (date.getMonth()+1) + "-" + (date.getYear()+1900));
+		dmr.getCurrentdayLabel().setText(DateConverter.parse(date, Type.DATE));
 		
-		String basePath = OptionTitle.DMRReport + "." + OptionTitle.ReportOptions + ".";
 		try {
-			int resolution = ResolutionConverter.convert(FileManager.readPath(dmr, basePath + OptionTitle.Interval));
-			for (Section section : dmr.getSections()) {
-				addSection(section, date, date, resolution);			
+			int resolution = Integer.valueOf(FileManager.readPath(dmr, "DMR Report.Resolution"));
+			Date fromDate;
+			switch (resolution) {
+			case Resolution.DAILY:
+				for (Section section : dmr.getSections()) {
+					addSection(section, date, date, resolution);			
+				}
+				break;
+			case Resolution.WEEKLY:
+				fromDate = new Date(date.getYear(), date.getMonth(), date.getDate()-7);
+				for (Section section : dmr.getSections()) {
+					addSection(section, fromDate, date, resolution);			
+				}
+				break;
+			case Resolution.MONTHLY:
+				fromDate = new Date(date.getYear(), date.getMonth()-1, date.getDate());
+				for (Section section : dmr.getSections()) {
+					addSection(section, fromDate, date, resolution);			
+				}
+				break;
+			case Resolution.YEARLY:
+				fromDate = new Date(date.getYear()-1, date.getMonth(), date.getDate());
+				for (Section section : dmr.getSections()) {
+					addSection(section, fromDate, date, resolution);			
+				}
+				break;
 			}
+			dmr.setResolution(resolution);
 		} catch (IOException e) {
 			Log.d("tieto", "Setting default time and resolution");
-			FileManager.writePath(dmr, basePath + OptionTitle.Interval, "Weekly");
+			FileManager.writePath(dmr, "DMR Report.Resolution", "Daily");
 			listSections();
 			e.printStackTrace();
 		}		
@@ -98,16 +125,15 @@ public class SectionBuilder {
 		//Values
 		if(section instanceof TextSection){
 			TextData textData = dmr.getWebservice().getTextData((TextSection)section, fromdate, toDate, resolution);				
-			addTextData(textData, dmr.getTable());
+			addTextData(textData, dmr.getTable(), sectionTitle);
 		}
 		else if(section instanceof TableSection){
 			TableData tableData = dmr.getWebservice().getTableData((TableSection)section, fromdate, toDate, resolution);
-			sectionTitle.setOnLongClickListener(new TableOptionDialogListener(dmr, section.getSectionHeader(), tableData));
-			addTableData(tableData, dmr.getTable(), section.getSectionHeader());
+			addTableData(tableData, dmr.getTable(), section.getSectionHeader(), sectionTitle);
 		}
 		else if(section instanceof GraphSection){
 			GraphData graphData = dmr.getWebservice().getGraphDataBySection((GraphSection)section, fromdate, toDate, resolution);	
-			addGraphData(graphData, dmr.getTable(), section.getSectionHeader());
+			addGraphData(graphData, dmr.getTable(), section.getSectionHeader(), sectionTitle);
 		}
 	}
 
@@ -115,18 +141,18 @@ public class SectionBuilder {
 	 * Adds a graph section to the report from a given {@link GraphData}
 	 * @param graphData The given {@link GraphData}
 	 * @param sectionTable the table {@link TableLayout} to add the section to
+	 * @param sectionTitle Needed in case of adding a {@link OnLongClickListener} to the title {@link View}
 	 */
-	private void addGraphData(GraphData graphData, TableLayout sectionTable, String title) {
+	private void addGraphData(GraphData graphData, TableLayout sectionTable, String title, TextView sectionTitle) {
 		//Init
 		Graph graph = null;
 		
 		//Add data
-		Log.d("tieto", "Adding graph with size: " + graphData.getGraphPoints().size());
 		if(graphData.getGraphPoints().size()>1){
 			//Line Graph
 			graph = new LineGraph(dmr, "");
 			((LineGraph) graph).add(graphData, title);			
-			graph.setOnLongClickListener(new GraphLineChooserListener(dmr, graph, title));
+			sectionTitle.setOnLongClickListener(new GraphLineChooserListener(dmr, graph, title));
 		}else{
 			//Bar graph
 			graph = new BarGraph(dmr, "", Color.GREEN);
@@ -148,8 +174,9 @@ public class SectionBuilder {
 	 * Adds a table section to the report from a given {@link TableData}
 	 * @param tableData The given {@link TableData}
 	 * @param sectionTable the table {@link TableLayout} to add the section to
+	 * @param sectionTitle Needed in case of adding a {@link OnLongClickListener} to the title {@link View}
 	 */
-	private void addTableData(TableData tableData, TableLayout sectionTable, String title) {
+	private void addTableData(TableData tableData, TableLayout sectionTable, String title, TextView sectionTitle) {
 		//Init
 		HorizontalScrollView hScroll = new HorizontalScrollView(dmr);
 		TableLayout table = new TableLayout(dmr);
@@ -160,7 +187,10 @@ public class SectionBuilder {
 		table.setBackgroundColor(dmr.getBackgroundColor());
 		
 		//Active columns
-		ArrayList<String> activeColumns = activeColumns(title + "." + OptionTitle.VisibleColumns, tableData);
+		ArrayList<String> activeColumns = activeColumns(title, tableData);
+		
+		//Listener
+		sectionTitle.setOnLongClickListener(new TableOptionDialogListener(dmr, title, tableData));
 		
 		//Headers
 		List<TableColumn> tableColumns = tableData.getTableColumns();
@@ -200,8 +230,9 @@ public class SectionBuilder {
 	 * Adds a text section to the report from a given {@link TextData}
 	 * @param textData The given {@link TextData}
 	 * @param sectionTable the table {@link TableLayout} to add the section to
+	 * @param sectionTitle Needed in case of adding a {@link OnLongClickListener} to the title {@link View}
 	 */
-	private void addTextData(TextData textData, TableLayout sectionTable) {
+	private void addTextData(TextData textData, TableLayout sectionTable, TextView sectionTitle) {
 		TableLayout table = new TableLayout(dmr);
 		List<TextElement> textElements = textData.getTextElements();
 		for (TextElement text : textElements) {
@@ -221,6 +252,7 @@ public class SectionBuilder {
 	 * @return {@link ArrayList} of active columns
 	 */
 	private ArrayList<String> activeColumns(String title, TableData tableData){
+		Log.d("tieto", "Checking active columns for table " + title);
 		ArrayList<String> columns = new ArrayList<String>();
 		try {
 			List<TableColumn> columnsList = tableData.getTableColumns();
@@ -235,6 +267,8 @@ public class SectionBuilder {
 			return columns;
 		} catch (IOException e) {
 			List<TableColumn> tableColumns = tableData.getTableColumns();
+			
+			Log.d("tieto", "Setting active columns: All");
 			
 			for (TableColumn tableColumn : tableColumns) {
 				FileManager.writePath(dmr,  title + "." + tableColumn.getHeader(), "true");

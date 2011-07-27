@@ -26,4 +26,22 @@ public class ResolutionConverter {
 			return Resolution.YEARLY;
 		}
 	}
+	
+	/**
+	 * Converts A {@link Integer} resolution to a {@link String}
+	 * @see Resolution
+	 * @param resolution int resolution 
+	 * @return A String representing the resolution, etc "Daily", "Weekly", "Monthly", "Yearly"
+	 */
+	public static String convert(int resolution){
+		if(resolution == Resolution.DAILY){
+			return "Daily";
+		}else if(resolution == Resolution.WEEKLY){
+			return "Weekly";
+		}else if(resolution == Resolution.MONTHLY){
+			return "Monthly";
+		}else{
+			return "Yearly";
+		}
+	}
 }
