@@ -14,9 +14,6 @@ import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.gui.dialogs.OptionRow.OptionRowType;
 
 public class OptionDialog extends Dialog {
-
-
-
 	
 	private String title;
 	private String path;

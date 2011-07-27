@@ -46,7 +46,6 @@ public class DailyMorningReport extends Activity{
 	private ButtonRow subButtonRow;
 	private Date date;
 	private SectionBuilder sectionBuilder;
-
 	/**
 	 * Main class for the daily morning report, this is the class started when you have logged in.
 	 * OnCreate is the constructor for the Super class Activity, and there all the initialization is.
