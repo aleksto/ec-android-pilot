@@ -20,7 +20,10 @@ import com.ec.prod.android.pilot.model.TextData;
 import com.ec.prod.android.pilot.model.TextElement;
 import com.ec.prod.android.pilot.model.TextSection;
 
-
+/**
+ * This class generates typical data which we may receive in a Daily Morning Report.
+ * This would normally come from a Webservice.
+ */
 public class ExampleViewService implements ViewService {
 
 	private HashMap<Section, Object> data;
@@ -31,6 +34,9 @@ public class ExampleViewService implements ViewService {
 		data = new HashMap<Section, Object>();
 	}
 
+	/**
+	 * Generates example of sections headers from a Daily Morning Report
+	 */
 	public List<Section> getSections() {
 		List<Section> sectionList = new LinkedList<Section>();
 		sectionList.add(new TextSection("Operational Comments"));
@@ -43,15 +49,20 @@ public class ExampleViewService implements ViewService {
 		sectionList.add(new GraphSection("Import Curves"));
 		sectionList.add(new TableSection("Ship Movement"));
 		sectionList.add(new TableSection("Weather"));
+		
 		return sectionList;
+		
 	}
 
+	/**
+	 * Generates example of table data from a Daily Morning Report
+	 */
 	public TableData getTableData(TableSection section, Date fromdate, Date toDate, int resolution) {
 		Log.d("tieto", "Webservice: contains table " + section.getSectionHeader() + ": " + data.containsKey(section));
 		if(data.containsKey(section)){
 			return (TableData) data.get(section);
 		}else{
-			if(section.getSectionHeader().equalsIgnoreCase("Well Status")){
+			if(section.getSectionHeader().equalsIgnoreCase("Well Status")){				
 				List<TableColumn> tableColumns = new LinkedList<TableColumn>();
 				tableColumns.add(new TableColumn("Well"));
 				tableColumns.add(new TableColumn("On Stream Hours"));
@@ -61,10 +72,10 @@ public class ExampleViewService implements ViewService {
 				tableColumns.add(new TableColumn("Allocated Gas Volume"));
 				tableColumns.add(new TableColumn("Allocated Water Volume"));				
 				TableData data = new TableData(tableColumns);
-				data.addTableRow(new TableRow("Well PH65R", "24", "60", "159", "5595.5", "656.8", "300.2"));
+				data.addTableRow(new TableRow("Well PH65R", Integer.toString((int) (18 + Math.random() * 11.0)), Integer.toString((int) (50 + Math.random() * 20.0)), Integer.toString((int) (150 + Math.random() * 51.0)), Double.toString(5000.1 + Math.random() * 1000.1).substring(0, 6), Double.toString(600.1 + Math.random() * 100.1).substring(0, 5), Double.toString(200.1 + Math.random() * 400.1).substring(0, 5)));
 				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-				data.addTableRow(new TableRow("Well PR87D", "24", "62", "160", "6008.8", "895.0", "256.7"));
-				data.addTableRow(new TableRow("Well PP12A", "23", "54", "180", "3789.0", "902.1", "189.4"));
+				data.addTableRow(new TableRow("Well PR87D", Integer.toString((int) (18 + Math.random() * 11.0)), Integer.toString((int) (50 + Math.random() * 20.0)), Integer.toString((int) (150 + Math.random() * 51.0)), Double.toString(6000.1 + Math.random() * 1000.1).substring(0, 6), Double.toString(800.1 + Math.random() * 100.1).substring(0, 5), Double.toString(200.1 + Math.random() * 100.1).substring(0, 5)));
+				data.addTableRow(new TableRow("Well PP12A", Integer.toString((int) (18 + Math.random() * 11.0)), Integer.toString((int) (50 + Math.random() * 20.0)), Integer.toString((int) (150 + Math.random() * 51.0)), Double.toString(3000.1 + Math.random() * 1000.1).substring(0, 6), Double.toString(800.1 + Math.random() * 900.1).substring(0, 5), Double.toString((int) (150 + Math.random() * 51.0))));
 				data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
 				if(saveData){
 					this.data.put(section, data);					
@@ -76,9 +87,9 @@ public class ExampleViewService implements ViewService {
 				tableColumns.add(new TableColumn("Quantity"));
 				tableColumns.add(new TableColumn("YTD"));			
 				TableData data = new TableData(tableColumns);
-				data.addTableRow(new TableRow("Medical treatment injury", "0", "10"));
-				data.addTableRow(new TableRow("First aid", "7", "18"));
-				data.addTableRow(new TableRow("Lost time injury", "4", "9"));
+				data.addTableRow(new TableRow("Medical treatment injury", "0", Integer.toString((int) (3 + Math.random() * 11.0))));
+				data.addTableRow(new TableRow("First aid", Integer.toString((int) (3 + Math.random() * 11.0)), Integer.toString((int) (18 + Math.random() * 11.0))));
+				data.addTableRow(new TableRow("Lost time injury", Integer.toString((int) (3 + Math.random() * 11.0)), Integer.toString((int) (3 + Math.random() * 11.0))));
 				data.addTableRow(new TableRow("Sick onboard", "0", "0"));
 				data.addTableRow(new TableRow("Sick sent ashore", "0", "0"));
 				data.addTableRow(new TableRow("Life boats out of service", "0", "0"));
@@ -120,11 +131,11 @@ public class ExampleViewService implements ViewService {
 				tableColumns.add(new TableColumn("Ship Movements"));
 				tableColumns.add(new TableColumn("Item Value"));		
 				TableData data = new TableData(tableColumns);
-				data.addTableRow(new TableRow("Heading(deg)", "15"));
+				data.addTableRow(new TableRow("Heading(deg)", Integer.toString((int) (18 + Math.random() * 11.0))));
 				data.addTableRow(new TableRow("Heave(m)", ""));
-				data.addTableRow(new TableRow("Pitch(deg)", "20"));
-				data.addTableRow(new TableRow("Roll(deg)", "5"));
-				data.addTableRow(new TableRow("(deg)", "10"));
+				data.addTableRow(new TableRow("Pitch(deg)", Integer.toString((int) (18 + Math.random() * 11.0))));
+				data.addTableRow(new TableRow("Roll(deg)", Integer.toString((int) (3 + Math.random() * 11.0))));
+				data.addTableRow(new TableRow("(deg)", Integer.toString((int) (3 + Math.random() * 11.0))));
 				if(saveData){
 					this.data.put(section, data);					
 				}
@@ -135,19 +146,19 @@ public class ExampleViewService implements ViewService {
 				tableColumns.add(new TableColumn("Item Code Text"));		
 				tableColumns.add(new TableColumn("Item Value"));		
 				TableData data = new TableData(tableColumns);
-				data.addTableRow(new TableRow("AIR", "Barometer(hPa)", "1"));
-				data.addTableRow(new TableRow("AIR", "Temp(´C)", "16"));
-				data.addTableRow(new TableRow("LIGHTNING", "Intensity", "5500"));
-				data.addTableRow(new TableRow("LIGHTNING", "Quantity (#/hrs)", "6"));
+				data.addTableRow(new TableRow("AIR", "Barometer(hPa)", Integer.toString((int) (1 + Math.random() * 2.0))));
+				data.addTableRow(new TableRow("AIR", "Temp(´C)", Integer.toString((int) (18 + Math.random() * 11.0))));
+				data.addTableRow(new TableRow("LIGHTNING", "Intensity", Integer.toString((int) (5400 + Math.random() * 201))));
+				data.addTableRow(new TableRow("LIGHTNING", "Quantity (#/hrs)", Integer.toString((int) (3 + Math.random() * 11.0))));
 				data.addTableRow(new TableRow("MISC_WEATHER", "Misc. Item 2", "0"));
 				data.addTableRow(new TableRow("MISC_WEATHER", "Visibility (m)", "0"));
-				data.addTableRow(new TableRow("PRECIPITATION", "Rainfall (cm)", "7"));
-				data.addTableRow(new TableRow("SWELL", "Direction", "25"));
-				data.addTableRow(new TableRow("WAVES", "Maximum Height (m)", "2"));
-				data.addTableRow(new TableRow("WAVES", "Significant Height (m)", "2"));
-				data.addTableRow(new TableRow("WAVES", "Spectral Peak Period (s)", "5"));
-				data.addTableRow(new TableRow("WIND", "Direction (deg)", "250"));
-				data.addTableRow(new TableRow("WIND", "Speed (m/s)", "9"));
+				data.addTableRow(new TableRow("PRECIPITATION", "Rainfall (cm)", Integer.toString((int) (3 + Math.random() * 11.0))));
+				data.addTableRow(new TableRow("SWELL", "Direction", Integer.toString((int) (18 + Math.random() * 11.0))));
+				data.addTableRow(new TableRow("WAVES", "Maximum Height (m)", Integer.toString((int) (1 + Math.random() * 2.0))));
+				data.addTableRow(new TableRow("WAVES", "Significant Height (m)", Integer.toString((int) (1 + Math.random() * 2.0))));
+				data.addTableRow(new TableRow("WAVES", "Spectral Peak Period (s)", Integer.toString((int) (3 + Math.random() * 11.0))));
+				data.addTableRow(new TableRow("WIND", "Direction (deg)", Integer.toString((int) (190 + Math.random() * 51.0))));
+				data.addTableRow(new TableRow("WIND", "Speed (m/s)", Integer.toString((int) (3 + Math.random() * 11.0))));
 				if(saveData){
 					this.data.put(section, data);					
 				}
@@ -156,27 +167,60 @@ public class ExampleViewService implements ViewService {
 		}
 	}
 
+	/**
+	 * Generates example of graph data from a Daily Morning Report
+	 */
 	public TextData getTextData(TextSection section, Date fromDate, Date toDate, int resolution) {
 		Log.d("tieto", "Webservice: contains table " + section.getSectionHeader() + ": " + data.containsKey(section));
 		if(data.containsKey(section)){
 			return (TextData) data.get(section);
 		}else{
 			TextData textData = new TextData();
-			Date today = Calendar.getInstance().getTime();		
-			textData.addTextElement(new TextElement(today, "Facility not producing optimally"));
-			textData.addTextElement(new TextElement(today, "Just kidding"));	
-
-			today.setDate(today.getDate()-1);
-			textData.addTextElement(new TextElement(today, "High Oil level"));
-			today.setDate(today.getDate()-1);
-			textData.addTextElement(new TextElement(today, "Everything is working ok"));	
+			
+			
+			if(Math.random() > 0.5){
+				Date date1 = new Date(Calendar.getInstance().getTime().getYear(), Calendar.getInstance().getTime().getMonth(), Calendar.getInstance().getTime().getDay(), 
+									  (int)(1 + Math.random() * 3.0), (int)(1 + Math.random() * 60));
+				textData.addTextElement(new TextElement(date1, "Facility not producing optimally"));
+			
+				Date date2 = new Date(Calendar.getInstance().getTime().getYear(), Calendar.getInstance().getTime().getMonth(), Calendar.getInstance().getTime().getDay(), 
+						  (int)(4 + Math.random() * 3.0), (int)(1 + Math.random() * 60));
+				textData.addTextElement(new TextElement(date2, "Facility is again producing optimally "));	
+			}
+			
+			if(Math.random() > 0.5){
+				Date date3 = new Date(Calendar.getInstance().getTime().getYear(), Calendar.getInstance().getTime().getMonth(), Calendar.getInstance().getTime().getDay(), 
+						  (int)(8 + Math.random() * 3.0), (int)(1 + Math.random() * 60));
+				textData.addTextElement(new TextElement(date3, "High Oil level"));
+				
+				Date date4 = new Date(Calendar.getInstance().getTime().getYear(), Calendar.getInstance().getTime().getMonth(), Calendar.getInstance().getTime().getDay(), 
+						  (int)(12 + Math.random() * 3.0), (int)(1 + Math.random() * 60));	
+				textData.addTextElement(new TextElement(date4, "Oil level under control"));	
+			}
+			
+			if(Math.random() > 0.5){
+				Date date5 = new Date(Calendar.getInstance().getTime().getYear(), Calendar.getInstance().getTime().getMonth(), Calendar.getInstance().getTime().getDay(), 
+						  (int)(16 + Math.random() * 3.0), (int)(1 + Math.random() * 60));
+				textData.addTextElement(new TextElement(date5, "Engineer injured on facility"));
+				
+				Date date6 = new Date(Calendar.getInstance().getTime().getYear(), Calendar.getInstance().getTime().getMonth(), Calendar.getInstance().getTime().getDay(), 
+						  (int)(20 + Math.random() * 3.0), (int)(1 + Math.random() * 60));
+				textData.addTextElement(new TextElement(date6, "Engineer is brought to the hospital"));			
+			}
+			
+			
 			if(saveData){
 				this.data.put(section, textData);					
 			}
 			return textData;
+			
+			
 		}
 	}
 
+	/**
+	 * Generates example of graph data from a Daily Morning Report
+	 */
 	public GraphData getGraphDataBySection(GraphSection section, Date fromDate,	Date toDate, int resolution) {
 		Log.d("tieto", "Webservice: contains table " + section.getSectionHeader() + ": " + data.containsKey(section));
 		if(data.containsKey(section)){
