@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.listeners.dmr.ChangeDayListener;
-import com.tieto.ec.listeners.dmr.ChangeResolutionListener;
+import com.tieto.ec.listeners.dmr.DisplayButtonRowListener;
 
 public class DateRow extends RelativeLayout{
 
@@ -59,7 +59,7 @@ public class DateRow extends RelativeLayout{
 		nextDay.setOnClickListener(new ChangeDayListener(dmr, ChangeDayListener.Action.NEXT_DAY));
 		previousDay.setOnClickListener(new ChangeDayListener(dmr, ChangeDayListener.Action.PREVIOUS_DAY));
 		titleLayout.setOnClickListener(new ChangeDayListener(dmr, ChangeDayListener.Action.CHOOSE_DAY));
-		titleLayout.setOnLongClickListener(new ChangeResolutionListener(dmr));
+		titleLayout.setOnLongClickListener(new DisplayButtonRowListener(dmr));
 		
 		
 		//ButtonRow Childs
