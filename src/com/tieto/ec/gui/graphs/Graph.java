@@ -16,7 +16,7 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeriesFormatter;
 
 
-public class Graph extends XYPlot{
+public abstract class Graph extends XYPlot{
 
 	@SuppressWarnings("rawtypes")
 	protected ArrayList<XYSeriesFormatter> formats;
@@ -25,12 +25,13 @@ public class Graph extends XYPlot{
 	protected Context context;
 
 	/**
-	 * Creates a new empty graph
+	 * Creates a new empty graph. This class can only be instantiated by classes extending
+	 * the class because it is only a abstract class. 
 	 * @param context {@link Context} needed for Android framework actions
 	 * @param title The title of the graph
 	 */
 	@SuppressWarnings("rawtypes")
-	public Graph(Context context, String title){
+	protected Graph(Context context, String title){
 		super(context, title);
 
 		this.context = context;
