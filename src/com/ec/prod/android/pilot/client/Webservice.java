@@ -9,7 +9,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import com.ec.prod.android.pilot.service.MarshalService;
 
-public class Webservice implements Runnable{
+public abstract class Webservice implements Runnable{
 
 
 	private String namespace;
@@ -21,7 +21,7 @@ public class Webservice implements Runnable{
 	private Object bodyIn;
 
 	/**
-	 * This class executes webservice calls. The parameters are used to
+	 * This abstract class executes webservice calls. The parameters are used to
 	 * set up an envelope for holding responses from the webservice, and   
 	 * for creating an {@link HttpTransportBasicAuth} object for login at the server
 	 * @param username
