@@ -1,12 +1,17 @@
 package com.tieto.ec.activities;
 
+import java.io.IOException;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.tieto.ec.gui.animation3D.WelcomeAnimation;
+import com.tieto.ec.logic.FileManager;
 
 public class Welcome extends Activity{
 
+	private boolean quit;
 	private WelcomeAnimation animation;
 
 	/**
@@ -19,9 +24,16 @@ public class Welcome extends Activity{
 		super.onCreate(savedInstanceState);
 		
 		//Init
-		animation = new WelcomeAnimation(this);
-		
-		setContentView(animation);
+		try {
+			if(Boolean.valueOf(FileManager.readPath(this, "Welcome Activity.3D Seen"))){
+				quit = true;
+				startActivity(new Intent(this, Login.class));
+			}
+		} catch (IOException e) {
+			animation = new WelcomeAnimation(this);
+			setContentView(animation);
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -31,7 +43,9 @@ public class Welcome extends Activity{
 	@Override
 	protected void onPause() {
 		super.onPause();
-		animation.onPause();
+		if(animation != null){
+			animation.onPause();			
+		}
 	}
 	
 	/**
@@ -39,8 +53,16 @@ public class Welcome extends Activity{
 	 * Activities this class should terminate.
 	 */
 	@Override
-	protected void onRestart() {
+	public void onRestart() {
 		super.onRestart();
 		onBackPressed();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(quit){
+			onBackPressed();			
+		}
 	}
 }

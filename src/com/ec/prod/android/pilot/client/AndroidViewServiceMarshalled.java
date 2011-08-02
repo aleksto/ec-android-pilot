@@ -60,8 +60,6 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 		return generateResponseList(response);
 	}
 
-
-
 	public List<String> getTextData(String section, Date fromDate, Date toDate, int resolution) {
 		Object response = executeWebservice("getTextData",  "arg0", section,
 															"arg1", DateConverter.parse(fromDate, DateConverter.Type.DATE),
@@ -97,12 +95,5 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 		}		
 		return list;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+		
 }

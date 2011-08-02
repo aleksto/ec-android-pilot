@@ -16,6 +16,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.ec.prod.android.pilot.model.DataType;
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphSection;
 import com.ec.prod.android.pilot.model.Resolution;
@@ -57,12 +58,12 @@ public class SectionBuilder {
 	 */
 	public void listSections(){
 		dmr.getTable().removeAllViews();
-		date = dmr.getDate();
+		date = dmr.getToDate();
 		dmr.getCurrentdayLabel().setText(DateConverter.parse(date, Type.DATE));
 		
 		try {
 			int resolution = Integer.valueOf(FileManager.readPath(dmr, "DMR Report.Resolution"));
-			Date fromDate;
+			Date fromDate = null;
 			switch (resolution) {
 			case Resolution.DAILY:
 				for (Section section : dmr.getSections()) {
@@ -88,10 +89,11 @@ public class SectionBuilder {
 				}
 				break;
 			}
+			dmr.setFromDate(fromDate);
 			dmr.setResolution(resolution);
 		} catch (IOException e) {
 			Log.d("tieto", "Setting default time and resolution");
-			FileManager.writePath(dmr, "DMR Report.Resolution", "Daily");
+			FileManager.writePath(dmr, "DMR Report.Resolution", Resolution.DAILY+"");
 			listSections();
 			e.printStackTrace();
 		}		
@@ -128,35 +130,40 @@ public class SectionBuilder {
 			addTextData(textData, dmr.getTable(), sectionTitle);
 		}
 		else if(section instanceof TableSection){
-			TableData tableData = dmr.getWebservice().getTableData((TableSection)section, fromdate, toDate, resolution);
-			addTableData(tableData, dmr.getTable(), section.getSectionHeader(), sectionTitle);
+			TableData tableDataActual = dmr.getWebservice().getTableData((TableSection)section, fromdate, toDate, resolution, DataType.ACTUAL);
+			TableData tableDataTarget = dmr.getWebservice().getTableData((TableSection)section, fromdate, toDate, resolution, DataType.TARGET);
+			addTableData(tableDataActual, tableDataTarget, dmr.getTable(), section.getSectionHeader(), sectionTitle);
 		}
 		else if(section instanceof GraphSection){
-			GraphData graphData = dmr.getWebservice().getGraphDataBySection((GraphSection)section, fromdate, toDate, resolution);	
-			addGraphData(graphData, dmr.getTable(), section.getSectionHeader(), sectionTitle);
+			GraphData graphDataActual = dmr.getWebservice().getGraphDataBySection((GraphSection)section, fromdate, toDate, resolution, DataType.ACTUAL);	
+			GraphData graphDataTarget = dmr.getWebservice().getGraphDataBySection((GraphSection)section, fromdate, toDate, resolution, DataType.TARGET);	
+			addGraphData(graphDataActual, graphDataTarget, dmr.getTable(), section.getSectionHeader(), sectionTitle);
 		}
 	}
 
 	/**
 	 * Adds a graph section to the report from a given {@link GraphData}
-	 * @param graphData The given {@link GraphData}
+	 * @param graphDataActual The given {@link GraphData}
+	 * @param graphDataTarget 
 	 * @param sectionTable the table {@link TableLayout} to add the section to
 	 * @param sectionTitle Needed in case of adding a {@link OnLongClickListener} to the title {@link View}
 	 */
-	private void addGraphData(GraphData graphData, TableLayout sectionTable, String title, TextView sectionTitle) {
+	private void addGraphData(GraphData graphDataActual, GraphData graphDataTarget, TableLayout sectionTable, String title, TextView sectionTitle) {
 		//Init
 		Graph graph = null;
 		
 		//Add data
-		if(graphData.getGraphPoints().size()>1){
+		if(graphDataActual.getGraphPoints().size()>1){
 			//Line Graph
 			graph = new LineGraph(dmr, "");
-			((LineGraph) graph).add(graphData, title);			
+			((LineGraph) graph).add(graphDataActual, title);
+			((LineGraph) graph).add(graphDataTarget, title);			
 			sectionTitle.setOnLongClickListener(new GraphLineChooserListener(dmr, graph, title));
 		}else{
 			//Bar graph
-			graph = new BarGraph(dmr, "", Color.GREEN);
-			((BarGraph) graph).add(graphData);	
+			graph = new BarGraph(dmr, "");
+			((BarGraph) graph).add(graphDataActual, Color.argb(100, 0, 200, 0), "Actual");	
+			((BarGraph) graph).add(graphDataTarget, Color.argb(100, 200, 0, 0), "Target");	
 		}
 		
 		//LayoutParams
@@ -172,48 +179,51 @@ public class SectionBuilder {
 
 	/**
 	 * Adds a table section to the report from a given {@link TableData}
-	 * @param tableData The given {@link TableData}
+	 * @param tableDataActual The given {@link TableData}
+	 * @param tableDataTarget 
 	 * @param sectionTable the table {@link TableLayout} to add the section to
 	 * @param sectionTitle Needed in case of adding a {@link OnLongClickListener} to the title {@link View}
 	 */
-	private void addTableData(TableData tableData, TableLayout sectionTable, String title, TextView sectionTitle) {
+	private void addTableData(TableData tableDataActual, TableData tableDataTarget, TableLayout sectionTable, String title, TextView sectionTitle) {
 		//Init
 		HorizontalScrollView hScroll = new HorizontalScrollView(dmr);
 		TableLayout table = new TableLayout(dmr);
-		List<com.ec.prod.android.pilot.model.TableRow> tableRows = tableData.getTableRows();
+		List<com.ec.prod.android.pilot.model.TableRow> tableRowsActual = tableDataActual.getTableRows();
 		
 		//Table
 		table.setStretchAllColumns(true);
 		table.setBackgroundColor(dmr.getBackgroundColor());
 		
 		//Active columns
-		ArrayList<String> activeColumns = activeColumns(title, tableData);
+		ArrayList<String> activeColumns = activeColumns(title, tableDataActual);
 		
 		//Listener
-		sectionTitle.setOnLongClickListener(new TableOptionDialogListener(dmr, title, tableData));
+		sectionTitle.setOnLongClickListener(new TableOptionDialogListener(dmr, title, tableDataActual));
 		
 		//Headers
-		List<TableColumn> tableColumns = tableData.getTableColumns();
+		List<TableColumn> tableColumns = tableDataActual.getTableColumns();
 		TableRow headerRow = new TableRow(dmr);
 		for (TableColumn column: tableColumns) {
 			//Init
 			if(activeColumns.contains(column.getHeader())){
-				headerRow.addView(new Cell(dmr, column.getHeader(), dmr.getCellBackgroundColor(), dmr.getCellTextColor(), dmr.getCellBorderColor()));				
+				headerRow.addView(new Cell(dmr, column.getHeader(), "", dmr.getCellBackgroundColor(), dmr.getCellTextColor(), dmr.getCellBorderColor()));				
 			}
 		}
 		table.addView(headerRow);
 		
 		//Rows
-		for (com.ec.prod.android.pilot.model.TableRow tableRow : tableRows) {
+		for (com.ec.prod.android.pilot.model.TableRow tableRow : tableRowsActual) {
 			//Init
+			int idx = tableDataActual.getTableRows().indexOf(tableRow);
 			TableRow row = new TableRow(dmr);
-			List<String> values = tableRow.getValues();
+			List<String> valuesActual = tableRow.getValues();
+			List<String> valuesTarget = tableDataTarget.getTableRows().get(idx).getValues();
 			
-			for (int i = 0; i < values.size(); i++) {
+			for (int i = 0; i < valuesActual.size(); i++) {
 				//Add Cell
 				String header = tableColumns.get(i).getHeader();
 				if(activeColumns.contains(header)){
-					row.addView(new Cell(dmr, values.get(i), dmr.getCellBackgroundColor(), dmr.getCellTextColor(), dmr.getCellBorderColor()));					
+					row.addView(new Cell(dmr, valuesActual.get(i), valuesTarget.get(i), dmr.getCellBackgroundColor(), dmr.getCellTextColor(), dmr.getCellBorderColor()));
 				}
 			}
 			
@@ -252,7 +262,6 @@ public class SectionBuilder {
 	 * @return {@link ArrayList} of active columns
 	 */
 	private ArrayList<String> activeColumns(String title, TableData tableData){
-		Log.d("tieto", "Checking active columns for table " + title);
 		ArrayList<String> columns = new ArrayList<String>();
 		try {
 			List<TableColumn> columnsList = tableData.getTableColumns();
@@ -291,8 +300,8 @@ public class SectionBuilder {
 			dmr.setCellBorderColor(ColorConverter.parseColor(FileManager.readPath(dmr, basePath + OptionTitle.CellBorderColor)));
 		} catch (IOException e) {
 			Log.d("tieto", "Setting default color");
-			dmr.setBackgroundColor(Color.BLACK);
-			dmr.setTextColor(Color.GRAY);
+			dmr.setBackgroundColor(Color.rgb(180, 201, 220));
+			dmr.setTextColor(Color.BLACK);
 			dmr.setCellBackgroundColor(Color.WHITE);
 			dmr.setCellTextColor(Color.BLACK);
 			dmr.setCellBorderColor(Color.BLACK);

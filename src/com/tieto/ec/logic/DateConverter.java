@@ -49,18 +49,17 @@ public class DateConverter {
 		
 		switch (type) {
 		case DATE:
-			int offset = date.getHours()/12;
 			if((date.getMonth()+1) < 10 && date.getDate() < 10){
-				return (date.getYear()+OFFSET) + "-0" + (date.getMonth()+1) + "-0" + (date.getDate() + offset);			
+				return (date.getYear()+OFFSET) + "-0" + (date.getMonth()+1) + "-0" + (date.getDate());			
 			}
 			if((date.getMonth()+1) >= 10 && date.getDate() < 10){
-				return (date.getYear()+OFFSET) + "-" + (date.getMonth()+1) + "-0" + (date.getDate() + offset);			
+				return (date.getYear()+OFFSET) + "-" + (date.getMonth()+1) + "-0" + (date.getDate());			
 			}
 			if((date.getMonth()+1) < 10 && date.getDate() >= 10){
-				return (date.getYear()+OFFSET) + "-0" + (date.getMonth()+1) + "-" + (date.getDate() + offset);			
+				return (date.getYear()+OFFSET) + "-0" + (date.getMonth()+1) + "-" + (date.getDate());			
 			}
 			else{
-				return (date.getYear()+OFFSET) + "-" + (date.getMonth()+1) + "-" + (date.getDate() + offset);			
+				return (date.getYear()+OFFSET) + "-" + (date.getMonth()+1) + "-" + (date.getDate());			
 			}
 		case TIME:
 			if(date.getHours() < 10 && date.getMinutes() < 10){

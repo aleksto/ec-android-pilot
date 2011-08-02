@@ -40,7 +40,6 @@ public class OptionRow extends RelativeLayout{
 		Dialog nextState = null;
 
 		//Init
-//		RelativeLayout optionRow = new RelativeLayout(optionDialog.getContext());
 		TextView optionsTextView = new TextView(optionDialog.getContext());
 		TextView optionsSubTextView = new TextView(optionDialog.getContext());
 		LayoutParams rowParameters = new LayoutParams(android.view.ViewGroup.LayoutParams.FILL_PARENT, 100);
@@ -71,11 +70,6 @@ public class OptionRow extends RelativeLayout{
 		
 		switch (optionRowType) {
 		case EDIT_BUTTON:
-			//Init
-//			Button editButton = new Button(context);
-			
-			//Text
-//			editButton.setText("Edit");
 			try {
 				optionsSubTextView.setText(FileManager.readPath(optionDialog.getContext(), optionDialog.getPath() + "." + optionsTitle));
 				Log.d("tieto", "Read path: " + optionDialog.getPath() + "." + optionsTitle + " for subtext. \tString read: " + optionsSubTextView.getText());
@@ -89,16 +83,8 @@ public class OptionRow extends RelativeLayout{
 			//Listener
 			goBack = false;
 			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState));
-			
-			//Child
-//			optionRow.addView(editButton, buttonSpaceParameters);
 			break;
 		case DATE_BUTTON:
-			//Init
-//			Button dateButton = new Button(context);
-			
-			//Text
-//			dateButton.setText("Edit");
 			try {
 				optionsSubTextView.setText(FileManager.readPath(optionDialog.getContext(), optionDialog.getPath() + "." + optionsTitle));
 				Log.d("tieto", "Read path: " + optionDialog.getPath() + "." + optionsTitle + " for subtext. \tString read: " + optionsSubTextView.getText());
@@ -116,23 +102,11 @@ public class OptionRow extends RelativeLayout{
 			//Listener
 			goBack = false;
 			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState));
-			
-			//Child
-//			optionRow.addView(dateButton, buttonSpaceParameters);
 			break;
 		case CHOOSE_BUTTON:
-			//Init
-//			Button chooseButton = new Button(context);
-			
-			//Text
-//			chooseButton.setText("Choose");
-			
 			//Listener
 			goBack = true;
 			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState));
-			
-			//Child
-//			optionRow.addView(chooseButton, buttonSpaceParameters);
 			break;
 		case CHECK_BOX:
 			//Init

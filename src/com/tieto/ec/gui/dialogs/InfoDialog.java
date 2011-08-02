@@ -34,13 +34,13 @@ public class InfoDialog{
 		
 		//Dialog
 		dialog.setTitle(TITLE);
-		dialog.setContentView(scroll);
+		dialog.setContentView(table);
 		dialog.show();
 		
 		//Childs
-		scroll.addView(table);
-		table.addView(text);
 		table.addView(ok);
+		table.addView(scroll);
+		scroll.addView(text);
 		
 		//Text
 		text.setTextSize(TEXT_SIZE);

@@ -20,6 +20,7 @@ import com.threed.jpct.util.MemoryHelper;
 import com.tieto.R;
 import com.tieto.ec.activities.Login;
 import com.tieto.ec.activities.Welcome;
+import com.tieto.ec.logic.FileManager;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -31,7 +32,7 @@ public class AnimationRenderer implements Renderer{
 	private Activity activity;
 	
 	//3D
-	private final int TOTAL_NUMBER_OF_SPHERES = 8;
+	private final int TOTAL_NUMBER_OF_SPHERES = 6;
 	private final int RADIUS = 13;
 	private final float ROTATION_SPEED = (float) (Math.PI/50f);
 	private FrameBuffer frameBuffer;
@@ -41,6 +42,7 @@ public class AnimationRenderer implements Renderer{
 	private ArrayList<Light> lights;
 	private Object3D mainSphere;
 	private Camera cam;
+	private Light camLight;
 	
 	/**
 	 * Creates a 3D renderer for the {@link Welcome} class
@@ -56,7 +58,7 @@ public class AnimationRenderer implements Renderer{
 		//Adding texture
 		if(!TextureManager.getInstance().containsTexture("texture")){
 			Texture texture = new Texture(BitmapHelper.rescale(BitmapHelper.convert(activity.getResources().getDrawable(R.drawable.energy_components)), 256, 256));
-			TextureManager.getInstance().addTexture("texture", texture);			
+			TextureManager.getInstance().addTexture("texture", texture);
 		}
 	}
 
@@ -67,15 +69,17 @@ public class AnimationRenderer implements Renderer{
 	public void onDrawFrame(GL10 gl) {
 		if(cam.getPosition().z < -50){
 			//Main sphere
-			mainSphere.rotateX(-ROTATION_SPEED*4.2f);
+			mainSphere.rotateX(-ROTATION_SPEED*4.05f);
 			
 			//Cam
-			cam.moveCamera(Camera.CAMERA_MOVEIN, 10);			
+			cam.moveCamera(Camera.CAMERA_MOVEIN, 1f);		
+			camLight.setPosition(cam.getPosition());
 		}else{
 			if(mainSphere.getTransparency() > 0){				
 				mainSphere.setTransparency(mainSphere.getTransparency()-1);
 			}else{
 				activity.startActivity(new Intent(activity, Login.class));
+				FileManager.writePath(activity, "Welcome Activity.3D Seen", "true");
 			}
 		}
 		
@@ -120,7 +124,8 @@ public class AnimationRenderer implements Renderer{
 		mainSphere.build();
 		
 		//World
-		world.setAmbientLight(50,50,50);
+//		world.setAmbientLight(50,50,50);
+//		world.setFogging(World.FOGGING_ENABLED);
 		world.addObject(mainSphere);
 		
 		//Orbits
@@ -128,11 +133,27 @@ public class AnimationRenderer implements Renderer{
 		for (int i = 0; i < TOTAL_NUMBER_OF_SPHERES; i++) {
 			radians = createOrbit(radians, i);
 		}
+		
+		//Floor
+		Object3D floor = Primitives.getBox(100, 0.01f);
+		floor.calcNormals();
+		floor.setLighting(Object3D.LIGHTING_ALL_ENABLED);
+		floor.setSpecularLighting(true);
+		floor.translate(0, 11, 0);
+		floor.rotateY((float) (Math.PI/4f));
+		floor.strip();
+		floor.build();
+		world.addObject(floor);
 
 		//Camera
 		cam = world.getCamera();
-		cam.moveCamera(Camera.CAMERA_MOVEOUT, 1000);
+		cam.moveCamera(Camera.CAMERA_MOVEOUT, 100);
 		cam.lookAt(mainSphere.getTransformedCenter());
+		
+		//Cam light
+		camLight = new Light(world);
+		camLight.setIntensity(100, 100, 100);
+		camLight.setPosition(cam.getPosition());
 
 		MemoryHelper.compact();	
 	}
@@ -160,9 +181,10 @@ public class AnimationRenderer implements Renderer{
 		Light light = new Light(world);
 		light.setPosition(new SimpleVector(x*2, y*2, z*2));
 		if(i%2 == 0){
-			light.setIntensity(0,0,255);
+			light.setIntensity(100,100,100);
+//			Color.rgb(180, 201, 220)
 		}else{
-			light.setIntensity(255,255,255);
+			light.setIntensity(0,0,0);
 		}
 		
 		lights.add(light);

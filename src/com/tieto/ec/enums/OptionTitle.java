@@ -99,7 +99,13 @@ public enum OptionTitle {
 			return "Warning Levels";
 		}
 	},
-
+	DisplayWarnings{
+		@Override
+		public String toString(){
+			return "Automatic display\nwarnings?";
+		}
+	},
+	
 	//Login 
 	InputOptions {
 		@Override

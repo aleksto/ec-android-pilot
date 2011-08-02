@@ -76,7 +76,7 @@ public abstract class Webservice implements Runnable{
 		SoapObject request = new SoapObject(namespace, method); 
 
 		//PARAMS
-		if(args[0] != ""){
+		if(args != null && args[0] != ""){
 			for (int i = 0; i < args.length; i+=2) {
 				request.addProperty(args[i], args[i+1]);
 			}

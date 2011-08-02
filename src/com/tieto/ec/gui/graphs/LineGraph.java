@@ -2,6 +2,7 @@ package com.tieto.ec.gui.graphs;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +23,8 @@ public class LineGraph extends Graph{
 	private final int[] COLORS = {Color.BLACK, Color.BLUE, Color.RED, Color.DKGRAY};
 	private final double STEP_VALUE = 4.5;
 	
+	private List<GraphData> data;
+	
 	/**
 	 * Creates a new empty {@link LineGraph}
 	 * @param context {@link Context} needed for Android frameword actions
@@ -29,6 +32,8 @@ public class LineGraph extends Graph{
 	 */
 	public LineGraph(Context context, String title) {
 		super(context, title);
+		
+		data = new ArrayList<GraphData>();
 	}
 	
 	/**
@@ -49,7 +54,7 @@ public class LineGraph extends Graph{
 				addSeries(graphLines.get(inx), formats.get(inx));
 			}
 		}
-		
+
 		this.setDomainValueFormat(new SimpleDateFormat("yyyy-MM-dd"));
 		this.setDomainStepValue(STEP_VALUE);
 	}
@@ -60,6 +65,8 @@ public class LineGraph extends Graph{
 	 * @param title Title of this line
 	 */
 	public void add(GraphData graphData, String title) {
+		data.add(graphData);
+		
 		List<GraphPoint> graphPoints = graphData.getGraphPoints();
 		List<String> pointAttributes = graphData.getPointAttributes();
 		
@@ -75,7 +82,7 @@ public class LineGraph extends Graph{
 			Date daytime = point.getDaytime();
 			for (String string : pointAttributes) {
 				String value = point.getValue(string);
-				int idx = pointAttributes.indexOf(string);
+				int idx = pointAttributes.indexOf(string) + (data.indexOf(graphData))*pointAttributes.size();
 				addPointToLine(idx, daytime.getTime(), Double.valueOf(value));						
 			}
 		}

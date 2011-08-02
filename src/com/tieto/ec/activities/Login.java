@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tieto.R;
+import com.tieto.ec.gui.dialogs.InfoDialog;
 import com.tieto.ec.gui.login.Slider;
 import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.listeners.login.LoginListener;
@@ -27,6 +29,7 @@ import com.tieto.ec.logic.FileManager;
 public class Login extends Activity{
 
 	private Handler handler;
+	private boolean quit;
 	
 	/**
 	 * Main class for the login, this is the class started after introduction animation
@@ -64,6 +67,20 @@ public class Login extends Activity{
     	//Login slider
     	Slider slider = new Slider(this, new LoginListener(username, password, this), "Slide to login");
     	relativ.addView(slider);
+    	
+    	//Animation
+    	TranslateAnimation animation = new TranslateAnimation(0, 0, 0, 0, 0, 200, 0, 0);
+    	animation.setDuration(2000);
+    	slider.setAnimation(animation);
+    	
+    	//Information
+    	try {
+			FileManager.readPath(this, "Login.First Time");
+		} catch (IOException e) {
+			InfoDialog.showInfoDialog(this, "Welcome to Energy Components pilot for Android. To start, click the menu button and fill in the webservice url and namespace");
+			FileManager.writePath(this, "Login.First Time", "Shown welcome message");
+			e.printStackTrace();
+		}
     }
 	
 	/**
@@ -83,6 +100,15 @@ public class Login extends Activity{
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(quit){
+			onBackPressed();
 		}
 		
 	}
@@ -113,6 +139,10 @@ public class Login extends Activity{
 				Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
 			}
 		});
+	}
+
+	public void setQuit(boolean quit) {
+		this.quit = quit;
 	}
 
 }
