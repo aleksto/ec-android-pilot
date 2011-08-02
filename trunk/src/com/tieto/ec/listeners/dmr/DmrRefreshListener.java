@@ -24,7 +24,7 @@ public class DmrRefreshListener implements OnDismissListener {
 	 * Runs when the {@link Dialog} is closed/dismissed
 	 */
 	public void onDismiss(DialogInterface arg0) {
-		dailyMorningReport.refresh();
+		dailyMorningReport.refresh(false);
 		Log.d("tieto", "Dialog dismissed");
 	}
 }
