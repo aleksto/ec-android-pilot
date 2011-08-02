@@ -21,6 +21,7 @@ import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphSection;
 import com.ec.prod.android.pilot.model.Resolution;
 import com.ec.prod.android.pilot.model.Section;
+import com.ec.prod.android.pilot.model.TableCell;
 import com.ec.prod.android.pilot.model.TableColumn;
 import com.ec.prod.android.pilot.model.TableData;
 import com.ec.prod.android.pilot.model.TableSection;
@@ -39,6 +40,7 @@ import com.tieto.ec.listeners.dmr.GraphLineChooserListener;
 import com.tieto.ec.listeners.dmr.ShowHideSection;
 import com.tieto.ec.listeners.dmr.TableOptionDialogListener;
 import com.tieto.ec.logic.DateConverter.Type;
+import com.tieto.ec.logic.SectionSaver.Location;
 
 public class SectionBuilder {
 
@@ -56,7 +58,7 @@ public class SectionBuilder {
 	/**
 	 * Gets the sections from the Report and builds up the UI.
 	 */
-	public void listSections(){
+	public void listSections(boolean newWebserviceValues){
 		dmr.getTable().removeAllViews();
 		date = dmr.getToDate();
 		dmr.getCurrentdayLabel().setText(DateConverter.parse(date, Type.DATE));
@@ -66,35 +68,36 @@ public class SectionBuilder {
 			Date fromDate = null;
 			switch (resolution) {
 			case Resolution.DAILY:
+				fromDate = date;
 				for (Section section : dmr.getSections()) {
-					addSection(section, date, date, resolution);			
+					addSection(section, date, date, resolution, newWebserviceValues);			
 				}
 				break;
 			case Resolution.WEEKLY:
 				fromDate = new Date(date.getYear(), date.getMonth(), date.getDate()-7);
 				for (Section section : dmr.getSections()) {
-					addSection(section, fromDate, date, resolution);			
+					addSection(section, fromDate, date, resolution, newWebserviceValues);			
 				}
 				break;
 			case Resolution.MONTHLY:
 				fromDate = new Date(date.getYear(), date.getMonth()-1, date.getDate());
 				for (Section section : dmr.getSections()) {
-					addSection(section, fromDate, date, resolution);			
+					addSection(section, fromDate, date, resolution, newWebserviceValues);			
 				}
 				break;
 			case Resolution.YEARLY:
 				fromDate = new Date(date.getYear()-1, date.getMonth(), date.getDate());
 				for (Section section : dmr.getSections()) {
-					addSection(section, fromDate, date, resolution);			
+					addSection(section, fromDate, date, resolution, newWebserviceValues);			
 				}
 				break;
 			}
 			dmr.setFromDate(fromDate);
 			dmr.setResolution(resolution);
 		} catch (IOException e) {
-			Log.d("tieto", "Setting default time and resolution");
+			Log.d("tieto", "Setting default resolution");
 			FileManager.writePath(dmr, "DMR Report.Resolution", Resolution.DAILY+"");
-			listSections();
+			listSections(newWebserviceValues);
 			e.printStackTrace();
 		}		
 	}
@@ -105,8 +108,9 @@ public class SectionBuilder {
 	 * @param fromdate From {@link Date} for the report
 	 * @param toDate To {@link Date} for the report
 	 * @param resolution Resolution for the report
+	 * @param newWebserviceValues 
 	 */
-	private void addSection(Section section, Date fromdate, Date toDate, int resolution){
+	private void addSection(Section section, Date fromdate, Date toDate, int resolution, boolean newWebserviceValues){
 		//Init
 		TextView sectionTitle = new TextView(dmr);
 		
@@ -126,18 +130,72 @@ public class SectionBuilder {
 		
 		//Values
 		if(section instanceof TextSection){
-			TextData textData = dmr.getWebservice().getTextData((TextSection)section, fromdate, toDate, resolution);				
+			TextData textData = null;
+			if(newWebserviceValues){
+				textData = dmr.getWebservice().getTextData((TextSection)section, fromdate, toDate, resolution);	
+				dmr.getSaveManager().save(section, textData, Location.ACTUAL);
+			}else{
+				if(dmr.getSaveManager().isSaved(section, Location.ACTUAL)){ 
+					textData = (TextData) dmr.getSaveManager().load(section, Location.ACTUAL);
+				}else{
+					textData = dmr.getWebservice().getTextData((TextSection)section, fromdate, toDate, resolution);	
+					dmr.getSaveManager().save(section, textData, Location.ACTUAL);
+				}
+			}
 			addTextData(textData, dmr.getTable(), sectionTitle);
 		}
 		else if(section instanceof TableSection){
-			TableData tableDataActual = dmr.getWebservice().getTableData((TableSection)section, fromdate, toDate, resolution, DataType.ACTUAL);
-			TableData tableDataTarget = dmr.getWebservice().getTableData((TableSection)section, fromdate, toDate, resolution, DataType.TARGET);
+			TableData tableDataActual;
+			TableData tableDataTarget;
+			
+			if(newWebserviceValues){
+				tableDataActual = dmr.getWebservice().getTableData((TableSection)section, fromdate, toDate, resolution, DataType.ACTUAL);	
+				tableDataTarget = dmr.getWebservice().getTableData((TableSection)section, fromdate, toDate, resolution, DataType.TARGET);
+				dmr.getSaveManager().save(section, tableDataActual, Location.ACTUAL);
+				dmr.getSaveManager().save(section, tableDataTarget, Location.TARGET);
+			}else{
+				if(dmr.getSaveManager().isSaved(section, Location.ACTUAL)){ 
+					tableDataActual = (TableData) dmr.getSaveManager().load(section, Location.ACTUAL);
+				}else{
+					tableDataActual = dmr.getWebservice().getTableData((TableSection)section, fromdate, toDate, resolution, DataType.ACTUAL);	
+					dmr.getSaveManager().save(section, tableDataActual, Location.ACTUAL);
+				}
+				
+				if(dmr.getSaveManager().isSaved(section, Location.TARGET)){ 
+					tableDataTarget = (TableData) dmr.getSaveManager().load(section, Location.TARGET);
+				}else{
+					tableDataTarget = dmr.getWebservice().getTableData((TableSection)section, fromdate, toDate, resolution, DataType.TARGET);	
+					dmr.getSaveManager().save(section, tableDataTarget, Location.TARGET);
+				}
+			}
 			addTableData(tableDataActual, tableDataTarget, dmr.getTable(), section.getSectionHeader(), sectionTitle);
 		}
 		else if(section instanceof GraphSection){
-			GraphData graphDataActual = dmr.getWebservice().getGraphDataBySection((GraphSection)section, fromdate, toDate, resolution, DataType.ACTUAL);	
-			GraphData graphDataTarget = dmr.getWebservice().getGraphDataBySection((GraphSection)section, fromdate, toDate, resolution, DataType.TARGET);	
-			addGraphData(graphDataActual, graphDataTarget, dmr.getTable(), section.getSectionHeader(), sectionTitle);
+			GraphSection graphSection = (GraphSection) section;
+			GraphData graphDataActual;
+			GraphData graphDataTarget;
+			
+			if(newWebserviceValues){
+				graphDataActual = dmr.getWebservice().getGraphDataBySection(graphSection, fromdate, toDate, resolution, DataType.ACTUAL);
+				graphDataTarget = dmr.getWebservice().getGraphDataBySection(graphSection, fromdate, toDate, resolution, DataType.TARGET);	
+				dmr.getSaveManager().save(graphSection, graphDataActual, Location.ACTUAL);
+				dmr.getSaveManager().save(graphSection, graphDataTarget, Location.TARGET);
+			}else{
+				if(dmr.getSaveManager().isSaved(graphSection, Location.ACTUAL)){ 
+					graphDataActual = (GraphData) dmr.getSaveManager().load(graphSection, Location.ACTUAL);
+				}else{
+					graphDataActual = dmr.getWebservice().getGraphDataBySection(graphSection, fromdate, toDate, resolution, DataType.ACTUAL);	
+					dmr.getSaveManager().save(graphSection, graphDataActual, Location.ACTUAL);
+				}
+				
+				if(dmr.getSaveManager().isSaved(graphSection, Location.TARGET)){ 
+					graphDataTarget = (GraphData) dmr.getSaveManager().load(graphSection, Location.TARGET);
+				}else{
+					graphDataTarget = dmr.getWebservice().getGraphDataBySection(graphSection, fromdate, toDate, resolution, DataType.TARGET);	
+					dmr.getSaveManager().save(graphSection, graphDataTarget, Location.TARGET);
+				}
+			}
+			addGraphData(graphDataActual, graphDataTarget, dmr.getTable(), graphSection.getSectionHeader(), sectionTitle);
 		}
 	}
 
@@ -206,7 +264,7 @@ public class SectionBuilder {
 		for (TableColumn column: tableColumns) {
 			//Init
 			if(activeColumns.contains(column.getHeader())){
-				headerRow.addView(new Cell(dmr, column.getHeader(), "", dmr.getCellBackgroundColor(), dmr.getCellTextColor(), dmr.getCellBorderColor()));				
+				headerRow.addView(new Cell(dmr, new TableCell(column.getHeader()), new TableCell(""), dmr.getCellBackgroundColor(), dmr.getCellTextColor(), dmr.getCellBorderColor()));				
 			}
 		}
 		table.addView(headerRow);
@@ -216,8 +274,8 @@ public class SectionBuilder {
 			//Init
 			int idx = tableDataActual.getTableRows().indexOf(tableRow);
 			TableRow row = new TableRow(dmr);
-			List<String> valuesActual = tableRow.getValues();
-			List<String> valuesTarget = tableDataTarget.getTableRows().get(idx).getValues();
+			List<TableCell> valuesActual = tableRow.getValues();
+			List<TableCell> valuesTarget = tableDataTarget.getTableRows().get(idx).getValues();
 			
 			for (int i = 0; i < valuesActual.size(); i++) {
 				//Add Cell

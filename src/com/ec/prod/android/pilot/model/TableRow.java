@@ -5,8 +5,20 @@ import java.util.List;
 
 public class TableRow {
 
-	List<String> rowValues = new LinkedList<String>();
+	List<TableCell> rowValues = new LinkedList<TableCell>();
 	private String rowId;
+	
+	public TableRow(String...rowValues) {
+		for (String rowValue : rowValues) {
+			this.rowValues.add(new TableCell(rowValue));
+		}
+	}
+	
+	public TableRow(TableCell...rowValues) {
+		for (TableCell rowValue : rowValues) {
+			this.rowValues.add(rowValue);
+		}
+	}
 	
 	public String getRowId() {
 		return rowId;
@@ -20,21 +32,29 @@ public class TableRow {
 		
 	}
 
-	public List<String> getRowValues() {
+	public List<TableCell> getRowValues() {
 		return rowValues;
 	}
 
 	public void setRowValues(List<String> rowValues) {
-		this.rowValues = rowValues;
+		for (String string : rowValues) {
+			this.rowValues.add(new TableCell(string));			
+		}
 	}
-
-	public TableRow(String...rowValues) {
-		for (String rowValue : rowValues) {
-			this.rowValues.add(rowValue);
+	
+	public void setRowComments(List<String> comments){
+		for (int i = 0; i < comments.size(); i++) {
+			rowValues.get(i).setComment(comments.get(i));
+		}
+	}
+	
+	public void setRowComments(String ... comments){
+		for (int i = 0; i < comments.length; i++) {
+			rowValues.get(i).setComment(comments[i]);
 		}
 	}
 
-	public List<String> getValues() {		
+	public List<TableCell> getValues() {		
 		return rowValues;
 	}
 

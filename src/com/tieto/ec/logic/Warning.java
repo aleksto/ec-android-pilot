@@ -30,6 +30,9 @@ public class Warning {
 	}
 
 	public String getComment() {
+		if(comment == null){
+			return "No comment";
+		}
 		return comment;
 	}
 }

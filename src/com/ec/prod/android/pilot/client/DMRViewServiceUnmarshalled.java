@@ -1,7 +1,6 @@
 package com.ec.prod.android.pilot.client;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import com.ec.prod.android.pilot.model.GraphData;
@@ -18,13 +17,9 @@ import com.ec.prod.android.pilot.service.ViewServiceMarshalled;
 
 public class DMRViewServiceUnmarshalled implements ViewService {
 
-	private HashMap<Section, Object> savedData;
 	private ViewServiceMarshalled viewService;
-	private final boolean saveData;
 
-	public DMRViewServiceUnmarshalled(boolean saveData, String username, String password, String namespace, String url){
-		this.saveData = saveData;
-		savedData = new HashMap<Section, Object>();
+	public DMRViewServiceUnmarshalled(String username, String password, String namespace, String url){
 		viewService = new AndroidViewServiceMarshalled(username, password, namespace, url);
 	}
 
@@ -34,31 +29,17 @@ public class DMRViewServiceUnmarshalled implements ViewService {
 	}
 
 	public TableData getTableData(TableSection section, Date fromdate, Date toDate, int resolution, int type) {	
-		if(savedData.containsKey(section)){
-			return (TableData) savedData.get(section);
-		}else{			
-			String tableSection = MarshalService.marshalTableSection(section);		
-			List<String> tableData = viewService.getTableData(tableSection, fromdate, toDate, resolution);
-			TableData unMarshalTableData = MarshalService.unMarshalTableData(tableData);
-			if(saveData){
-				savedData.put(section, unMarshalTableData);				
-			}
-			return unMarshalTableData;			
-		}
+		String tableSection = MarshalService.marshalTableSection(section);		
+		List<String> tableData = viewService.getTableData(tableSection, fromdate, toDate, resolution);
+		TableData unMarshalTableData = MarshalService.unMarshalTableData(tableData);
+		return unMarshalTableData;			
 	}
 
 	public GraphData getGraphDataBySection(GraphSection section, Date fromDate, Date toDate, int resolution, int type) {
-		if(savedData.containsKey(section)){
-			return (GraphData) savedData.get(section);
-		}else{	
-			String graphSection = MarshalService.marshalGraphSection(section);		
-			List<String> graphData = viewService.getGraphDataBySection(graphSection, fromDate, toDate, resolution);
-			GraphData unMarshalGraphData = MarshalService.unMarshalGraphData(graphData);
-			if(saveData){
-				savedData.put(section, unMarshalGraphData);				
-			}
-			return unMarshalGraphData;
-		}
+		String graphSection = MarshalService.marshalGraphSection(section);		
+		List<String> graphData = viewService.getGraphDataBySection(graphSection, fromDate, toDate, resolution);
+		GraphData unMarshalGraphData = MarshalService.unMarshalGraphData(graphData);
+		return unMarshalGraphData;
 	}
 
 	public GraphData getGraphDataByRow(TableRow row, Date fromDate, Date toDate, int resolution, int type) {
@@ -68,20 +49,9 @@ public class DMRViewServiceUnmarshalled implements ViewService {
 	}
 
 	public TextData getTextData(TextSection section, Date fromDate, Date toDate, int resolution) {
-		if(savedData.containsKey(section)){
-			return (TextData) savedData.get(section);
-		}else{	
-			String textSection = MarshalService.marshalTextSection(section);		
-			List<String> textData = viewService.getTextData(textSection, fromDate, toDate, resolution);
-			TextData unMarshalTextData = MarshalService.unMarshalTextData(textData);
-			if(saveData){
-				savedData.put(section, unMarshalTextData);				
-			}
-			return unMarshalTextData;
-		}
-	}
-
-	public void clearSaveData() {
-		savedData.clear();
+		String textSection = MarshalService.marshalTextSection(section);		
+		List<String> textData = viewService.getTextData(textSection, fromDate, toDate, resolution);
+		TextData unMarshalTextData = MarshalService.unMarshalTextData(textData);
+		return unMarshalTextData;
 	}
 }

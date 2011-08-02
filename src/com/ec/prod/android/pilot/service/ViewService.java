@@ -23,6 +23,4 @@ public interface ViewService {
 	public GraphData getGraphDataByRow(TableRow row, Date fromDate, Date toDate, int resolution, int type);
 	
 	public TextData getTextData(TextSection section, Date fromDate, Date toDate, int resolution);	
-	
-	public void clearSaveData();
 }

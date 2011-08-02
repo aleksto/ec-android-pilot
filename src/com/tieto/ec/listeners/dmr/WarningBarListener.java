@@ -23,10 +23,10 @@ public class WarningBarListener implements OnClickListener{
 		for (Warning warning : sectionWarning.getWarnings()) {
 			if(warning.getType() == Type.CRITICAL && first){
 				info.append("Critical:\n");
-				info.append(warning.getComment() + "\n");
+				info.append("- " + warning.getComment() + "\n\n");
 				first = false;
 			}else if(warning.getType() == Type.CRITICAL){
-				info.append(warning.getComment() + "\n");
+				info.append("- " + warning.getComment() + "\n\n");
 			}
 		}
 
@@ -35,10 +35,10 @@ public class WarningBarListener implements OnClickListener{
 		for (Warning warning : sectionWarning.getWarnings()) {
 			if(warning.getType() == Type.WARNING && first){
 				info.append("\nWarning:\n");
-				info.append(warning.getComment() + "\n");
+				info.append("- " + warning.getComment() + "\n\n");
 				first = false;
 			}else if(warning.getType() == Type.WARNING){
-				info.append(warning.getComment() + "\n");
+				info.append("- " + warning.getComment() + "\n\n");
 			}
 		}
 	}

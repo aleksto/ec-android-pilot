@@ -2,7 +2,6 @@ package com.ec.prod.android.pilot.service;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,14 +24,7 @@ import com.ec.prod.android.pilot.model.TextSection;
  */
 public class ExampleViewService implements ViewService {
 
-	private HashMap<Section, Object> savedDataActual;
-	private HashMap<Section, Object> savedDataTarget;
-	private final boolean saveData;
-
-	public ExampleViewService(boolean saveData){
-		this.saveData = saveData;
-		savedDataActual = new HashMap<Section, Object>();
-		savedDataTarget = new HashMap<Section, Object>();
+	public ExampleViewService(){
 	}
 
 	/**
@@ -61,9 +53,6 @@ public class ExampleViewService implements ViewService {
 	public TableData getTableData(TableSection section, Date fromdate, Date toDate, int resolution, int type) {
 		switch (type) {
 		case DataType.ACTUAL:
-			if(savedDataActual.containsKey(section)){
-				return (TableData) savedDataActual.get(section);
-			}else{
 				if(section.getSectionHeader().equalsIgnoreCase("Well Status")){				
 					List<TableColumn> tableColumns = new LinkedList<TableColumn>();
 					tableColumns.add(new TableColumn("Well"));
@@ -74,15 +63,16 @@ public class ExampleViewService implements ViewService {
 					tableColumns.add(new TableColumn("Allocated Gas Volume"));
 					tableColumns.add(new TableColumn("Allocated Water Volume"));				
 					TableData data = new TableData(tableColumns);
-					data.addTableRow(new TableRow("Well PH65R", Integer.toString((int) (18 + Math.random() * 11.0)), Integer.toString((int) (50 + Math.random() * 20.0)), Integer.toString((int) (150 + Math.random() * 51.0)), Double.toString(5000.1 + Math.random() * 1000.1).substring(0, 6), Double.toString(600.1 + Math.random() * 100.1).substring(0, 5), Double.toString(200.1 + Math.random() * 400.1).substring(0, 5)));
+					TableRow row;
+					row = new TableRow("Well PH65R", Integer.toString((int) (18 + Math.random() * 11.0)), Integer.toString((int) (50 + Math.random() * 20.0)), Integer.toString((int) (150 + Math.random() * 51.0)), Double.toString(5000.1 + Math.random() * 1000.1).substring(0, 6), Double.toString(600.1 + Math.random() * 100.1).substring(0, 5), Double.toString(200.1 + Math.random() * 400.1).substring(0, 5));
+					row.setRowComments("", "Everything is fine", "Drinking coffe", "Night shift starts 00:00");
+					data.addTableRow(row);
 					data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
 					data.addTableRow(new TableRow("Well PR87D", Integer.toString((int) (18 + Math.random() * 11.0)), Integer.toString((int) (50 + Math.random() * 20.0)), Integer.toString((int) (150 + Math.random() * 51.0)), Double.toString(6000.1 + Math.random() * 1000.1).substring(0, 6), Double.toString(800.1 + Math.random() * 100.1).substring(0, 5), Double.toString(200.1 + Math.random() * 100.1).substring(0, 5)));
 					data.addTableRow(new TableRow("Well PP12A", Integer.toString((int) (18 + Math.random() * 11.0)), Integer.toString((int) (50 + Math.random() * 20.0)), Integer.toString((int) (150 + Math.random() * 51.0)), Double.toString(3000.1 + Math.random() * 1000.1).substring(0, 6), Double.toString(800.1 + Math.random() * 900.1).substring(0, 5), Double.toString((int) (150 + Math.random() * 51.0))));
 					data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-					if(saveData){
-						this.savedDataActual.put(section, data);					
-					}
-					return data;			
+	
+					return MarshalService.unMarshalTableData(MarshalService.marshalTableData(data));			
 				}else if(section.getSectionHeader().equalsIgnoreCase("Safety")){
 					List<TableColumn> tableColumns = new LinkedList<TableColumn>();
 					tableColumns.add(new TableColumn("HSE Event"));
@@ -97,10 +87,8 @@ public class ExampleViewService implements ViewService {
 					data.addTableRow(new TableRow("Life boats out of service", "0", "0"));
 					data.addTableRow(new TableRow("Restricted work injury", "0", "0"));
 					data.addTableRow(new TableRow("Safrty critical equipment", "0", "0"));
-					if(saveData){
-						this.savedDataActual.put(section, data);					
-					}
-					return data;		
+			
+					return MarshalService.unMarshalTableData(MarshalService.marshalTableData(data));		
 				}else if(section.getSectionHeader().equalsIgnoreCase("Personnel On Board")){
 					List<TableColumn> tableColumns = new LinkedList<TableColumn>();
 					tableColumns.add(new TableColumn("Job Category"));
@@ -109,10 +97,8 @@ public class ExampleViewService implements ViewService {
 					TableData data = new TableData(tableColumns);
 					data.addTableRow(new TableRow("HEAD_COUNT", "10", "COMMENT ON PERSONNEL ONBOARD - POB - SKRAV_FPSO"));
 					data.addTableRow(new TableRow("OIM", "1", "Kaptein Sabeltan"));
-					if(saveData){
-						this.savedDataActual.put(section, data);					
-					}
-					return data;	
+			
+					return MarshalService.unMarshalTableData(MarshalService.marshalTableData(data));	
 				}else if(section.getSectionHeader().equalsIgnoreCase("Leak / Spill")){
 					List<TableColumn> tableColumns = new LinkedList<TableColumn>();
 					tableColumns.add(new TableColumn("Time"));
@@ -124,10 +110,8 @@ public class ExampleViewService implements ViewService {
 					data.addTableRow(new TableRow("00:00", "GAS", "0", "M3", "COMMENT ON FCTY SPILL EVENT - GAS"));
 					data.addTableRow(new TableRow("10:00", "GAS", "1", "M3", ""));
 					data.addTableRow(new TableRow("11:00", "OIL", "2", "M3", ""));
-					if(saveData){
-						this.savedDataActual.put(section, data);					
-					}
-					return data;	
+			
+					return MarshalService.unMarshalTableData(MarshalService.marshalTableData(data));	
 				}else if(section.getSectionHeader().equalsIgnoreCase("Ship Movement")){
 					List<TableColumn> tableColumns = new LinkedList<TableColumn>();
 					tableColumns.add(new TableColumn("Ship Movements"));
@@ -138,10 +122,8 @@ public class ExampleViewService implements ViewService {
 					data.addTableRow(new TableRow("Pitch(deg)", Integer.toString((int) (18 + Math.random() * 11.0))));
 					data.addTableRow(new TableRow("Roll(deg)", Integer.toString((int) (3 + Math.random() * 11.0))));
 					data.addTableRow(new TableRow("(deg)", Integer.toString((int) (3 + Math.random() * 11.0))));
-					if(saveData){
-						this.savedDataActual.put(section, data);					
-					}
-					return data;	
+			
+					return MarshalService.unMarshalTableData(MarshalService.marshalTableData(data));	
 				}else{
 					List<TableColumn> tableColumns = new LinkedList<TableColumn>();
 					tableColumns.add(new TableColumn("Item Type"));
@@ -161,16 +143,12 @@ public class ExampleViewService implements ViewService {
 					data.addTableRow(new TableRow("WAVES", "Spectral Peak Period (s)", Integer.toString((int) (3 + Math.random() * 11.0))));
 					data.addTableRow(new TableRow("WIND", "Direction (deg)", Integer.toString((int) (190 + Math.random() * 51.0))));
 					data.addTableRow(new TableRow("WIND", "Speed (m/s)", Integer.toString((int) (3 + Math.random() * 11.0))));
-					if(saveData){
-						this.savedDataActual.put(section, data);					
-					}
-					return data;	
+			
+					return MarshalService.unMarshalTableData(MarshalService.marshalTableData(data));	
 				}
-			}
+			
 		case DataType.TARGET:
-			if(savedDataTarget.containsKey(section)){
-				return (TableData) savedDataTarget.get(section);
-			}else{
+
 				if(section.getSectionHeader().equalsIgnoreCase("Well Status")){					
 					List<TableColumn> tableColumns = new LinkedList<TableColumn>();
 					tableColumns.add(new TableColumn("Well"));
@@ -186,10 +164,8 @@ public class ExampleViewService implements ViewService {
 					data.addTableRow(new TableRow("Well PR87D", Integer.toString((int) (134 + Math.random()*0.5 * 11.0)), Integer.toString((int) (50 + Math.random() * 20.0)), Integer.toString((int) (150 + Math.random() * 51.0)), Double.toString(6000.1 + Math.random() * 1000.1).substring(0, 6), Double.toString(800.1 + Math.random() * 100.1).substring(0, 5), Double.toString(200.1 + Math.random() * 100.1).substring(0, 5)));
 					data.addTableRow(new TableRow("Well PP12A", Integer.toString((int) (56 + Math.random()*0.5 * 11.0)), Integer.toString((int) (50 + Math.random() * 20.0)), Integer.toString((int) (150 + Math.random() * 51.0)), Double.toString(3000.1 + Math.random() * 1000.1).substring(0, 6), Double.toString(800.1 + Math.random() * 900.1).substring(0, 5), Double.toString((int) (150 + Math.random() * 51.0))));
 					data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*0.5*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
-					if(saveData){
-						this.savedDataTarget.put(section, data);					
-					}
-					return data;			
+				
+					return MarshalService.unMarshalTableData(MarshalService.marshalTableData(data));			
 				}else if(section.getSectionHeader().equalsIgnoreCase("Safety")){
 					List<TableColumn> tableColumns = new LinkedList<TableColumn>();
 					tableColumns.add(new TableColumn("HSE Event"));
@@ -204,10 +180,8 @@ public class ExampleViewService implements ViewService {
 					data.addTableRow(new TableRow("Life boats out of service", "10", "0"));
 					data.addTableRow(new TableRow("Restricted work injury", "2", "5"));
 					data.addTableRow(new TableRow("Safrty critical equipment", "2", "0"));
-					if(saveData){
-						this.savedDataTarget.put(section, data);					
-					}
-					return data;		
+				
+					return MarshalService.unMarshalTableData(MarshalService.marshalTableData(data));		
 				}else if(section.getSectionHeader().equalsIgnoreCase("Personnel On Board")){
 					List<TableColumn> tableColumns = new LinkedList<TableColumn>();
 					tableColumns.add(new TableColumn("Job Category"));
@@ -216,10 +190,8 @@ public class ExampleViewService implements ViewService {
 					TableData data = new TableData(tableColumns);
 					data.addTableRow(new TableRow("HEAD_COUNT", "10", "COMMENT ON PERSONNEL ONBOARD - POB - SKRAV_FPSO"));
 					data.addTableRow(new TableRow("OIM", "1", "Kaptein Sabeltan"));
-					if(saveData){
-						this.savedDataTarget.put(section, data);					
-					}
-					return data;	
+		
+					return MarshalService.unMarshalTableData(MarshalService.marshalTableData(data));	
 				}else if(section.getSectionHeader().equalsIgnoreCase("Leak / Spill")){
 					List<TableColumn> tableColumns = new LinkedList<TableColumn>();
 					tableColumns.add(new TableColumn("Time"));
@@ -231,10 +203,8 @@ public class ExampleViewService implements ViewService {
 					data.addTableRow(new TableRow("00:00", "GAS", "0", "M3", "COMMENT ON FCTY SPILL EVENT - GAS"));
 					data.addTableRow(new TableRow("10:00", "GAS", "1", "M3", ""));
 					data.addTableRow(new TableRow("11:00", "OIL", "2", "M3", ""));
-					if(saveData){
-						this.savedDataTarget.put(section, data);					
-					}
-					return data;	
+			
+					return MarshalService.unMarshalTableData(MarshalService.marshalTableData(data));	
 				}else if(section.getSectionHeader().equalsIgnoreCase("Ship Movement")){
 					List<TableColumn> tableColumns = new LinkedList<TableColumn>();
 					tableColumns.add(new TableColumn("Ship Movements"));
@@ -245,10 +215,8 @@ public class ExampleViewService implements ViewService {
 					data.addTableRow(new TableRow("Pitch(deg)", Integer.toString((int) (18 + Math.random() * 11.0))));
 					data.addTableRow(new TableRow("Roll(deg)", Integer.toString((int) (3 + Math.random() * 11.0))));
 					data.addTableRow(new TableRow("(deg)", Integer.toString((int) (3 + Math.random() * 11.0))));
-					if(saveData){
-						this.savedDataTarget.put(section, data);					
-					}
-					return data;	
+				
+					return MarshalService.unMarshalTableData(MarshalService.marshalTableData(data));	
 				}else{
 					List<TableColumn> tableColumns = new LinkedList<TableColumn>();
 					tableColumns.add(new TableColumn("Item Type"));
@@ -268,13 +236,11 @@ public class ExampleViewService implements ViewService {
 					data.addTableRow(new TableRow("WAVES", "Spectral Peak Period (s)", Integer.toString((int) (3 + Math.random() * 11.0))));
 					data.addTableRow(new TableRow("WIND", "Direction (deg)", Integer.toString((int) (190 + Math.random() * 51.0))));
 					data.addTableRow(new TableRow("WIND", "Speed (m/s)", Integer.toString((int) (3 + Math.random() * 11.0))));
-					if(saveData){
-						this.savedDataTarget.put(section, data);					
-					}
-					return data;	
+				
+					return MarshalService.unMarshalTableData(MarshalService.marshalTableData(data));	
 				}
 			}
-		}
+		
 		return null;
 	}
 
@@ -282,9 +248,7 @@ public class ExampleViewService implements ViewService {
 	 * Generates example of graph data from a Daily Morning Report
 	 */
 	public TextData getTextData(TextSection section, Date fromDate, Date toDate, int resolution) {
-		if(savedDataActual.containsKey(section)){
-			return (TextData) savedDataActual.get(section);
-		}else{
+
 			TextData textData = new TextData();
 			
 			
@@ -319,14 +283,12 @@ public class ExampleViewService implements ViewService {
 			}
 			
 			
-			if(saveData){
-				this.savedDataActual.put(section, textData);					
-			}
+	
 			return textData;
 			
 			
 		}
-	}
+	
 
 	/**
 	 * Generates example of graph data from a Daily Morning Report
@@ -334,9 +296,7 @@ public class ExampleViewService implements ViewService {
 	public GraphData getGraphDataBySection(GraphSection section, Date fromDate,	Date toDate, int resolution, int type) {
 		switch (type) {
 		case DataType.ACTUAL:
-			if(savedDataActual.containsKey(section)){
-				return (GraphData) savedDataActual.get(section);
-			}else{
+	
 				if(section.getSectionHeader().equalsIgnoreCase("Export Curves")){
 					GraphData data = new GraphData();
 					data.setPointAttributes("OIL", "GAS", "WATER");
@@ -347,12 +307,11 @@ public class ExampleViewService implements ViewService {
 						graphPoint1.addValue("OIL", "" + Math.random()*10000);
 						graphPoint1.addValue("GAS", "" + Math.random()*5000);
 						graphPoint1.addValue("WATER", "" + Math.random()*2000);
+						
 						data.addGraphPoint(graphPoint1);
 					}				
-					if(saveData){
-						this.savedDataActual.put(section, data);					
-					}
-					return data;
+				
+					return MarshalService.unMarshalGraphData(MarshalService.marshalGraphData(data));
 				}else if(section.getSectionHeader().equalsIgnoreCase("Import Curves")){
 					GraphData data = new GraphData();
 					data.setPointAttributes("OIL", "GAS", "WATER");
@@ -365,10 +324,8 @@ public class ExampleViewService implements ViewService {
 						graphPoint1.addValue("WATER", "" + Math.random()*2000);
 						data.addGraphPoint(graphPoint1);
 					}				
-					if(saveData){
-						this.savedDataActual.put(section, data);					
-					}
-					return data;
+				
+					return MarshalService.unMarshalGraphData(MarshalService.marshalGraphData(data));
 				} else {				
 					GraphData data = new GraphData();
 					data.setPointAttributes("OIL", "GAS", "WATER");
@@ -376,17 +333,16 @@ public class ExampleViewService implements ViewService {
 					graphPoint1.addValue("OIL", "" + Math.random()*10000);
 					graphPoint1.addValue("GAS", "" + Math.random()*5000);
 					graphPoint1.addValue("WATER", "" + Math.random()*2000);
+					graphPoint1.addComment("OIL", "This is a comment for oil, and the volum is ok");
+					graphPoint1.addComment("GAS", "Gas explosion");
+					graphPoint1.addComment("WATER", "Water level increases");
 					data.addGraphPoint(graphPoint1);
-					if(saveData){
-						this.savedDataActual.put(section, data);					
-					}
-					return data;
+			
+					return MarshalService.unMarshalGraphData(MarshalService.marshalGraphData(data));
 				}
-			}
+			
 		case DataType.TARGET:
-			if(savedDataTarget.containsKey(section)){
-				return (GraphData) savedDataTarget.get(section);
-			}else{
+		
 				if(section.getSectionHeader().equalsIgnoreCase("Export Curves")){
 					GraphData data = new GraphData();
 					data.setPointAttributes("OIL", "GAS", "WATER");
@@ -399,10 +355,8 @@ public class ExampleViewService implements ViewService {
 						graphPoint1.addValue("WATER", "" + 2000);
 						data.addGraphPoint(graphPoint1);
 					}				
-					if(saveData){
-						this.savedDataTarget.put(section, data);					
-					}
-					return data;
+			
+					return MarshalService.unMarshalGraphData(MarshalService.marshalGraphData(data));
 				}else if(section.getSectionHeader().equalsIgnoreCase("Import Curves")){
 					GraphData data = new GraphData();
 					data.setPointAttributes("OIL", "GAS", "WATER");
@@ -415,10 +369,8 @@ public class ExampleViewService implements ViewService {
 						graphPoint1.addValue("WATER", "" + 2000);
 						data.addGraphPoint(graphPoint1);
 					}				
-					if(saveData){
-						this.savedDataTarget.put(section, data);					
-					}
-					return data;
+				
+					return MarshalService.unMarshalGraphData(MarshalService.marshalGraphData(data));
 				} else {				
 					GraphData data = new GraphData();
 					data.setPointAttributes("OIL", "GAS", "WATER");
@@ -427,22 +379,15 @@ public class ExampleViewService implements ViewService {
 					graphPoint1.addValue("GAS", "" + 5000);
 					graphPoint1.addValue("WATER", "" + 2000);
 					data.addGraphPoint(graphPoint1);
-					if(saveData){
-						this.savedDataTarget.put(section, data);					
-					}
-					return data;
+				
+					return MarshalService.unMarshalGraphData(MarshalService.marshalGraphData(data));
 				}
 			}
-		}
+		
 		return null;
 	}
 
 	public GraphData getGraphDataByRow(TableRow row, Date fromDate,	Date toDate, int resolutio, int typen) {
 		return null;
-	}
-
-	public void clearSaveData() {
-		savedDataActual.clear();
-		savedDataTarget.clear();
 	}
 }

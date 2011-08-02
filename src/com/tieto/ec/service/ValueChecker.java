@@ -21,7 +21,7 @@ public class ValueChecker extends TimerTask{
 	 */
 	public ValueChecker(Context context, String username, String password, String url, String namespace){
 		serviceNotification = new ServiceNotification(context);
-		new DMRViewServiceUnmarshalled(false, username, password, namespace, url);
+		new DMRViewServiceUnmarshalled(username, password, namespace, url);
 	}
 	
 	/**

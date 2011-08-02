@@ -35,6 +35,7 @@ import com.tieto.ec.logic.DateConverter.Type;
 import com.tieto.ec.logic.FileManager;
 import com.tieto.ec.logic.ResolutionConverter;
 import com.tieto.ec.logic.SectionBuilder;
+import com.tieto.ec.logic.SectionSaver;
 import com.tieto.ec.logic.SectionWarning;
 import com.tieto.ec.logic.WarningChecker;
 import com.tieto.ec.service.EcService;
@@ -56,6 +57,7 @@ public class DailyMorningReport extends Activity{
 	private ButtonRow buttonRow;
 	private SectionBuilder sectionBuilder;
 	private WarningChecker warningChecker;
+	private SectionSaver saveManager;
 	private Dialog warningDialog;
 
 
@@ -78,6 +80,7 @@ public class DailyMorningReport extends Activity{
 		main = new TableLayout(this);
 		sectionBuilder = new SectionBuilder(this);
 		warningChecker = new WarningChecker(this);
+		saveManager = new SectionSaver();
 		dateRow = new DateRow(this);
 		buttonRow = new ButtonRow(this);
 		username = getIntent().getExtras().getString(Webservice.username.toString());
@@ -87,17 +90,17 @@ public class DailyMorningReport extends Activity{
 
 		if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
 			Log.d("tieto", "Starting report with example view service");
-			webservice = new ExampleViewService(true);
+			webservice = new ExampleViewService();
 		}else{
 			Log.d("tieto", "Starting report with webservice");
-			webservice = new DMRViewServiceUnmarshalled(true, username, password, namespace, url);
+			webservice = new DMRViewServiceUnmarshalled(username, password, namespace, url);
 		}
 
 		//Getting sections
 		sections = webservice.getSections();
 		
 		//Sections Builder
-		refresh();
+		sectionBuilder.updateColors();
 		
 		setToDate(toDate);
 
@@ -157,9 +160,7 @@ public class DailyMorningReport extends Activity{
 	 */
 	public void setToDate(Date date){
 		this.toDate = date;
-		webservice.clearSaveData();
-		
-		sectionBuilder.listSections();
+		sectionBuilder.listSections(true);
 		
 		//WarningCheker
 		List<SectionWarning> warnings = warningChecker.checkForWarnings();
@@ -176,6 +177,7 @@ public class DailyMorningReport extends Activity{
 			setToDate(date);
 			e.printStackTrace();
 		}
+		Log.d("tieto", "Viewing report from " + fromDate + "\tto " + toDate);
 	}
 
 	/**
@@ -227,11 +229,11 @@ public class DailyMorningReport extends Activity{
 	/**
 	 * Refreshing the sections and colors of the report
 	 */
-	public void refresh(){
+	public void refresh(boolean newWebserviceValues){
 		//Log
 		Log.d("tieto", "\nDisplaying report with date: " + toDate);
 		sectionBuilder.updateColors();
-		sectionBuilder.listSections();
+		sectionBuilder.listSections(newWebserviceValues);
 		dateRow.getCurrentDayLabel().setText(DateConverter.parse(toDate, Type.DATE));
 	}
 
@@ -387,5 +389,12 @@ public class DailyMorningReport extends Activity{
 	 */
 	public Dialog getWarningDialog() {
 		return warningDialog;
+	}
+
+	/**
+	 * @return A class responsible for holding save data 
+	 */
+	public SectionSaver getSaveManager(){
+		return saveManager;
 	}
 }

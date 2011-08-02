@@ -7,10 +7,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import android.util.Log;
+
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphPoint;
 import com.ec.prod.android.pilot.model.GraphSection;
 import com.ec.prod.android.pilot.model.Section;
+import com.ec.prod.android.pilot.model.TableCell;
 import com.ec.prod.android.pilot.model.TableColumn;
 import com.ec.prod.android.pilot.model.TableData;
 import com.ec.prod.android.pilot.model.TableRow;
@@ -41,11 +44,18 @@ public class MarshalService {
 		for (GraphPoint point : points) {			
 			String pointExpression = "";
 			Date daytime = point.getDaytime();
-			pointExpression += sdf.format(daytime) + delimiter;			
+			pointExpression += sdf.format(daytime) + delimiter;		
 			Map<String, String> values = point.getValues();
 			for (String key : values.keySet()) {
 				String keyValue = values.get(key);
 				pointExpression += key + "#" + keyValue + delimiter;
+			}
+			pointExpression += "COMMENTS" + delimiter;
+			
+			Map<String, String> comments = point.getPointComments();
+			for (String key : comments .keySet()) {
+				String commentsValue = point.getPointComment(key);
+				pointExpression += key + "#" + commentsValue + delimiter;
 			}
 			graphDataExpression.add(pointExpression);					
 		}
@@ -95,10 +105,11 @@ public class MarshalService {
 	public static String marshalTableRow(TableRow row) {
 		String rowString = "";
 		String rowId = row.getRowId();
-		List<String> values = row.getRowValues();
+		List<TableCell> values = row.getRowValues();
 		rowString = rowId + delimiter;
-		for(String value : values) {
-			rowString += value + delimiter;
+		for(TableCell value : values) {
+			rowString += value.getValue() + delimiter;
+			rowString += value.getComment() + delimiter;
 		}
 		return rowString;
 	}
@@ -146,12 +157,23 @@ public class MarshalService {
 			} catch (ParseException e) {
 				throw new IllegalStateException("Could not parse daytime out of Graph Data string", e);
 			}
-			GraphPoint point = new GraphPoint(daytime);			
-			for (int t = 1; t < pointValues.length; t++) {
-				String[] valueSet = pointValues[t].split("#");
+			GraphPoint point = new GraphPoint(daytime);	
+			String values;
+			int counter = 1;
+			while(!(values = pointValues[counter++]).equalsIgnoreCase("COMMENTS")){
+				String[] valueSet = values.split("#");
 				point.addValue(valueSet[0], valueSet[1]);
-			}			
-			graphDataObject.addGraphPoint(point);			
+			}
+			while(counter < pointValues.length){
+				String[] valueSet = pointValues[counter].split("#");
+				point.addComment(valueSet[0], valueSet[1]);
+				counter++;
+			}
+//			for (int t = 2; t < pointValues.length || !pointValues[t].equalsIgnoreCase("COMMENTS"); t++) {
+//				String[] valueSet = pointValues[t].split("#");
+//				point.addValue(valueSet[0], valueSet[1]);
+//			}	
+			graphDataObject.addGraphPoint(point);	
 		}		
 		return graphDataObject;
 	}
@@ -210,10 +232,13 @@ public class MarshalService {
 		String[] values = row.split(delimiter);
 		tableRow.setRowId(values[0]);
 		List<String> rowValues = new LinkedList<String>();
-		for (int i = 1; i < values.length; i++) {
+		List<String> rowComments = new LinkedList<String>();
+		for (int i = 1; i < values.length; i+=2) {
 			rowValues.add(values[i]);
+			rowComments.add(values[i+1]);
 		}
 		tableRow.setRowValues(rowValues);
+		tableRow.setRowComments(rowComments);
 		return tableRow;
 	}
 

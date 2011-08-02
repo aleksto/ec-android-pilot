@@ -44,14 +44,12 @@ public class ChangeDayListener implements OnClickListener, OnDateSetListener{
 		case NEXT_DAY:
 			date = dmr.getToDate();
 			date.setDate(date.getDate()+1);
-			dmr.setToDate(date);		
-			dmr.refresh();	
+			dmr.setToDate(date);	
 			break;
 		case PREVIOUS_DAY:
 			date = dmr.getToDate();
 			date.setDate(date.getDate()-1);
 			dmr.setToDate(date);
-			dmr.refresh();
 			break;
 		case CHOOSE_DAY:
 			date = dmr.getToDate();
@@ -66,6 +64,5 @@ public class ChangeDayListener implements OnClickListener, OnDateSetListener{
 	 */
 	public void onDateSet(DatePicker arg0, int year, int month, int day) {
 		dmr.setToDate(new Date(year-1900, month, day));
-		dmr.refresh();
 	}
 }
