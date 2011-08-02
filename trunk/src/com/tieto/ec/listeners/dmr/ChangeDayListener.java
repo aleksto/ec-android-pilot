@@ -37,24 +37,24 @@ public class ChangeDayListener implements OnClickListener, OnDateSetListener{
 	/**
 	 * Increases, decreases or displays {@link DatePickerDialog}
 	 * and refreshes the report 
-	 */
+//	 */
 	public void onClick(View arg0) {
 		Log.d("tieto", "ChangeDayListener: onClick()");
 		switch (action) {
 		case NEXT_DAY:
-			date = dmr.getDate();
+			date = dmr.getToDate();
 			date.setDate(date.getDate()+1);
-			dmr.setDate(date);		
+			dmr.setToDate(date);		
 			dmr.refresh();	
 			break;
 		case PREVIOUS_DAY:
-			date = dmr.getDate();
+			date = dmr.getToDate();
 			date.setDate(date.getDate()-1);
-			dmr.setDate(date);
+			dmr.setToDate(date);
 			dmr.refresh();
 			break;
 		case CHOOSE_DAY:
-			date = dmr.getDate();
+			date = dmr.getToDate();
 			dialog = new DatePickerDialog(dmr, this, date.getYear()+1900, date.getMonth(), date.getDate());
 			dialog.show();
 			break;
@@ -65,7 +65,7 @@ public class ChangeDayListener implements OnClickListener, OnDateSetListener{
 	 * Sets new {@link Date} in the report when user clicks ok at {@link DatePickerDialog}
 	 */
 	public void onDateSet(DatePicker arg0, int year, int month, int day) {
-		dmr.setDate(new Date(year-1900, month, day));
+		dmr.setToDate(new Date(year-1900, month, day));
 		dmr.refresh();
 	}
 }

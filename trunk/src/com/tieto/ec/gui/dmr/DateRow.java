@@ -24,7 +24,7 @@ public class DateRow extends RelativeLayout{
 		super(dmr);
 		
 		//ButtonRow
-		Date date = dmr.getDate();
+		Date date = dmr.getToDate();
 		setBackgroundResource(android.R.drawable.title_bar);
 		RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		RelativeLayout.LayoutParams params3 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);

@@ -1,5 +1,6 @@
 package com.tieto.ec.gui.graphs;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,15 +10,15 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphPoint;
 import com.tieto.ec.logic.NameFormat;
-import com.tieto.ec.logic.DateConverter;
 
 import android.content.Context;
 import android.graphics.Color;
 
 public class BarGraph extends Graph{
 
-	private int color;
-	private GraphData data;
+	private List<Integer> colors;
+	private List<GraphData> data;
+	private List<String> titles;
 	
 	/**
 	 * Creates a new empty Bar graph with given title and color.
@@ -25,12 +26,14 @@ public class BarGraph extends Graph{
 	 * @param title The title of the graph
 	 * @param color The color of the graph
 	 */
-	public BarGraph(Context context, String title, int color) {
+	public BarGraph(Context context, String title) {
 		//Super
 		super(context, title);
 		
 		//Init
-		this.color = color;
+		titles = new ArrayList<String>();
+		colors = new ArrayList<Integer>();
+		data = new ArrayList<GraphData>();
 		
 		//This      
         getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
@@ -56,9 +59,12 @@ public class BarGraph extends Graph{
 	 */
 	public BarGraph(BarGraph graph){
 		//This
-		this(graph.context, graph.title, graph.color);
+		this(graph.context, graph.title);
 		
-		add(graph.data);
+		for (GraphData graphData : graph.data) {
+			int idx = graph.data.indexOf(graphData);
+			add(graphData, graph.colors.get(idx), graph.titles.get(idx));			
+		}
 	}
 	
 	/**
@@ -66,10 +72,10 @@ public class BarGraph extends Graph{
 	 * @param title Title of the bars
 	 * @param vals The array of values
 	 */
-	private void addBars(String title, Number ... vals){
+	private void addBars(String title, int color, Number ... vals){
 		//Init
 		SimpleXYSeries bar = new SimpleXYSeries(Arrays.asList(vals), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, title);
-		BarFormatter barFormatter  = new BarFormatter(Color.argb(100, 0, 200, 0), Color.rgb(0, 80, 0));
+		BarFormatter barFormatter  = new BarFormatter(color, Color.rgb(0, 80, 0));
         
         //List
 		graphLines.set(0, bar);
@@ -92,9 +98,11 @@ public class BarGraph extends Graph{
 	 * Adds bars to the graph by a given {@link GraphData}
 	 * @param graphData data
 	 */
-	public void add(GraphData graphData) {
+	public void add(GraphData graphData, int color, String title) {
 		//Init
-		this.data = graphData;
+		colors.add(color);
+		data.add(graphData);
+		titles.add(title);
 		List<String> pointAttributes = graphData.getPointAttributes();
 		List<GraphPoint> graphPoints = graphData.getGraphPoints();
 		Double[] vals = new Double[graphPoints.size()*pointAttributes.size()];
@@ -110,7 +118,7 @@ public class BarGraph extends Graph{
 			}
 		}
 		
-		addBars(DateConverter.parse(graphData.getGraphPoints().get(0).getDaytime(), DateConverter.Type.DATE), vals);
+		addBars(title, color, vals);
 		
 		invalidate();
 	}

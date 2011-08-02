@@ -44,6 +44,7 @@ public class ButtonRow extends LinearLayout{
 		yearly.setOnClickListener(new ButtowRowListener(dmr, Resolution.YEARLY));
 		
 		//This
+		setBackgroundColor(dmr.getBackgroundColor());
 		setPadding(10, 10, 10, 0);
 		addView(daily, params);
 		addView(weekly, params);

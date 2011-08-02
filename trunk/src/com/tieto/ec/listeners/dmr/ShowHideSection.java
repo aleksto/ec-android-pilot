@@ -36,6 +36,7 @@ public class ShowHideSection implements OnClickListener{
 		}else{
 			if(showing){
 				table.removeViewAt(getIdx()+1);
+				table.invalidate();
 				showing = false;
 			}
 			else{

@@ -1,6 +1,7 @@
 package com.tieto.ec.gui.login;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -13,8 +14,9 @@ public class Slider extends RelativeLayout implements OnTouchListener{
 	private final int BUTTON_WIDTH = 160;
 	private final int TEXT_SIZE = 25;
 	
-	private ImageButton sliderButton;
 	private int padding;
+	private int alpha;
+	private ImageButton sliderButton;
 	private Runnable onFinish;
 	private TextView text;
 
@@ -69,12 +71,19 @@ public class Slider extends RelativeLayout implements OnTouchListener{
 		if(arg1.getAction() == MotionEvent.ACTION_MOVE){
 			//text.setVisibility(GONE);
 			padding = (int) (getPaddingLeft() + arg1.getX() - BUTTON_WIDTH/2);
+			alpha = (int) (200 - (padding/(getWidth()/2f)*200));
+			if(alpha > 0){
+				text.setTextColor(Color.argb(alpha, 120, 120, 120));				
+			}else{
+				text.setTextColor(Color.argb(0, 120, 120, 120));		
+			}
 		}else if(arg1.getAction() == MotionEvent.ACTION_UP){
 			if(padding > getWidth()-170){
 				//Complete
 				onFinish.run();
 			}else{
-				padding = 0;		
+				padding = 0;	
+				text.setTextColor(Color.argb(200, 120, 120, 120));
 				text.setVisibility(View.VISIBLE);
 			}
 		}

@@ -154,5 +154,6 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 	private void createRootOptions() {
 		root.addOptionRow(OptionTitle.SecurityOptions, OptionRowType.NONE);
 		root.addOptionRow(OptionTitle.ColorOptions, OptionRowType.NONE);
+		root.addOptionRow(OptionTitle.DisplayWarnings, OptionRowType.CHECK_BOX);
 	}
 }

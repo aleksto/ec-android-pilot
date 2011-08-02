@@ -20,6 +20,11 @@ public class FileManager {
 	 */
 	public static void writePath(Context context, String path, String text) {
 		try {
+			//Replacing "/" with "###" because a path cant contain the path seperator "/"
+			if(path.contains("/")){
+				path = path.replaceAll("/", "###");
+			}
+			
 			byte[] write = text.getBytes();
 			FileOutputStream ut = context.openFileOutput(path, Context.MODE_PRIVATE);
 			ut.write(write);
@@ -37,6 +42,11 @@ public class FileManager {
 	 * @throws IOException if file not found
 	 */
 	public static String readPath(Context context, String path) throws IOException{
+		//Replacing "/" with "###" because a path cant contain the path seperator "/"
+		if(path.contains("/")){
+			path = path.replaceAll("/", "###");
+		}
+		
 		FileInputStream inputStream = context.openFileInput(path);
 		ArrayList<Byte> bytes = new ArrayList<Byte>();
 		byte currentByte;
@@ -46,6 +56,8 @@ public class FileManager {
 
 		String a = new String(copyArrayList(bytes));
 		inputStream.close();
+		
+		
 		return a;
 	}
 	

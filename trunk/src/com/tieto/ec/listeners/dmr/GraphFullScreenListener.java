@@ -12,9 +12,7 @@ import com.tieto.ec.gui.graphs.LineGraph;
 
 public class GraphFullScreenListener implements OnClickListener {
 
-	private Graph graph;
-	private GraphFullScreenDialog graphFullScreenDialog;
-	private String title;
+	private GraphFullScreenDialog dialog;
 	
 	/**
 	 * Creates a {@link OnClickListener} for a {@link Graph}, When clicked it will pop up a
@@ -24,9 +22,15 @@ public class GraphFullScreenListener implements OnClickListener {
 	 * @param title Title for the dialog
 	 */
 	public GraphFullScreenListener(Context context, Graph graph, String title) {
-		this.title = title;
-		this.graph = graph;
-		graphFullScreenDialog = new GraphFullScreenDialog(context);
+		//Graph
+		if(graph instanceof LineGraph){			
+			dialog = new GraphFullScreenDialog(context, new LineGraph((LineGraph) graph));
+		}else if(graph instanceof BarGraph){
+			dialog = new GraphFullScreenDialog(context, new BarGraph((BarGraph) graph));
+		}
+		
+		//Dialog
+		dialog.setTitle(title);
 	}
 
 	/**
@@ -34,12 +38,6 @@ public class GraphFullScreenListener implements OnClickListener {
 	 * this show a new dialog, and set its view to a new {@link Graph}
 	 */
 	public void onClick(View v) {	
-		graphFullScreenDialog.show();
-		if(graph instanceof LineGraph){			
-			graphFullScreenDialog.setContentView(new LineGraph((LineGraph) graph));
-		}else if(graph instanceof BarGraph){
-			graphFullScreenDialog.setContentView(new BarGraph((BarGraph) graph));
-		}
-		graphFullScreenDialog.setTitle(title);
+		dialog.show();
 	}
 }

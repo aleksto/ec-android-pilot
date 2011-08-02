@@ -33,7 +33,7 @@ public class DMRViewServiceUnmarshalled implements ViewService {
 		return MarshalService.unMarshalSections(sections);
 	}
 
-	public TableData getTableData(TableSection section, Date fromdate, Date toDate, int resolution) {	
+	public TableData getTableData(TableSection section, Date fromdate, Date toDate, int resolution, int type) {	
 		if(savedData.containsKey(section)){
 			return (TableData) savedData.get(section);
 		}else{			
@@ -47,7 +47,7 @@ public class DMRViewServiceUnmarshalled implements ViewService {
 		}
 	}
 
-	public GraphData getGraphDataBySection(GraphSection section, Date fromDate, Date toDate, int resolution) {
+	public GraphData getGraphDataBySection(GraphSection section, Date fromDate, Date toDate, int resolution, int type) {
 		if(savedData.containsKey(section)){
 			return (GraphData) savedData.get(section);
 		}else{	
@@ -61,7 +61,7 @@ public class DMRViewServiceUnmarshalled implements ViewService {
 		}
 	}
 
-	public GraphData getGraphDataByRow(TableRow row, Date fromDate, Date toDate, int resolution) {
+	public GraphData getGraphDataByRow(TableRow row, Date fromDate, Date toDate, int resolution, int type) {
 		String tableRowSection = MarshalService.marshalTableRow(row);		
 		List<String> graphData = viewService.getGraphDataByRow(tableRowSection, fromDate, toDate, resolution);
 		return MarshalService.unMarshalGraphData(graphData);
@@ -81,4 +81,7 @@ public class DMRViewServiceUnmarshalled implements ViewService {
 		}
 	}
 
+	public void clearSaveData() {
+		savedData.clear();
+	}
 }

@@ -48,6 +48,7 @@ public abstract class Graph extends XYPlot{
 		getBorderPaint().setStrokeWidth(1);
 		getBorderPaint().setAntiAlias(false);
 		getBorderPaint().setColor(Color.WHITE);
+		setGridPadding(1, 5, 1, 1);
 		disableAllMarkup();
 
 		//GraphWidget

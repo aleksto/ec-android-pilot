@@ -1,9 +1,11 @@
 package com.tieto.ec.activities;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.animation.TranslateAnimation;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -21,13 +24,19 @@ import com.ec.prod.android.pilot.model.Section;
 import com.ec.prod.android.pilot.service.ExampleViewService;
 import com.ec.prod.android.pilot.service.ViewService;
 import com.tieto.R;
+import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.enums.Webservice;
-import com.tieto.ec.gui.dmr.DateRow;
 import com.tieto.ec.gui.dmr.ButtonRow;
-import com.tieto.ec.listeners.dmr.DmrMapButtonListener;
+import com.tieto.ec.gui.dmr.DateRow;
 import com.tieto.ec.listeners.dmr.DmrOptionsButtonListener;
+import com.tieto.ec.listeners.dmr.DmrWarningButtonListener;
+import com.tieto.ec.logic.DateConverter;
+import com.tieto.ec.logic.DateConverter.Type;
+import com.tieto.ec.logic.FileManager;
 import com.tieto.ec.logic.ResolutionConverter;
 import com.tieto.ec.logic.SectionBuilder;
+import com.tieto.ec.logic.SectionWarning;
+import com.tieto.ec.logic.WarningChecker;
 import com.tieto.ec.service.EcService;
 
 public class DailyMorningReport extends Activity{
@@ -35,17 +44,21 @@ public class DailyMorningReport extends Activity{
 	private Intent serviceIntent;
 
 	private List<Section> sections;
-	private ViewService webservice;
 	private String username, password, namespace, url;
 	private TableLayout table, main;
 	private int backgroundColor, textColor, cellTextColor, cellBackgroundColor, cellBorderColor;
 	private int resolution;
 	private ScrollView scroll;
+	private Date toDate, fromDate;
 
-	private DateRow buttonRow;
-	private ButtonRow subButtonRow;
-	private Date date;
+	private ViewService webservice;
+	private DateRow dateRow;
+	private ButtonRow buttonRow;
 	private SectionBuilder sectionBuilder;
+	private WarningChecker warningChecker;
+	private Dialog warningDialog;
+
+
 	/**
 	 * Main class for the daily morning report, this is the class started when you have logged in.
 	 * OnCreate is the constructor for the Super class Activity, and there all the initialization is.
@@ -56,50 +69,53 @@ public class DailyMorningReport extends Activity{
 		super.onCreate(savedInstanceState);
 
 		//Date
-		date = new Date(System.currentTimeMillis());
-		date.setDate(date.getDate()-1);
+		toDate = new Date(System.currentTimeMillis());
+		toDate.setDate(toDate.getDate()-1);
 
 		//Init
+		scroll = new ScrollView(this);
+		table = new TableLayout(this);
 		main = new TableLayout(this);
 		sectionBuilder = new SectionBuilder(this);
-		buttonRow = new DateRow(this);
-		subButtonRow = new ButtonRow(this);
+		warningChecker = new WarningChecker(this);
+		dateRow = new DateRow(this);
+		buttonRow = new ButtonRow(this);
 		username = getIntent().getExtras().getString(Webservice.username.toString());
 		password = getIntent().getExtras().getString(Webservice.password.toString());
 		namespace = getIntent().getExtras().getString(Webservice.namespace.toString());
 		url = getIntent().getExtras().getString(Webservice.url.toString());
 
 		if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
+			Log.d("tieto", "Starting report with example view service");
 			webservice = new ExampleViewService(true);
 		}else{
+			Log.d("tieto", "Starting report with webservice");
 			webservice = new DMRViewServiceUnmarshalled(true, username, password, namespace, url);
 		}
 
-		//Service
-		if(serviceIntent == null){
-			restartService();			
-		}
+		//Getting sections
+		sections = webservice.getSections();
+		
+		//Sections Builder
+		refresh();
+		
+		setToDate(toDate);
 
 		//This
 		setContentView(main);
 
-		//Background
-		scroll = new ScrollView(this);
-		table = new TableLayout(this);
-
-		//Main
-		main.addView(buttonRow);
-		main.addView(scroll);
-
 		//Scroll
 		scroll.addView(table);
 
-		//Getting sections
-		sections = webservice.getSections();
-
-		//Sections Builder
-		sectionBuilder.updateColors();
-		sectionBuilder.listSections();
+		//Animation
+		TranslateAnimation animation = new TranslateAnimation(0, 0, 0, 0, 0, -50, 0, 0);
+		animation.setDuration(1000);
+		dateRow.setAnimation(animation);
+		
+		//Main
+		main.addView(dateRow);
+		main.addView(scroll);
+		main.setBackgroundColor(backgroundColor);
 	}
 
 	/**
@@ -111,24 +127,15 @@ public class DailyMorningReport extends Activity{
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = new MenuInflater(this);
 		inflater.inflate(R.menu.dmr_menu, menu);
-
+		
 		MenuItem optionButton = menu.findItem(R.id.dmr_options);
 		optionButton.setOnMenuItemClickListener(new DmrOptionsButtonListener(this));
 		optionButton.setIcon(android.R.drawable.ic_menu_manage);
 
-		MenuItem mapButton = menu.findItem(R.id.dmr_map);
-		mapButton.setOnMenuItemClickListener(new DmrMapButtonListener(this));
-		mapButton.setIcon(android.R.drawable.ic_menu_mapmode);
+		MenuItem warningsButton = menu.findItem(R.id.dmr_warning);
+		warningsButton.setOnMenuItemClickListener(new DmrWarningButtonListener(this));
+		warningsButton.setIcon(android.R.drawable.ic_dialog_alert);
 		return super.onCreateOptionsMenu(menu);
-	}
-	
-	/**
-	 * This method is executed when the activity is resumed, and refreshes all the values in the activity
-	 */
-	@Override
-	protected void onResume() {
-		super.onResume();
-		refreshWebserviceValues();
 	}
 	
 	/**
@@ -137,7 +144,7 @@ public class DailyMorningReport extends Activity{
 	 */
 	@Override
 	public void onBackPressed() {
-		if(main.getChildAt(1) == subButtonRow){
+		if(main.getChildAt(1) == buttonRow){
 			toogleSubButtonRow();
 		}else{
 			super.onBackPressed();					
@@ -148,27 +155,57 @@ public class DailyMorningReport extends Activity{
 	 * Setting the date showed in the button row at top of activity
 	 * @param date
 	 */
-	public void setDate(Date date){
-		this.date = date;
+	public void setToDate(Date date){
+		this.toDate = date;
+		webservice.clearSaveData();
+		
+		sectionBuilder.listSections();
+		
+		//WarningCheker
+		List<SectionWarning> warnings = warningChecker.checkForWarnings();
+		if(warnings.size() > 0){
+			warningDialog = warningChecker.createWarningDialog(warnings);
+		}
+		
+		try {
+			if(Boolean.valueOf(FileManager.readPath(this, OptionTitle.DMRReport + "." + OptionTitle.DisplayWarnings))){
+				warningDialog.show();			
+			}
+		} catch (IOException e) {
+			FileManager.writePath(this, OptionTitle.DMRReport + "." + OptionTitle.DisplayWarnings, "true");
+			setToDate(date);
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Getting the date showed in the button row at top of activity
 	 * @return Current Date in button row
 	 */
-	public Date getDate(){
-		return date;
+	public Date getToDate(){
+		return toDate;
 	}
-
-	public void setSections(List<Section> sections) {
-		this.sections = sections;
+	
+	/**
+	 * Sets the from date {@link Date} for the report
+	 * @param fromDate
+	 */
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
+	}
+	
+	/**
+	 * @return The from date {@link Date} for this report
+	 */
+	public Date getFromDate(){
+		return fromDate;
 	}
 
 	/**
 	 * Refreshes all value in the entire activity
 	 */
 	public void refreshWebserviceValues(){
-		onCreate(null);
+//		onCreate(null);
 	}
 
 	/**
@@ -192,9 +229,10 @@ public class DailyMorningReport extends Activity{
 	 */
 	public void refresh(){
 		//Log
-		Log.d("tieto", "\nDisplaying report with date: " + date);
+		Log.d("tieto", "\nDisplaying report with date: " + toDate);
 		sectionBuilder.updateColors();
 		sectionBuilder.listSections();
+		dateRow.getCurrentDayLabel().setText(DateConverter.parse(toDate, Type.DATE));
 	}
 
 	/**
@@ -312,23 +350,21 @@ public class DailyMorningReport extends Activity{
 	 * @return The Currentday Label {@link TextView}
 	 */
 	public TextView getCurrentdayLabel(){
-		return buttonRow.getCurrentDayLabel();
+		return dateRow.getCurrentDayLabel();
 	}
-
 
 	/**
 	 * Toggles if the {@link ButtonRow} should be visible
 	 */
 	public void toogleSubButtonRow() {
-		if(main.getChildAt(1) == subButtonRow){
-			main.removeView(subButtonRow);
+		if(main.getChildAt(1) == buttonRow){
+			main.removeView(buttonRow);
 		}else{
-			main.addView(subButtonRow, 1);
-			subButtonRow.refreshButtonsState();
-			subButtonRow.setBackgroundColor(backgroundColor);
+			buttonRow.setBackgroundColor(backgroundColor);
+			buttonRow.refreshButtonsState();
+			main.addView(buttonRow, 1);
 		}
 	}
-
 
 	/**
 	 * Sets the {@link Resolution} for the report
@@ -342,8 +378,14 @@ public class DailyMorningReport extends Activity{
 	/**
 	 * @return The {@link Resolution} for the report
 	 */
-
 	public int getResolution() {
 		return resolution;
+	}
+
+	/**
+	 * @return The warning dialog
+	 */
+	public Dialog getWarningDialog() {
+		return warningDialog;
 	}
 }
