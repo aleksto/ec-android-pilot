@@ -46,7 +46,7 @@ public class SectionBuilder {
 
 	private DailyMorningReport dmr;
 	private Date date; 
-	
+
 	/**
 	 * Initialize the {@link SectionBuilder}
 	 * @param dmr {@link DailyMorningReport} for refreshing the report
@@ -54,7 +54,7 @@ public class SectionBuilder {
 	public SectionBuilder(DailyMorningReport dmr){
 		this.dmr = dmr;
 	}
-	
+
 	/**
 	 * Gets the sections from the Report and builds up the UI.
 	 */
@@ -62,46 +62,35 @@ public class SectionBuilder {
 		dmr.getTable().removeAllViews();
 		date = dmr.getToDate();
 		dmr.getCurrentdayLabel().setText(DateConverter.parse(date, Type.DATE));
-		
-		try {
-			int resolution = Integer.valueOf(FileManager.readPath(dmr, "DMR Report.Resolution"));
-			Date fromDate = null;
-			switch (resolution) {
-			case Resolution.DAILY:
-				fromDate = date;
-				for (Section section : dmr.getSections()) {
-					addSection(section, date, date, resolution, newWebserviceValues);			
-				}
-				break;
-			case Resolution.WEEKLY:
-				fromDate = new Date(date.getYear(), date.getMonth(), date.getDate()-7);
-				for (Section section : dmr.getSections()) {
-					addSection(section, fromDate, date, resolution, newWebserviceValues);			
-				}
-				break;
-			case Resolution.MONTHLY:
-				fromDate = new Date(date.getYear(), date.getMonth()-1, date.getDate());
-				for (Section section : dmr.getSections()) {
-					addSection(section, fromDate, date, resolution, newWebserviceValues);			
-				}
-				break;
-			case Resolution.YEARLY:
-				fromDate = new Date(date.getYear()-1, date.getMonth(), date.getDate());
-				for (Section section : dmr.getSections()) {
-					addSection(section, fromDate, date, resolution, newWebserviceValues);			
-				}
-				break;
+
+		int resolution = dmr.getResolution();
+		Log.d("tieto", "Listing sections with resolution " + ResolutionConverter.convert(resolution));
+		Date fromDate = DateIntervalCalculator.calcFromDate(date, resolution);
+		switch (resolution) {
+		case Resolution.DAILY:
+			for (Section section : dmr.getSections()) {
+				addSection(section, date, date, resolution, newWebserviceValues);			
 			}
-			dmr.setFromDate(fromDate);
-			dmr.setResolution(resolution);
-		} catch (IOException e) {
-			Log.d("tieto", "Setting default resolution");
-			FileManager.writePath(dmr, "DMR Report.Resolution", Resolution.DAILY+"");
-			listSections(newWebserviceValues);
-			e.printStackTrace();
-		}		
+			break;
+		case Resolution.WEEKLY:
+			for (Section section : dmr.getSections()) {
+				addSection(section, fromDate, date, resolution, newWebserviceValues);			
+			}
+			break;
+		case Resolution.MONTHLY:
+			for (Section section : dmr.getSections()) {
+				addSection(section, fromDate, date, resolution, newWebserviceValues);			
+			}
+			break;
+		case Resolution.YEARLY:
+			for (Section section : dmr.getSections()) {
+				addSection(section, fromDate, date, resolution, newWebserviceValues);			
+			}
+			break;
+		}
+		dmr.setFromDate(fromDate);	
 	}
-	
+
 	/**
 	 * Adds a given section to the report, the section could be a {@link TextSection}, {@link TableSection} or {@link GraphSection}.
 	 * @param section The section to add to the report
@@ -113,21 +102,21 @@ public class SectionBuilder {
 	private void addSection(Section section, Date fromdate, Date toDate, int resolution, boolean newWebserviceValues){
 		//Init
 		TextView sectionTitle = new TextView(dmr);
-		
+
 		//Title
 		sectionTitle.setText(section.getSectionHeader() + ":");
 		sectionTitle.setTextSize(30);
 		sectionTitle.setTextColor(dmr.getTextColor());
 		sectionTitle.setTypeface(Typeface.create("arial", Typeface.NORMAL));
 		sectionTitle.setPadding(0, 20, 0, 0);
-		
+
 		//Childs
 		dmr.getTable().addView(sectionTitle);
 		dmr.getTable().setPadding(10, 10, 10, 0);
-		
+
 		//Listeners
 		sectionTitle.setOnClickListener(new ShowHideSection(section.getSectionHeader(), dmr.getTable()));
-		
+
 		//Values
 		if(section instanceof TextSection){
 			TextData textData = null;
@@ -147,7 +136,7 @@ public class SectionBuilder {
 		else if(section instanceof TableSection){
 			TableData tableDataActual;
 			TableData tableDataTarget;
-			
+
 			if(newWebserviceValues){
 				tableDataActual = dmr.getWebservice().getTableData((TableSection)section, fromdate, toDate, resolution, DataType.ACTUAL);	
 				tableDataTarget = dmr.getWebservice().getTableData((TableSection)section, fromdate, toDate, resolution, DataType.TARGET);
@@ -160,7 +149,7 @@ public class SectionBuilder {
 					tableDataActual = dmr.getWebservice().getTableData((TableSection)section, fromdate, toDate, resolution, DataType.ACTUAL);	
 					dmr.getSaveManager().save(section, tableDataActual, Location.ACTUAL);
 				}
-				
+
 				if(dmr.getSaveManager().isSaved(section, Location.TARGET)){ 
 					tableDataTarget = (TableData) dmr.getSaveManager().load(section, Location.TARGET);
 				}else{
@@ -174,7 +163,7 @@ public class SectionBuilder {
 			GraphSection graphSection = (GraphSection) section;
 			GraphData graphDataActual;
 			GraphData graphDataTarget;
-			
+
 			if(newWebserviceValues){
 				graphDataActual = dmr.getWebservice().getGraphDataBySection(graphSection, fromdate, toDate, resolution, DataType.ACTUAL);
 				graphDataTarget = dmr.getWebservice().getGraphDataBySection(graphSection, fromdate, toDate, resolution, DataType.TARGET);	
@@ -187,7 +176,7 @@ public class SectionBuilder {
 					graphDataActual = dmr.getWebservice().getGraphDataBySection(graphSection, fromdate, toDate, resolution, DataType.ACTUAL);	
 					dmr.getSaveManager().save(graphSection, graphDataActual, Location.ACTUAL);
 				}
-				
+
 				if(dmr.getSaveManager().isSaved(graphSection, Location.TARGET)){ 
 					graphDataTarget = (GraphData) dmr.getSaveManager().load(graphSection, Location.TARGET);
 				}else{
@@ -209,7 +198,7 @@ public class SectionBuilder {
 	private void addGraphData(GraphData graphDataActual, GraphData graphDataTarget, TableLayout sectionTable, String title, TextView sectionTitle) {
 		//Init
 		Graph graph = null;
-		
+
 		//Add data
 		if(graphDataActual.getGraphPoints().size()>1){
 			//Line Graph
@@ -223,17 +212,17 @@ public class SectionBuilder {
 			((BarGraph) graph).add(graphDataActual, Color.argb(100, 0, 200, 0), "Actual");	
 			((BarGraph) graph).add(graphDataTarget, Color.argb(100, 200, 0, 0), "Target");	
 		}
-		
+
 		//LayoutParams
 		int width = dmr.getWindowManager().getDefaultDisplay().getWidth();
 		graph.setLayoutParams(new LayoutParams(width-20, 200));
-		
+
 		//Childs
 		sectionTable.addView(graph);
-		
+
 		//Listener
 		graph.setOnClickListener(new GraphFullScreenListener(dmr, graph, title));
-		
+
 	}
 
 	/**
@@ -248,17 +237,17 @@ public class SectionBuilder {
 		HorizontalScrollView hScroll = new HorizontalScrollView(dmr);
 		TableLayout table = new TableLayout(dmr);
 		List<com.ec.prod.android.pilot.model.TableRow> tableRowsActual = tableDataActual.getTableRows();
-		
+
 		//Table
 		table.setStretchAllColumns(true);
 		table.setBackgroundColor(dmr.getBackgroundColor());
-		
+
 		//Active columns
 		ArrayList<String> activeColumns = activeColumns(title, tableDataActual);
-		
+
 		//Listener
 		sectionTitle.setOnLongClickListener(new TableOptionDialogListener(dmr, title, tableDataActual));
-		
+
 		//Headers
 		List<TableColumn> tableColumns = tableDataActual.getTableColumns();
 		TableRow headerRow = new TableRow(dmr);
@@ -269,7 +258,7 @@ public class SectionBuilder {
 			}
 		}
 		table.addView(headerRow);
-		
+
 		//Rows
 		for (com.ec.prod.android.pilot.model.TableRow tableRow : tableRowsActual) {
 			//Init
@@ -277,7 +266,7 @@ public class SectionBuilder {
 			TableRow row = new TableRow(dmr);
 			List<TableCell> valuesActual = tableRow.getValues();
 			List<TableCell> valuesTarget = tableDataTarget.getTableRows().get(idx).getValues();
-			
+
 			for (int i = 0; i < valuesActual.size(); i++) {
 				//Add Cell
 				String header = tableColumns.get(i).getHeader();
@@ -285,11 +274,11 @@ public class SectionBuilder {
 					row.addView(new Cell(dmr, valuesActual.get(i), valuesTarget.get(i), dmr.getCellBackgroundColor(), dmr.getCellTextColor(), dmr.getCellBorderColor()));
 				}
 			}
-			
+
 			//Childs
 			table.addView(row);
 		}
-		
+
 		//Childs
 		hScroll.addView(table);
 		sectionTable.addView(hScroll);
@@ -326,22 +315,22 @@ public class SectionBuilder {
 			List<TableColumn> columnsList = tableData.getTableColumns();
 			for (int i = 0; i < columnsList.size(); i++) {
 				boolean active = Boolean.valueOf(FileManager.readPath(dmr, title + "." + columnsList.get(i).getHeader()));
-				
+
 				if(active){
 					columns.add(columnsList.get(i).getHeader());
 				}
 			}
-			
+
 			return columns;
 		} catch (IOException e) {
 			List<TableColumn> tableColumns = tableData.getTableColumns();
-			
+
 			Log.d("tieto", "Setting active columns: All");
-			
+
 			for (TableColumn tableColumn : tableColumns) {
 				FileManager.writePath(dmr,  title + "." + tableColumn.getHeader(), "true");
 			}			
-			
+
 			return activeColumns(title, tableData);
 		}
 	}
@@ -362,12 +351,12 @@ public class SectionBuilder {
 			setDefaultColor(basePath);
 			e.printStackTrace();
 		}
-		
+
 		dmr.getScrollView().setBackgroundColor(dmr.getBackgroundColor());
 		dmr.getTable().setBackgroundColor(dmr.getBackgroundColor());
 	}
 
-	
+
 	/**
 	 * This method sets the default color of the daily morning repost class
 	 * @param basePath
