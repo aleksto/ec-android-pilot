@@ -7,7 +7,6 @@ import java.util.List;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -104,6 +103,16 @@ public class DailyMorningReport extends Activity{
 		sectionBuilder.updateColors();
 		
 		setToDate(toDate);
+		try {
+			setResolution(Integer.valueOf(FileManager.readPath(this, "DMR Report.Resolution")));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			Log.d("tieto", "Setting default resolution");
+			setResolution(Resolution.DAILY);
+			FileManager.writePath(this, "DMR Report.Resolution", Resolution.DAILY+"");
+			e.printStackTrace();
+		}
 
 		//This
 		setContentView(main);
@@ -175,7 +184,6 @@ public class DailyMorningReport extends Activity{
 			setToDate(date);
 			e.printStackTrace();
 		}
-		Log.d("tieto", "Viewing report from " + fromDate + "\tto " + toDate);
 	}
 
 	/**
@@ -232,7 +240,6 @@ public class DailyMorningReport extends Activity{
 	 */
 	public void refresh(boolean newWebserviceValues){
 		//Log
-		Log.d("tieto", "\nDisplaying report with date: " + toDate);
 		sectionBuilder.updateColors();
 		sectionBuilder.listSections(newWebserviceValues);
 		dateRow.getCurrentDayLabel().setText(DateConverter.parse(toDate, Type.DATE));
@@ -374,9 +381,9 @@ public class DailyMorningReport extends Activity{
 	 * @param resolution {@link Resolution}
 	 */
 	public void setResolution(int resolution) {
-		Log.d("tieto", "Setting resolution: " + ResolutionConverter.convert(resolution));
 		this.resolution = resolution;
 		refreshWarningDialog();
+		refresh(true);
 	}
 	
 	/**
