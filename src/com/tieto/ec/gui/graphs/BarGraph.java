@@ -78,8 +78,8 @@ public class BarGraph extends Graph{
 		if(vals.length == 1){
 			Number temp = vals[0];
 			vals = new Number[3];
-			vals[0] = 0;
-			vals[1] = temp;
+			vals[0] = temp;
+			vals[1] = 0;
 			vals[2] = 0;
 		}
 		

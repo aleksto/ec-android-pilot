@@ -7,6 +7,7 @@ import java.util.List;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -162,11 +163,8 @@ public class DailyMorningReport extends Activity{
 		this.toDate = date;
 		sectionBuilder.listSections(true);
 		
-		//WarningCheker
-		List<SectionWarning> warnings = warningChecker.checkForWarnings();
-		if(warnings.size() > 0){
-			warningDialog = warningChecker.createWarningDialog(warnings);
-		}
+		//WarningChecker
+		refreshWarningDialog();
 		
 		try {
 			if(Boolean.valueOf(FileManager.readPath(this, OptionTitle.DMRReport + "." + OptionTitle.DisplayWarnings))){
@@ -178,6 +176,16 @@ public class DailyMorningReport extends Activity{
 			e.printStackTrace();
 		}
 		Log.d("tieto", "Viewing report from " + fromDate + "\tto " + toDate);
+	}
+
+	/**
+	 * Creates a {@link Dialog} which show the warnings for each section
+	 */
+	private void refreshWarningDialog() {
+		List<SectionWarning> warnings = warningChecker.checkForWarnings();
+		if(warnings.size() > 0){
+			warningDialog = warningChecker.createWarningDialog(warnings);
+		}
 	}
 
 	/**
@@ -368,6 +376,7 @@ public class DailyMorningReport extends Activity{
 	public void setResolution(int resolution) {
 		Log.d("tieto", "Setting resolution: " + ResolutionConverter.convert(resolution));
 		this.resolution = resolution;
+		refreshWarningDialog();
 	}
 	
 	/**

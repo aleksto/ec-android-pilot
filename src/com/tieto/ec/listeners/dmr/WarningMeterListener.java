@@ -7,14 +7,16 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.ec.prod.android.pilot.model.Section;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.gui.dmr.WarningMeter;
 import com.tieto.ec.gui.graphs.BarGraph;
+import com.tieto.ec.listeners.dialogs.HideDialogListener;
 import com.tieto.ec.logic.IndexFormat;
 import com.tieto.ec.model.GraphWarning;
 import com.tieto.ec.model.SectionWarning;
@@ -27,9 +29,10 @@ public class WarningMeterListener implements OnClickListener{
 	private StringBuilder info;
 	private Dialog dialog;
 	private ScrollView scroll;
-	private TableLayout table;
+	private RelativeLayout main;
 	private TextView text;
 	private BarGraph graph;
+	private Button ok;
 
 	/**
 	 * Creates a {@link OnClickListener} for a {@link WarningMeter}
@@ -41,19 +44,38 @@ public class WarningMeterListener implements OnClickListener{
 		dialog = new Dialog(dmr);
 		graph = new BarGraph(dmr, "");
 		scroll = new ScrollView(dmr);
-		table = new TableLayout(dmr);
+		main = new RelativeLayout(dmr);
 		text = new TextView(dmr);
+		ok = new Button(dmr);
 
 		initText(sectionWarning);
 
 		//Dialog
-		dialog.setContentView(table);
+		dialog.setContentView(main);
 		dialog.setTitle("Levels");
+		
+		//ID
+		graph.setId(1);
+		ok.setId(2);
 
-		//Table
-		table.addView(graph);
-		table.addView(scroll);
+		//Layoutparams
+		RelativeLayout.LayoutParams graphParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, 200);
+		RelativeLayout.LayoutParams scrollParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		graphParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+		buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		scrollParams.addRule(RelativeLayout.BELOW, graph.getId());
+		scrollParams.addRule(RelativeLayout.ABOVE, ok.getId());
+		
+		//Childs
+		main.addView(graph, graphParams);
+		main.addView(scroll, scrollParams);
+		main.addView(ok, buttonParams);
 
+		//Button
+		ok.setText("Ok");
+		ok.setOnClickListener(new HideDialogListener(dialog));
+		
 		//Scroll
 		scroll.addView(text);
 
@@ -62,7 +84,7 @@ public class WarningMeterListener implements OnClickListener{
 
 		//Graph
 		int width = dmr.getWindowManager().getDefaultDisplay().getWidth();
-		graph.setLayoutParams(new TableLayout.LayoutParams(width-20, 200));
+		graph.setLayoutParams(new RelativeLayout.LayoutParams(width-20, 200));
 		graph.addBars("Target", Color.RED, generateTargetValues(sectionWarning));
 		graph.addBars("Actual", Color.GREEN, generateActualValues(sectionWarning));
 		graph.setDomainStepValue(sectionWarning.getWarnings().size());
@@ -130,6 +152,10 @@ public class WarningMeterListener implements OnClickListener{
 
 	}
 
+	/**
+	 * Builds the text for a Graph
+	 * @param sectionWarning The {@link SectionWarning} containing the {@link GraphWarning}
+	 */
 	private void initGraphText(SectionWarning sectionWarning) {
 		int index = 1;
 		boolean first = true;
@@ -137,11 +163,11 @@ public class WarningMeterListener implements OnClickListener{
 			GraphWarning graphWarning = (GraphWarning) warning;
 			if(warning.getType() == Type.CRITICAL && first){
 				info.append("Critical:\n");
-				info.append(index + ". " + graphWarning.getAttribute() + ":\n" + graphWarning.getComment() + "\n\n");
+				info.append(index + ". " + graphWarning.getAttribute() + ", " + graphWarning.getTime() + ":\n" + graphWarning.getComment() + "\n\n");
 				first = false;
 				index++;
 			}else if(warning.getType() == Type.CRITICAL){
-				info.append(index + ". " + graphWarning.getAttribute() + ":\n" + graphWarning.getComment() + "\n\n");
+				info.append(index + ". " + graphWarning.getAttribute() + ", " + graphWarning.getTime() + ":\n" + graphWarning.getComment() + "\n\n");
 				index++;
 			}
 		}
@@ -152,16 +178,20 @@ public class WarningMeterListener implements OnClickListener{
 			GraphWarning graphWarning = (GraphWarning) warning;
 			if(warning.getType() == Type.WARNING && first){
 				info.append("\nWarning:\n");
-				info.append(index + ". " + graphWarning.getAttribute() + ":\n" + graphWarning.getComment() + "\n\n");
+				info.append(index + ". " + graphWarning.getAttribute() + ", " + graphWarning.getTime() + ":\n" + graphWarning.getComment() + "\n\n");
 				first = false;
 				index++;
 			}else if(warning.getType() == Type.WARNING){
-				info.append(index + ". " + graphWarning.getAttribute() + ":\n" + graphWarning.getComment() + "\n\n");
+				info.append(index + ". " + graphWarning.getAttribute() + ", " + graphWarning.getTime() + ":\n" + graphWarning.getComment() + "\n\n");
 				index++;
 			}
 		}
 	}
 	
+	/**
+	 * Builds the text for a table
+	 * @param sectionWarning The {@link SectionWarning} containing the {@link TableWarning}
+	 */
 	private void initTableText(SectionWarning sectionWarning) {
 		int index = 1;
 		boolean first = true;

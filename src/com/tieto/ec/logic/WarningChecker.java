@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphPoint;
 import com.ec.prod.android.pilot.model.GraphSection;
+import com.ec.prod.android.pilot.model.Resolution;
 import com.ec.prod.android.pilot.model.Section;
 import com.ec.prod.android.pilot.model.TableCell;
 import com.ec.prod.android.pilot.model.TableData;
@@ -197,9 +198,21 @@ public class WarningChecker {
 				if(differential > 0.95){
 //					warnings.add(new Warning(Type.OK, actualValue, targetValue, pointActual.getPointComment(attribute)));
 				}else if(differential < 0.95 && differential >= 0.9){
-					warnings.add(new GraphWarning(Type.WARNING, attribute, actualValue, targetValue, pointActual.getPointComment(attribute)));
+					String time = "Could not find date";
+					if(dmr.getResolution() == Resolution.DAILY){
+						time = DateConverter.parse(pointActual.getDaytime(), com.tieto.ec.logic.DateConverter.Type.TIME);
+					}else{
+						time = DateConverter.parse(pointActual.getDaytime(), com.tieto.ec.logic.DateConverter.Type.DATE);
+					}
+					warnings.add(new GraphWarning(Type.WARNING, attribute, time, actualValue, targetValue, pointActual.getPointComment(attribute)));
 				}else if(differential < 0.9){
-					warnings.add(new GraphWarning(Type.CRITICAL, attribute, actualValue, targetValue, pointActual.getPointComment(attribute)));
+					String time = "Could not find date";
+					if(dmr.getResolution() == Resolution.DAILY){
+						time = DateConverter.parse(pointActual.getDaytime(), com.tieto.ec.logic.DateConverter.Type.TIME);
+					}else{
+						time = DateConverter.parse(pointActual.getDaytime(), com.tieto.ec.logic.DateConverter.Type.DATE);
+					}
+					warnings.add(new GraphWarning(Type.CRITICAL, attribute, time, actualValue, targetValue, pointActual.getPointComment(attribute)));
 				}
 			}
 		}
