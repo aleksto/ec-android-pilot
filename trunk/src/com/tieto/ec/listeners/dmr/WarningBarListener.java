@@ -1,13 +1,13 @@
 package com.tieto.ec.listeners.dmr;
 
+import android.view.View;
+import android.view.View.OnClickListener;
+
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.gui.dialogs.InfoDialog;
 import com.tieto.ec.logic.SectionWarning;
 import com.tieto.ec.logic.Warning;
 import com.tieto.ec.logic.Warning.Type;
-
-import android.view.View;
-import android.view.View.OnClickListener;
 
 public class WarningBarListener implements OnClickListener{
 

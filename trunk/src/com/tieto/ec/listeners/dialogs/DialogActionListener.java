@@ -19,21 +19,25 @@ public class DialogActionListener implements OnClickListener, OnCheckedChangeLis
 	private boolean goBack;
 	private String optionTitle;
 	private String path;
+	private boolean setDefault;
 
 	/**
 	 * This Listener listens for actions in instances of {@link OptionDialog}. When a action takes place
 	 * in any {@link OptionRow}s it decides the options actions and if the option tree should go one step back, 
 	 * stay as it is or step forward to nextState. 
+	 * @param optionRow 
 	 * @param dialog
 	 * @param goBack
 	 * @param optionTitle
 	 * @param nextState
+	 * @param setDefault 
 	 */
-	public DialogActionListener(OptionDialog dialog, boolean goBack, String optionTitle, Dialog nextState) {
+	public DialogActionListener(OptionDialog dialog, boolean goBack, String optionTitle, Dialog nextState, boolean setDefault) {
 		this.dialog = dialog;
 		this.goBack = goBack;
 		
 		this.optionTitle = optionTitle;
+		this.setDefault = setDefault;
 		path = dialog.getPath();
 		if(!goBack){
 			this.nextState = nextState;			
@@ -45,9 +49,15 @@ public class DialogActionListener implements OnClickListener, OnCheckedChangeLis
 	 */
 	public void onClick(View v) {
 		if(goBack){
-			FileManager.writePath(dialog.getContext(), path, optionTitle);
-			Log.d("tieto", "Writing value: " + optionTitle + " to path: " + path);
-			dialog.dismiss();
+			dialog.dismiss();			
+			if(!setDefault){
+				FileManager.writePath(dialog.getContext(), path, optionTitle);
+				Log.d("tieto", "Writing value: " + optionTitle + " to path: " + path);				
+			}
+			else {
+				dialog.setDefaultValues(dialog, path);
+				dialog.dismiss();
+			}
 		}
 		else{
 			nextState.show();

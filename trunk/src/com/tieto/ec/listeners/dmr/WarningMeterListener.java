@@ -1,6 +1,5 @@
 package com.tieto.ec.listeners.dmr;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import android.app.Dialog;
