@@ -4,8 +4,6 @@ import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
 
-import android.util.Log;
-
 import com.tieto.ec.gui.graphs.BarGraph;
 
 public class IndexFormat extends Format {
@@ -37,7 +35,6 @@ public class IndexFormat extends Format {
 			count = 1;
 			format(obj, toAppendTo, pos);
 		}
-		Log.d("tieto", "toAppendTo.toString() = " + toAppendTo.toString());
 		return toAppendTo;
 	}
 	
