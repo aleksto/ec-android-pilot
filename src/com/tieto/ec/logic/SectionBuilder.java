@@ -233,6 +233,7 @@ public class SectionBuilder {
 		
 		//Listener
 		graph.setOnClickListener(new GraphFullScreenListener(dmr, graph, title));
+		
 	}
 
 	/**
@@ -351,26 +352,36 @@ public class SectionBuilder {
 	public void updateColors(){
 		String basePath = OptionTitle.DMRReport + "." + OptionTitle.ColorOptions + ".";
 		try {
+			//if(basePath + OptionTitle.Default))
 			dmr.setBackgroundColor(ColorConverter.parseColor(FileManager.readPath(dmr, basePath + OptionTitle.BackgroundColor)));
 			dmr.setTextColor(ColorConverter.parseColor(FileManager.readPath(dmr, basePath + OptionTitle.TextColor)));
 			dmr.setCellTextColor(ColorConverter.parseColor(FileManager.readPath(dmr, basePath + OptionTitle.TextColor)));
 			dmr.setCellBackgroundColor(ColorConverter.parseColor(FileManager.readPath(dmr, basePath + OptionTitle.CellBackgroundColor)));
 			dmr.setCellBorderColor(ColorConverter.parseColor(FileManager.readPath(dmr, basePath + OptionTitle.CellBorderColor)));
 		} catch (IOException e) {
-			Log.d("tieto", "Setting default color");
-			dmr.setBackgroundColor(Color.rgb(180, 201, 220));
-			dmr.setTextColor(Color.BLACK);
-			dmr.setCellBackgroundColor(Color.WHITE);
-			dmr.setCellTextColor(Color.BLACK);
-			dmr.setCellBorderColor(Color.BLACK);
-			FileManager.writePath(dmr, basePath + OptionTitle.BackgroundColor, ColorType.LightBlue.toString());
-			FileManager.writePath(dmr, basePath + OptionTitle.TextColor, ColorType.Black.toString());
-			FileManager.writePath(dmr, basePath + OptionTitle.CellBackgroundColor, ColorType.White.toString());
-			FileManager.writePath(dmr, basePath + OptionTitle.CellBorderColor, ColorType.Black.toString());
+			setDefaultColor(basePath);
 			e.printStackTrace();
 		}
 		
 		dmr.getScrollView().setBackgroundColor(dmr.getBackgroundColor());
 		dmr.getTable().setBackgroundColor(dmr.getBackgroundColor());
+	}
+
+	
+	/**
+	 * This method sets the default color of the daily morning repost class
+	 * @param basePath
+	 */
+	private void setDefaultColor(String basePath) {
+		Log.d("tieto", "Setting default color");
+		dmr.setBackgroundColor(Color.rgb(180, 201, 220));
+		dmr.setTextColor(Color.BLACK);
+		dmr.setCellBackgroundColor(Color.WHITE);
+		dmr.setCellTextColor(Color.BLACK);
+		dmr.setCellBorderColor(Color.BLACK);
+		FileManager.writePath(dmr, basePath + OptionTitle.BackgroundColor, ColorType.LightBlue.toString());
+		FileManager.writePath(dmr, basePath + OptionTitle.TextColor, ColorType.Black.toString());
+		FileManager.writePath(dmr, basePath + OptionTitle.CellBackgroundColor, ColorType.White.toString());
+		FileManager.writePath(dmr, basePath + OptionTitle.CellBorderColor, ColorType.Black.toString());
 	}
 }

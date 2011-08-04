@@ -61,6 +61,15 @@ public class FileManager {
 		return a;
 	}
 	
+	public static void deletePath(Context context, String path){
+		//Replacing "/" with "###" because a path cant contain the path seperator "/"
+		if(path.contains("/")){
+			path = path.replaceAll("/", "###");
+		}
+		context.deleteFile(path);
+		
+	}
+	
 	/**
 	 * Copies from {@link ArrayList<Byte>} to {@link Byte[]}
 	 * @param source

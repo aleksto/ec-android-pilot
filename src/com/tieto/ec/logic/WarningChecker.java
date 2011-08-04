@@ -3,10 +3,12 @@ package com.tieto.ec.logic;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R;
 import android.app.Dialog;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -50,8 +52,7 @@ public class WarningChecker {
 	public Dialog createWarningDialog(List<SectionWarning> sectionWarnings){
 		//Init
 		Dialog dialog = new Dialog(dmr);
-		ScrollView scroll = new ScrollView(dmr);
-		TableLayout main = new TableLayout(dmr);
+		RelativeLayout main = new RelativeLayout(dmr);
 		TableLayout table = new TableLayout(dmr);
 
 		LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1f);
@@ -81,20 +82,57 @@ public class WarningChecker {
 			table.addView(row1);
 			table.addView(row2);
 		}
-
+		
 		//Dialog
 		dialog.setTitle("Warnings");
 		dialog.setContentView(main);
-		scroll.addView(table);
-		
 		table.setStretchAllColumns(true);
 
-		//Button
-		Button button = new Button(dmr);
-		button.setText("Ok");
-		button.setOnClickListener(new HideDialogListener(dialog));
-		main.addView(button);
-		main.addView(scroll);
+		//Standard linearLayout params
+		LinearLayout.LayoutParams standardParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+		
+		//Content
+		RelativeLayout content = new RelativeLayout(dmr);
+		
+		//Scroll
+		LinearLayout scrollLayout = new LinearLayout(dmr);
+		RelativeLayout.LayoutParams scrollLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+		final int SCROLL_BOTTOM_MARGIN = 80;
+		scrollLayoutParams.bottomMargin = SCROLL_BOTTOM_MARGIN;
+		ScrollView scroll = new ScrollView(dmr);
+		int scrollId = 1;
+		scroll.setId(scrollId);
+
+		//Exit button
+		LinearLayout okLayout = new LinearLayout(dmr);
+		okLayout.setBackgroundResource(R.drawable.bottom_bar);
+		final int BUTTON_LAYOUT_HEIGHT = 75;
+		RelativeLayout.LayoutParams okLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, BUTTON_LAYOUT_HEIGHT);
+		okLayoutParams.addRule(RelativeLayout.BELOW, scrollId);
+		okLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);	
+		Button okButton = new Button(dmr);
+		okButton.setText("Ok");
+		okButton.setBackgroundResource(android.R.drawable.btn_default);
+		final int BUTTON_HEIGHT = 70;
+		LinearLayout.LayoutParams okParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, BUTTON_HEIGHT);
+		final int BUTTON_MARGIN = 5;
+		okParams.setMargins(BUTTON_MARGIN, BUTTON_MARGIN, BUTTON_MARGIN, BUTTON_MARGIN);
+		okButton.setOnClickListener(new HideDialogListener(dialog));
+
+		//Table
+		LinearLayout tableLayout = new LinearLayout(dmr);
+		RelativeLayout.LayoutParams tableLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);		
+		
+		//Childs
+		dialog.setContentView(main, standardParams);
+		main.addView(content, standardParams);
+		content.addView(scrollLayout, scrollLayoutParams);
+		content.addView(okLayout, okLayoutParams);
+		scrollLayout.addView(scroll, standardParams);
+		scroll.addView(tableLayout, tableLayoutParams);
+		tableLayout.addView(table, standardParams);
+		okLayout.addView(okButton, okParams);
+		
 
 		return dialog;
 	}

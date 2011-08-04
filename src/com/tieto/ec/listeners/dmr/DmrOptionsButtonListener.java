@@ -6,7 +6,6 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.enums.ColorType;
 import com.tieto.ec.enums.OptionTitle;
-import com.tieto.ec.enums.TimeType;
 import com.tieto.ec.gui.dialogs.OptionDialog;
 import com.tieto.ec.gui.dialogs.OptionRow.OptionRowType;
 
@@ -41,15 +40,11 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		OptionDialog backgroundColor = new OptionDialog(dailyMorningReport, OptionTitle.BackgroundColor);
 		OptionDialog cellTextColor = new OptionDialog(dailyMorningReport, OptionTitle.CellBackgroundColor);
 		OptionDialog cellBackgroundColor = new OptionDialog(dailyMorningReport, OptionTitle.CellBorderColor);
-		OptionDialog intervalDialog = new OptionDialog(dailyMorningReport, OptionTitle.Interval);
-		OptionDialog updateIntervalDialog = new OptionDialog(dailyMorningReport, OptionTitle.UpdateInterval);
 
 
 		// Root options
 		createRootOptions();
 		createColorOptions(color);
-		createUpdateIntervalDialog(updateIntervalDialog);
-		createIntervalOptions(intervalDialog);
 		createSecurityOptions(security);
 		createSubColorOptions(textColor);
 		createSubColorOptions(backgroundColor);
@@ -70,43 +65,12 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		backgroundColor.setOnDismissListener(listener);
 		cellTextColor.setOnDismissListener(listener);
 		cellBackgroundColor.setOnDismissListener(listener);
-		intervalDialog.setOnDismissListener(listener);
-		updateIntervalDialog.setOnDismissListener(new DmrServiceRestartListener(dailyMorningReport));
+		color.setOnDismissListener(listener);
 
 		root.show();
 		return false;
 	}
 
-	/**
-	 * Creates sub dialog update interval
-	 * @param dialog {@link OptionDialog} dialog
-	 */
-	private void createUpdateIntervalDialog(OptionDialog dialog) {
-		dialog.addOptionRow(TimeType.off, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.min15, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.min30, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.min45, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.hour1, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.hour2, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.hour5, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.hour10, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.hour12, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.day1, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.day2, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.day3, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow("Debug: 20 sec", OptionRowType.CHOOSE_BUTTON);
-	}
-
-	/**
-	 * Creates sub dialog interval
-	 * @param dialog {@link OptionDialog} dialog
-	 */
-	private void createIntervalOptions(OptionDialog dialog) {
-		dialog.addOptionRow(OptionTitle.Daily, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(OptionTitle.Weekly, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(OptionTitle.Monthly, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(OptionTitle.Yearly, OptionRowType.CHOOSE_BUTTON);
-	}
 
 	/**
 	 * Creates sub dialog sub color options
@@ -145,6 +109,7 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 		dialog.addOptionRow(OptionTitle.BackgroundColor, OptionRowType.NONE);
 		dialog.addOptionRow(OptionTitle.CellBackgroundColor, OptionRowType.NONE);
 		dialog.addOptionRow(OptionTitle.CellBorderColor, OptionRowType.NONE);
+		dialog.addOptionRow(OptionTitle.Default, OptionRowType.DEFAULT);
 	}
 
 	/**

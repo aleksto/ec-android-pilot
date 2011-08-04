@@ -17,12 +17,25 @@ import com.tieto.ec.logic.FileManager;
 
 public class OptionRow extends RelativeLayout{
 
+	private OptionRowType optionRowType;
+	private String optionsTitle;
+
+	public OptionRowType getOptionRowType() {
+		return optionRowType;
+	}
+	
+	public String getTitle() {
+		return optionsTitle;
+	}
+	
 	public enum OptionRowType {
 		NONE, 
 		EDIT_BUTTON, 
 		DATE_BUTTON, 
 		CHOOSE_BUTTON, 
-		CHECK_BOX
+		CHECK_BOX,
+		DEFAULT;
+	
 	}
 	
 	/**
@@ -35,8 +48,11 @@ public class OptionRow extends RelativeLayout{
 	 */
 	public OptionRow(OptionDialog optionDialog, String optionsTitle, OptionRowType optionRowType){
 		super(optionDialog.getContext());
+		this.optionsTitle = optionsTitle;
+		this.optionRowType = optionRowType;
 		
 		boolean goBack;
+		boolean setDefault;
 		Dialog nextState = null;
 
 		//Init
@@ -82,7 +98,8 @@ public class OptionRow extends RelativeLayout{
 			
 			//Listener
 			goBack = false;
-			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState));
+			setDefault = false;
+			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
 			break;
 		case DATE_BUTTON:
 			try {
@@ -101,12 +118,14 @@ public class OptionRow extends RelativeLayout{
 			
 			//Listener
 			goBack = false;
-			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState));
+			setDefault = false;
+			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
 			break;
 		case CHOOSE_BUTTON:
 			//Listener
 			goBack = true;
-			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState));
+			setDefault = false;
+			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
 			break;
 		case CHECK_BOX:
 			//Init
@@ -114,7 +133,8 @@ public class OptionRow extends RelativeLayout{
 			
 			//Listener
 			goBack = false;
-			checkBox.setOnCheckedChangeListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState));
+			setDefault = false;
+			checkBox.setOnCheckedChangeListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
 			
 			//Checking state
 			try {
@@ -129,11 +149,19 @@ public class OptionRow extends RelativeLayout{
 		case NONE:
 			nextState = optionDialog.getChild(optionsTitle.toString());
 			goBack = false;
-			optionsTextView.setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState));
-			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState));
+			setDefault = false;
+			optionsTextView.setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
+			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
+			break;
+		
+		case DEFAULT:
+			//Listener
+			goBack = true;
+			setDefault = true;
+			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
 			break;
 		}
-		
 	}
+
 	
 }

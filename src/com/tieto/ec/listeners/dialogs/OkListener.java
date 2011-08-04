@@ -3,6 +3,7 @@ package com.tieto.ec.listeners.dialogs;
 import android.app.Dialog;
 import android.view.View;
 import android.view.View.OnClickListener;
+
 import com.tieto.ec.gui.dialogs.OptionDialog;
 
 public class OkListener implements OnClickListener {

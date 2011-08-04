@@ -124,6 +124,12 @@ public enum OptionTitle {
 		public String toString() {
 	        return "Webservice Namespace";
 	    }
+	}, 
+	Default {
+		@Override
+		public String toString() {
+	        return "#Default";
+	    }
 	},
 
 
