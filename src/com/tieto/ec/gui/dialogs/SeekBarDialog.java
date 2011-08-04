@@ -1,8 +1,5 @@
 package com.tieto.ec.gui.dialogs;
 
-import com.tieto.ec.listeners.dialogs.CancelListener;
-import com.tieto.ec.listeners.dialogs.SeekBarChangeListener;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.widget.Button;
@@ -10,6 +7,9 @@ import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
+
+import com.tieto.ec.listeners.dialogs.CancelListener;
+import com.tieto.ec.listeners.dialogs.SeekBarChangeListener;
 
 public class SeekBarDialog extends Dialog{
 

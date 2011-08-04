@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Dialog;
-import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -12,7 +11,6 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.ec.prod.android.pilot.model.DataType;
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphPoint;
 import com.ec.prod.android.pilot.model.GraphSection;
@@ -22,11 +20,15 @@ import com.ec.prod.android.pilot.model.TableData;
 import com.ec.prod.android.pilot.model.TableRow;
 import com.ec.prod.android.pilot.model.TableSection;
 import com.tieto.ec.activities.DailyMorningReport;
-import com.tieto.ec.gui.dmr.WarningBar;
+import com.tieto.ec.gui.dmr.WarningMeter;
 import com.tieto.ec.listeners.dialogs.HideDialogListener;
-import com.tieto.ec.listeners.dmr.WarningBarListener;
+import com.tieto.ec.listeners.dmr.WarningMeterListener;
 import com.tieto.ec.logic.SectionSaver.Location;
-import com.tieto.ec.logic.Warning.Type;
+import com.tieto.ec.model.GraphWarning;
+import com.tieto.ec.model.SectionWarning;
+import com.tieto.ec.model.TableWarning;
+import com.tieto.ec.model.Warning;
+import com.tieto.ec.model.Warning.Type;
 
 public class WarningChecker {
 
@@ -68,8 +70,8 @@ public class WarningChecker {
 				title.setText(sectionWarnings.get(i+j).getSectionTitle() + ": " + (getNumberOfWarnings(sectionWarnings.get(i+j).getWarnings()) + getNumberOfCriticals(sectionWarnings.get(i+j).getWarnings())));
 				
 				//WarningBar
-				WarningBar bar = new WarningBar(dmr, sectionWarnings.get(i+j));
-				bar.setOnClickListener(new WarningBarListener(dmr, sectionWarnings.get(i+j)));
+				WarningMeter bar = new WarningMeter(dmr, sectionWarnings.get(i+j));
+				bar.setOnClickListener(new WarningMeterListener(dmr, sectionWarnings.get(i+j)));
 				
 				//Childs
 				row1.addView(title, params1);
@@ -120,7 +122,7 @@ public class WarningChecker {
 	 * @param section The {@link Section} to check
 	 * @return List {@link Warning} for this {@link Section}
 	 */
-	private List<Warning> checkSectionForWarnings(Section section) {
+	public List<Warning> checkSectionForWarnings(Section section) {
 		if(section instanceof TableSection){
 			return checkTableForWarnings((TableSection) section);
 		}else if(section instanceof GraphSection){
@@ -140,8 +142,6 @@ public class WarningChecker {
 		List<Warning> warnings = new ArrayList<Warning>();
 		GraphData actual = (GraphData) dmr.getSaveManager().load(section, Location.ACTUAL);
 		GraphData target = (GraphData) dmr.getSaveManager().load(section, Location.TARGET);
-//		GraphData actual = dmr.getWebservice().getGraphDataBySection(section, dmr.getFromDate(), dmr.getToDate(), dmr.getResolution(), DataType.ACTUAL);
-//		GraphData target = dmr.getWebservice().getGraphDataBySection(section, dmr.getFromDate(), dmr.getToDate(), dmr.getResolution(), DataType.TARGET);
 		List<String> attributes = actual.getPointAttributes();
 		List<GraphPoint> pointsActual = actual.getGraphPoints();
 		List<GraphPoint> pointsTarget = target.getGraphPoints();
@@ -157,11 +157,11 @@ public class WarningChecker {
 				differential = actualValue/targetValue; 
 
 				if(differential > 0.95){
-					warnings.add(new Warning(Type.OK, actualValue, targetValue, pointActual.getPointComment(attribute)));
+//					warnings.add(new Warning(Type.OK, actualValue, targetValue, pointActual.getPointComment(attribute)));
 				}else if(differential < 0.95 && differential >= 0.9){
-					warnings.add(new Warning(Type.WARNING, actualValue, targetValue, pointActual.getPointComment(attribute)));
+					warnings.add(new GraphWarning(Type.WARNING, attribute, actualValue, targetValue, pointActual.getPointComment(attribute)));
 				}else if(differential < 0.9){
-					warnings.add(new Warning(Type.CRITICAL, actualValue, targetValue, pointActual.getPointComment(attribute)));
+					warnings.add(new GraphWarning(Type.CRITICAL, attribute, actualValue, targetValue, pointActual.getPointComment(attribute)));
 				}
 			}
 		}
@@ -179,8 +179,6 @@ public class WarningChecker {
 		List<Warning> warnings = new ArrayList<Warning>();
 		TableData actualData = (TableData) dmr.getSaveManager().load(section, Location.ACTUAL);
 		TableData targetData = (TableData) dmr.getSaveManager().load(section, Location.TARGET);
-//		TableData actualData = dmr.getWebservice().getTableData(section, dmr.getFromDate(), dmr.getToDate(), dmr.getResolution(), DataType.ACTUAL);
-//		TableData targetData = dmr.getWebservice().getTableData(section, dmr.getFromDate(), dmr.getToDate(), dmr.getResolution(), DataType.TARGET);
 
 		List<TableRow> actualRows = actualData.getTableRows();
 		List<TableRow> targetRows = targetData.getTableRows();
@@ -200,11 +198,11 @@ public class WarningChecker {
 					differential = actualValue/targetValue;
 
 					if(differential > 0.95){
-						warnings.add(new Warning(Type.OK, actualValue, targetValue, actual.getComment()));
+//						warnings.add(new Warning(Type.OK, actualValue, targetValue, actual.getComment()));
 					}else if(differential < 0.95 && differential >= 0.9){
-						warnings.add(new Warning(Type.WARNING, actualValue, targetValue, actual.getComment()));
+						warnings.add(new TableWarning(Type.WARNING, targetData.getTableColumns().get(idx2).getHeader(), actuals.get(0).getValue(), actualValue, targetValue, actual.getComment()));
 					}else if(differential < 0.9){
-						warnings.add(new Warning(Type.CRITICAL, actualValue, targetValue, actual.getComment()));
+						warnings.add(new TableWarning(Type.CRITICAL, targetData.getTableColumns().get(idx2).getHeader(), actuals.get(0).getValue(), actualValue, targetValue, actual.getComment()));
 					}
 				}catch(java.lang.NumberFormatException e){
 					//Nothing neccesary to do

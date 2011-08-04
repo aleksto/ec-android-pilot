@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import android.util.Log;
-
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphPoint;
 import com.ec.prod.android.pilot.model.GraphSection;
@@ -169,10 +167,6 @@ public class MarshalService {
 				point.addComment(valueSet[0], valueSet[1]);
 				counter++;
 			}
-//			for (int t = 2; t < pointValues.length || !pointValues[t].equalsIgnoreCase("COMMENTS"); t++) {
-//				String[] valueSet = pointValues[t].split("#");
-//				point.addValue(valueSet[0], valueSet[1]);
-//			}	
 			graphDataObject.addGraphPoint(point);	
 		}		
 		return graphDataObject;

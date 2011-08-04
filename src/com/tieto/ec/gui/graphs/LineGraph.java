@@ -2,7 +2,6 @@ package com.tieto.ec.gui.graphs;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -23,8 +22,6 @@ public class LineGraph extends Graph{
 	private final int[] COLORS = {Color.BLACK, Color.BLUE, Color.RED, Color.DKGRAY};
 	private final double STEP_VALUE = 4.5;
 	
-	private List<GraphData> data;
-	
 	/**
 	 * Creates a new empty {@link LineGraph}
 	 * @param context {@link Context} needed for Android frameword actions
@@ -32,8 +29,6 @@ public class LineGraph extends Graph{
 	 */
 	public LineGraph(Context context, String title) {
 		super(context, title);
-		
-		data = new ArrayList<GraphData>();
 	}
 	
 	/**

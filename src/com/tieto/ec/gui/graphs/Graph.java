@@ -2,6 +2,7 @@ package com.tieto.ec.gui.graphs;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import android.content.Context;
@@ -14,6 +15,7 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYGraphWidget;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeriesFormatter;
+import com.ec.prod.android.pilot.model.GraphData;
 
 
 public abstract class Graph extends XYPlot{
@@ -21,6 +23,7 @@ public abstract class Graph extends XYPlot{
 	@SuppressWarnings("rawtypes")
 	protected ArrayList<XYSeriesFormatter> formats;
 	protected ArrayList<SimpleXYSeries> graphLines;
+	protected List<GraphData> data;
 	protected String title;
 	protected Context context;
 
@@ -38,6 +41,7 @@ public abstract class Graph extends XYPlot{
 		this.title = title;
 		graphLines = new ArrayList<SimpleXYSeries>();
 		formats = new ArrayList<XYSeriesFormatter>();
+		data = new ArrayList<GraphData>();
 
 		//this
 		setDomainLabel("");
@@ -165,6 +169,13 @@ public abstract class Graph extends XYPlot{
 	public ArrayList<SimpleXYSeries> getLines(){
 		return graphLines;
 	} 
+	
+	/**
+	 * @return The {@link GraphData} for the graph
+	 */
+	public List<GraphData> getData(){
+		return data;
+	}
 	
 	/**
 	 * Gets the index of a line from a given title
