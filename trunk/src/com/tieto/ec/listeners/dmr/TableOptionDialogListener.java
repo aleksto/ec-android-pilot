@@ -1,16 +1,15 @@
 package com.tieto.ec.listeners.dmr;
 
+import android.app.Dialog;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 
 import com.ec.prod.android.pilot.model.TableColumn;
 import com.ec.prod.android.pilot.model.TableData;
+import com.ec.prod.android.pilot.model.TableSection;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.gui.dialogs.OptionDialog;
 import com.tieto.ec.gui.dialogs.OptionRow.OptionRowType;
-import com.ec.prod.android.pilot.model.TableSection;
-
-import android.app.Dialog;
 
 public class TableOptionDialogListener implements OnLongClickListener{
 

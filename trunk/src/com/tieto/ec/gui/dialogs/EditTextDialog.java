@@ -2,11 +2,6 @@ package com.tieto.ec.gui.dialogs;
 
 import java.io.IOException;
 
-import com.tieto.ec.listeners.dialogs.CancelListener;
-import com.tieto.ec.listeners.dialogs.EditTextWatcher;
-import com.tieto.ec.listeners.dialogs.OkListener;
-import com.tieto.ec.logic.FileManager;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;
@@ -16,6 +11,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
+
+import com.tieto.ec.listeners.dialogs.CancelListener;
+import com.tieto.ec.listeners.dialogs.EditTextWatcher;
+import com.tieto.ec.listeners.dialogs.OkListener;
+import com.tieto.ec.logic.FileManager;
 
 public class EditTextDialog extends Dialog{
 

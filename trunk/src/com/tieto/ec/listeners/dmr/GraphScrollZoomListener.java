@@ -1,14 +1,14 @@
 package com.tieto.ec.listeners.dmr;
 
-import com.androidplot.xy.BoundaryMode;
-import com.tieto.ec.gui.graphs.Graph;
-import com.tieto.ec.gui.graphs.LineGraph;
-
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+
+import com.androidplot.xy.BoundaryMode;
+import com.tieto.ec.gui.graphs.Graph;
+import com.tieto.ec.gui.graphs.LineGraph;
 
 public class GraphScrollZoomListener implements OnTouchListener{
 

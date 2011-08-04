@@ -1,11 +1,11 @@
 package com.tieto.ec.listeners.dmr;
 
-import com.ec.prod.android.pilot.model.Section;
-
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TableLayout;
 import android.widget.TextView;
+
+import com.ec.prod.android.pilot.model.Section;
 
 public class ShowHideSection implements OnClickListener{
 

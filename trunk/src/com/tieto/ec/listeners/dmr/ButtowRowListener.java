@@ -1,12 +1,12 @@
 package com.tieto.ec.listeners.dmr;
 
-import com.tieto.ec.activities.DailyMorningReport;
-import com.tieto.ec.logic.FileManager;
-import com.tieto.ec.logic.ResolutionConverter;
-
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import com.tieto.ec.activities.DailyMorningReport;
+import com.tieto.ec.logic.FileManager;
+import com.tieto.ec.logic.ResolutionConverter;
 
 public class ButtowRowListener implements OnClickListener{
 

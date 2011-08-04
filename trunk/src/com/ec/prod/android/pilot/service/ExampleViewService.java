@@ -65,7 +65,7 @@ public class ExampleViewService implements ViewService {
 					TableData data = new TableData(tableColumns);
 					TableRow row;
 					row = new TableRow("Well PH65R", Integer.toString((int) (18 + Math.random() * 11.0)), Integer.toString((int) (50 + Math.random() * 20.0)), Integer.toString((int) (150 + Math.random() * 51.0)), Double.toString(5000.1 + Math.random() * 1000.1).substring(0, 6), Double.toString(600.1 + Math.random() * 100.1).substring(0, 5), Double.toString(200.1 + Math.random() * 400.1).substring(0, 5));
-					row.setRowComments("", "Everything is fine", "Drinking coffe", "Night shift starts 00:00");
+					row.setRowComments("", "Everything is fine", "Drinking coffe", "Night shift starts 00:00", "Oil level to low");
 					data.addTableRow(row);
 					data.addTableRow(new TableRow("Well PH65R", Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7), Double.toString(Math.random()*2344).substring(0, 7)));
 					data.addTableRow(new TableRow("Well PR87D", Integer.toString((int) (18 + Math.random() * 11.0)), Integer.toString((int) (50 + Math.random() * 20.0)), Integer.toString((int) (150 + Math.random() * 51.0)), Double.toString(6000.1 + Math.random() * 1000.1).substring(0, 6), Double.toString(800.1 + Math.random() * 100.1).substring(0, 5), Double.toString(200.1 + Math.random() * 100.1).substring(0, 5)));

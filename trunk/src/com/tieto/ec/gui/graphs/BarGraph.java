@@ -17,7 +17,6 @@ import android.graphics.Color;
 public class BarGraph extends Graph{
 
 	private List<Integer> colors;
-	private List<GraphData> data;
 	private List<String> titles;
 	
 	/**
@@ -33,7 +32,6 @@ public class BarGraph extends Graph{
 		//Init
 		titles = new ArrayList<String>();
 		colors = new ArrayList<Integer>();
-		data = new ArrayList<GraphData>();
 		
 		//This      
         getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
@@ -47,10 +45,6 @@ public class BarGraph extends Graph{
         getBorderPaint().setAntiAlias(false);
         getBorderPaint().setColor(Color.WHITE);
         getDomainLabelWidget().pack();
-        
-        //List
-        graphLines.add(new SimpleXYSeries(title));
-        formats.add(new BarFormatter(1, 1));
 	}
 	
 	/**
@@ -72,26 +66,36 @@ public class BarGraph extends Graph{
 	 * @param title Title of the bars
 	 * @param vals The array of values
 	 */
-	private void addBars(String title, int color, Number ... vals){
+	public void addBars(String title, int color, Number ... vals){
 		//Init
 		SimpleXYSeries bar = new SimpleXYSeries(Arrays.asList(vals), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, title);
 		BarFormatter barFormatter  = new BarFormatter(color, Color.rgb(0, 80, 0));
-        
-        //List
-		graphLines.set(0, bar);
-		formats.set(0, barFormatter);
 		
 		//This
 		addSeries(bar, BarRenderer.class, barFormatter);
         
+		//Needed if size == 1, because external library could not show only 1 value
+		if(vals.length == 1){
+			Number temp = vals[0];
+			vals = new Number[3];
+			vals[0] = 0;
+			vals[1] = temp;
+			vals[2] = 0;
+		}
+		
         //BarRenderer
         BarRenderer renderer = (BarRenderer) getRenderer(BarRenderer.class);
         if(renderer != null){
-        	renderer.setBarWidth(50);
+        	renderer.setBarWidth(150/vals.length);
         }
+        
 		
 		//Series
 		bar.setModel(Arrays.asList(vals), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY);
+		
+		//List
+		graphLines.add(bar);
+		formats.add(barFormatter);
 	}
 	
 	/**

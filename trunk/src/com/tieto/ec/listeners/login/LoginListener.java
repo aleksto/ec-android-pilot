@@ -64,10 +64,7 @@ public class LoginListener implements Runnable {
 			if(Boolean.valueOf(FileManager.readPath(login, "DMR Report.Security Options.Remember Login\nCredentials"))){
 				if(!username.equalsIgnoreCase("") && !password.equalsIgnoreCase("")){
 					FileManager.writePath(login, "DMR Report.Security Options", username + "¤#@#¤" + password);		
-					Log.d("tieto", "Writing username and password");			
 				}
-			}else{
-				Log.d("tieto", "Not writing username and password");
 			}
 		} catch (IOException e) {
 			FileManager.writePath(login, "DMR Report.Security Options.Remember Login\nCredentials", "true");

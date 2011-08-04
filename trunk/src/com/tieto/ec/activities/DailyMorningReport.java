@@ -36,8 +36,8 @@ import com.tieto.ec.logic.FileManager;
 import com.tieto.ec.logic.ResolutionConverter;
 import com.tieto.ec.logic.SectionBuilder;
 import com.tieto.ec.logic.SectionSaver;
-import com.tieto.ec.logic.SectionWarning;
 import com.tieto.ec.logic.WarningChecker;
+import com.tieto.ec.model.SectionWarning;
 import com.tieto.ec.service.EcService;
 
 public class DailyMorningReport extends Activity{
@@ -201,13 +201,6 @@ public class DailyMorningReport extends Activity{
 	 */
 	public Date getFromDate(){
 		return fromDate;
-	}
-
-	/**
-	 * Refreshes all value in the entire activity
-	 */
-	public void refreshWebserviceValues(){
-//		onCreate(null);
 	}
 
 	/**

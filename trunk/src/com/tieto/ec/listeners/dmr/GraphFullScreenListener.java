@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.gui.dialogs.GraphFullScreenDialog;
 import com.tieto.ec.gui.graphs.BarGraph;
 import com.tieto.ec.gui.graphs.Graph;
@@ -21,12 +22,12 @@ public class GraphFullScreenListener implements OnClickListener {
 	 * @param graph The new {@link Graph} to display
 	 * @param title Title for the dialog
 	 */
-	public GraphFullScreenListener(Context context, Graph graph, String title) {
+	public GraphFullScreenListener(DailyMorningReport dmr, Graph graph, String title) {
 		//Graph
 		if(graph instanceof LineGraph){			
-			dialog = new GraphFullScreenDialog(context, new LineGraph((LineGraph) graph));
+			dialog = new GraphFullScreenDialog(dmr, new LineGraph((LineGraph) graph));
 		}else if(graph instanceof BarGraph){
-			dialog = new GraphFullScreenDialog(context, new BarGraph((BarGraph) graph));
+			dialog = new GraphFullScreenDialog(dmr, new BarGraph((BarGraph) graph));
 		}
 		
 		//Dialog

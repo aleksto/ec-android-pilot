@@ -1,9 +1,6 @@
 package com.tieto.ec.logic;
 
 import java.util.HashMap;
-import java.util.TreeMap;
-
-import android.util.Log;
 
 import com.ec.prod.android.pilot.model.Section;
 
@@ -14,18 +11,28 @@ public class SectionSaver {
 	private HashMap<Section, Object> dataActual = new HashMap<Section, Object>();
 	private HashMap<Section, Object> dataTarget = new HashMap<Section, Object>();
 	
+	/**
+	 * Returns true if the given section has been saved
+	 * @param section The given {@link Section}
+	 * @param location Save location, either ACTUAL or TARGET
+	 * @return True if the section has been saved
+	 */
 	public boolean isSaved(Section section, Location location){
 		switch (location) {
 		case ACTUAL:
-			Log.d("tieto", section.getSectionHeader() + " is saved: " + dataActual.containsKey(section));
 			return dataActual.containsKey(section);
 		case TARGET:
-			Log.d("tieto", section.getSectionHeader() + " is saved: " + dataTarget.containsKey(section));
 			return dataTarget.containsKey(section);
 		}
 		return false;
 	}
 	
+	/**
+	 * Loads the data for a {@link Section}
+	 * @param section The given {@link Section}
+	 * @param location Location, either ACTUAL or TARGET
+	 * @return The save data, or null if the section has not been saved
+	 */
 	public Object load(Section section, Location location){
 		switch (location) {
 		case ACTUAL:
@@ -36,18 +43,18 @@ public class SectionSaver {
 		return null;
 	}
 	
+	/**
+	 * Saves the given data for a {@link Section}
+	 * @param section The {@link Section} for saving
+	 * @param data The data to save
+	 * @param location {@link Location} for the save data
+	 */
 	public void save(Section section, Object data, Location location){
 		switch (location) {
 		case ACTUAL:
-			Object put = dataActual.put(section, data);
-			if(put != null){
-				Log.d("tieto", put.toString());
-			}
+			dataActual.put(section, data);
 		case TARGET:
-			Object put2 = dataTarget.put(section, data);
-			if(put2 != null){
-				Log.d("tieto", put2.toString());
-			}
+			dataTarget.put(section, data);
 		}
 	}
 }
