@@ -130,6 +130,11 @@ public enum OptionTitle {
 		public String toString() {
 	        return "#Default";
 	    }
+	}, ChooseSections {
+		@Override
+		public String toString() {
+	        return "Choose Sections";
+	    }
 	},
 
 

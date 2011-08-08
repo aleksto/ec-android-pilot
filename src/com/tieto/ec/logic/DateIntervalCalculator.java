@@ -1,7 +1,5 @@
 package com.tieto.ec.logic;
 
-import java.io.ObjectInputStream.GetField;
-import java.util.Calendar;
 import java.util.Date;
 
 import android.util.Log;

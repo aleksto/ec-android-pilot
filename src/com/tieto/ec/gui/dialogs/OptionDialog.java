@@ -231,7 +231,7 @@ public class OptionDialog extends Dialog {
 	
 	/**
 	 * Adds a option row this {@link OptionDialog} using Enum
-	 * @param text
+	 * @param data.text
 	 * @param optionRowType
 	 */
 	public void addOptionRow(Enum<?> type, OptionRowType optionRowType){

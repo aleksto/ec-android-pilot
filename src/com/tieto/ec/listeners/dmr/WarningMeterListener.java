@@ -18,9 +18,8 @@ import com.tieto.ec.gui.dmr.WarningMeter;
 import com.tieto.ec.gui.graphs.BarGraph;
 import com.tieto.ec.listeners.dialogs.HideDialogListener;
 import com.tieto.ec.logic.IndexFormat;
-import com.tieto.ec.model.GraphWarning;
+import com.tieto.ec.logic.InitiateWarningText;
 import com.tieto.ec.model.SectionWarning;
-import com.tieto.ec.model.TableWarning;
 import com.tieto.ec.model.Warning;
 import com.tieto.ec.model.Warning.Type;
 
@@ -48,8 +47,9 @@ public class WarningMeterListener implements OnClickListener{
 		text = new TextView(dmr);
 		ok = new Button(dmr);
 
-		initText(sectionWarning);
-
+		InitiateWarningText initiateWarningText = new InitiateWarningText(sectionWarning);
+		info = initiateWarningText.getInfo();
+			
 		//Dialog
 		dialog.setContentView(main);
 		dialog.setTitle("Levels");
@@ -139,90 +139,7 @@ public class WarningMeterListener implements OnClickListener{
 		return array;
 	}
 
-	/**
-	 * Initializes a {@link StringBuilder} and builds it up whit comments from the {@link SectionWarning} 
-	 * @param sectionWarning
-	 */
-	private void initText(SectionWarning sectionWarning) {
-		if(sectionWarning.getWarnings().get(0) instanceof GraphWarning){
-			initGraphText(sectionWarning);
-		}else if(sectionWarning.getWarnings().get(0) instanceof TableWarning){
-			initTableText(sectionWarning);
-		}
-
-	}
-
-	/**
-	 * Builds the text for a Graph
-	 * @param sectionWarning The {@link SectionWarning} containing the {@link GraphWarning}
-	 */
-	private void initGraphText(SectionWarning sectionWarning) {
-		int index = 1;
-		boolean first = true;
-		for (Warning warning : sectionWarning.getWarnings()) {
-			GraphWarning graphWarning = (GraphWarning) warning;
-			if(warning.getType() == Type.CRITICAL && first){
-				info.append("Critical:\n");
-				info.append(index + ". " + graphWarning.getAttribute() + ", " + graphWarning.getTime() + ":\n" + graphWarning.getComment() + "\n\n");
-				first = false;
-				index++;
-			}else if(warning.getType() == Type.CRITICAL){
-				info.append(index + ". " + graphWarning.getAttribute() + ", " + graphWarning.getTime() + ":\n" + graphWarning.getComment() + "\n\n");
-				index++;
-			}
-		}
-
-
-		first = true;
-		for (Warning warning : sectionWarning.getWarnings()) {
-			GraphWarning graphWarning = (GraphWarning) warning;
-			if(warning.getType() == Type.WARNING && first){
-				info.append("\nWarning:\n");
-				info.append(index + ". " + graphWarning.getAttribute() + ", " + graphWarning.getTime() + ":\n" + graphWarning.getComment() + "\n\n");
-				first = false;
-				index++;
-			}else if(warning.getType() == Type.WARNING){
-				info.append(index + ". " + graphWarning.getAttribute() + ", " + graphWarning.getTime() + ":\n" + graphWarning.getComment() + "\n\n");
-				index++;
-			}
-		}
-	}
 	
-	/**
-	 * Builds the text for a table
-	 * @param sectionWarning The {@link SectionWarning} containing the {@link TableWarning}
-	 */
-	private void initTableText(SectionWarning sectionWarning) {
-		int index = 1;
-		boolean first = true;
-		for (Warning warning : sectionWarning.getWarnings()) {
-			TableWarning tableWarning = (TableWarning) warning;
-			if(warning.getType() == Type.CRITICAL && first){
-				info.append("Critical:\n");
-				info.append(index + ". " + tableWarning.getRow() + ", " + tableWarning.getCollumn() + "\n" + warning.getComment() + "\n\n");
-				first = false;
-				index++;
-			}else if(warning.getType() == Type.CRITICAL){
-				info.append(index + ". " + tableWarning.getRow() + ", " + tableWarning.getCollumn() + "\n" + warning.getComment() + "\n\n");
-				index++;
-			}
-		}
-
-
-		first = true;
-		for (Warning warning : sectionWarning.getWarnings()) {
-			TableWarning tableWarning = (TableWarning) warning;
-			if(warning.getType() == Type.WARNING && first){
-				info.append("\nWarning:\n");
-				info.append(index + ". " + tableWarning.getRow() + ", " + tableWarning.getCollumn() + "\n" + warning.getComment() + "\n\n");
-				first = false;
-				index++;
-			}else if(warning.getType() == Type.WARNING){
-				info.append(index + ". " + tableWarning.getRow() + ", " + tableWarning.getCollumn() + "\n" + warning.getComment() + "\n\n");
-				index++;
-			}
-		}
-	}
 
 	/**
 	 * Runs when user clicks the {@link View} with this {@link OnClickListener} attached

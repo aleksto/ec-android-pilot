@@ -131,6 +131,7 @@ public class SectionBuilder {
 					dmr.getSaveManager().save(section, textData, Location.ACTUAL);
 				}
 			}
+			Log.d("tieto", "TEXTDATA: " + textData);
 			addTextData(textData, dmr.getTable(), sectionTitle);
 		}
 		else if(section instanceof TableSection){
