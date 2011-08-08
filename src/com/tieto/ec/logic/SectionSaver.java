@@ -1,19 +1,37 @@
 package com.tieto.ec.logic;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import android.util.Log;
 
+import com.ec.prod.android.pilot.model.DataType;
+import com.ec.prod.android.pilot.model.GraphData;
+import com.ec.prod.android.pilot.model.GraphSection;
 import com.ec.prod.android.pilot.model.Section;
+import com.ec.prod.android.pilot.model.TableData;
+import com.ec.prod.android.pilot.model.TableRow;
+import com.ec.prod.android.pilot.model.TableSection;
+import com.ec.prod.android.pilot.model.TextData;
+import com.ec.prod.android.pilot.model.TextSection;
+import com.ec.prod.android.pilot.service.ViewService;
+import com.tieto.ec.activities.DailyMorningReport;
 
-public class SectionSaver {
+public class SectionSaver implements ViewService{
 
 	public enum Location{ACTUAL, TARGET};
 	
+	private final DailyMorningReport dmr;
 	private HashMap<Section, Object> dataActual;
 	private HashMap<Section, Object> dataTarget;
 	
-	public SectionSaver(){
+	/**
+	 * Creates a new SectionSaver, this class is used for storing {@link Section}
+	 * @param dmr
+	 */
+	public SectionSaver(DailyMorningReport dmr){
+		this.dmr = dmr;
 		//Init 
 		dataActual = new HashMap<Section, Object>();
 		dataTarget = new HashMap<Section, Object>();
@@ -65,5 +83,72 @@ public class SectionSaver {
 		case TARGET:
 			dataTarget.put(section, data);
 		}
+	}
+
+
+	/**
+	 * @return The {@link Section} listed in {@link DailyMorningReport}
+	 */
+	public List<Section> getSections() {
+		return dmr.getSections();
+	}
+
+
+	/**
+	 * @param section The section to load
+	 * @param fromdate This is not used
+	 * @param toDate This is not used
+	 * @param type The location of the saved data
+	 * @see DataType
+	 * @return {@link TableData} for the given {@link Section}
+	 */
+	public TableData getTableData(TableSection section, Date fromdate, Date toDate, int resolution, int type) {
+		if(type == DataType.ACTUAL){			
+			return (TableData) load(section, Location.ACTUAL);
+		}else if(type == DataType.TARGET){
+			return (TableData) load(section, Location.TARGET);
+		}
+		return null;
+	}
+	
+	/**
+	 * @param section The section to load
+	 * @param fromdate This is not used
+	 * @param toDate This is not used
+	 * @param type The location of the saved data
+	 * @see DataType
+	 * @return {@link GraphData} for the given {@link Section}
+	 */
+
+	public GraphData getGraphDataBySection(GraphSection section, Date fromDate, Date toDate, int resolution, int type) {
+		if(type == DataType.ACTUAL){			
+			return (GraphData) load(section, Location.ACTUAL);
+		}else if(type == DataType.TARGET){
+			return (GraphData) load(section, Location.TARGET);
+		}
+		return null;
+	}
+	
+	/**
+	 * This is not yet implemented
+	 */
+
+	public GraphData getGraphDataByRow(TableRow row, Date fromDate,	Date toDate, int resolution, int type) {
+		//FIXME
+		return null;
+	}
+	
+	/**
+	 * @param section The section to load
+	 * @param fromdate This is not used
+	 * @param toDate This is not used
+	 * @param type The location of the saved data
+	 * @see DataType
+	 * @return {@link TextData} for the given {@link Section}
+	 */
+
+	public TextData getTextData(TextSection section, Date fromDate,	Date toDate, int resolution) {
+		//This section does not have any target, so Location is always ACTUAL
+		return (TextData) load(section, Location.ACTUAL);
 	}
 }

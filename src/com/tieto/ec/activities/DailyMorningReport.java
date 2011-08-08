@@ -33,6 +33,7 @@ import com.tieto.ec.listeners.dmr.DmrWarningButtonListener;
 import com.tieto.ec.listeners.dmr.SendWarningsByMailListener;
 import com.tieto.ec.logic.DateConverter;
 import com.tieto.ec.logic.DateConverter.Type;
+import com.tieto.ec.logic.DateIntervalCalculator;
 import com.tieto.ec.logic.FileManager;
 import com.tieto.ec.logic.SectionBuilder;
 import com.tieto.ec.logic.SectionSaver;
@@ -91,17 +92,6 @@ public class DailyMorningReport extends Activity{
 		password = getIntent().getExtras().getString(Webservice.password.toString());
 		namespace = getIntent().getExtras().getString(Webservice.namespace.toString());
 		url = getIntent().getExtras().getString(Webservice.url.toString());
-		toDate = new Date(System.currentTimeMillis());
-		toDate.setDate(toDate.getDate()-1);
-		table = new TableLayout(this);
-		sectionBuilder = new SectionBuilder(this);
-		dateRow = new DateRow(this);
-		warningChecker = new WarningChecker(this);
-		scroll = new ScrollView(this);
-		main = new TableLayout(this);
-		saveManager = new SectionSaver();
-		buttonRow = new ButtonRow(this);
-		
 		if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
 			Log.d("tieto", "Starting report with example view service");
 			webservice = new ExampleViewService();
@@ -109,6 +99,17 @@ public class DailyMorningReport extends Activity{
 			Log.d("tieto", "Starting report with webservice");
 			webservice = new DMRViewServiceUnmarshalled(username, password, namespace, url);
 		}
+		toDate = new Date(System.currentTimeMillis());
+		toDate.setDate(toDate.getDate()-1);
+		table = new TableLayout(this);
+		sectionBuilder = new SectionBuilder(this);
+		saveManager = new SectionSaver(this);
+		dateRow = new DateRow(this);
+		warningChecker = new WarningChecker(saveManager, resolution);
+		scroll = new ScrollView(this);
+		main = new TableLayout(this);
+		buttonRow = new ButtonRow(this);
+		
 
 		//Getting sections
 		sections = webservice.getSections();
@@ -184,12 +185,13 @@ public class DailyMorningReport extends Activity{
 	 */
 	public void setToDate(Date date){
 		this.toDate = date;
-//		sectionBuilder.listSections(true);
+		this.fromDate = DateIntervalCalculator.calcFromDate(toDate, resolution);
 		refresh(true);
 		
 		//WarningChecker
 		refreshWarningDialog();
 		
+		//Checking if the user want to automatically display warning dialog
 		try {
 			if(Boolean.valueOf(FileManager.readPath(this, OptionTitle.DMRReport + "." + OptionTitle.DisplayWarnings))){
 				warningDialog.show();			
@@ -205,9 +207,9 @@ public class DailyMorningReport extends Activity{
 	 * Creates a {@link Dialog} which show the warnings for each section
 	 */
 	private void refreshWarningDialog() {
-		warnings = warningChecker.checkForWarnings();
+		warnings = warningChecker.checkForWarnings(fromDate, toDate);
 		if(warnings.size() > 0){
-			warningDialog = warningChecker.createWarningDialog(warnings);
+			warningDialog = warningChecker.createWarningDialog(this, warnings);
 		}
 	}
 

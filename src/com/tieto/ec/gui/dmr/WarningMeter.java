@@ -1,5 +1,6 @@
 package com.tieto.ec.gui.dmr;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -31,8 +32,8 @@ public class WarningMeter extends View{
 	 * @param dmr {@link Context} needed for Android framework actions
 	 * @param sectionWarning The {@link SectionWarning} with the data
 	 */
-	public WarningMeter(DailyMorningReport dmr, SectionWarning sectionWarning) {
-		super(dmr);
+	public WarningMeter(Activity activity, SectionWarning sectionWarning) {
+		super(activity);
 		
 		for (Warning warning : sectionWarning.getWarnings()) {
 			if(warning.getType() == Type.CRITICAL || warning.getType() == Type.WARNING) {
