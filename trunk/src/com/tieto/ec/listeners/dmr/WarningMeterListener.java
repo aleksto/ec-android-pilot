@@ -2,6 +2,7 @@ package com.tieto.ec.listeners.dmr;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -38,14 +39,14 @@ public class WarningMeterListener implements OnClickListener{
 	 * @param dmr {@link DailyMorningReport} getting {@link Context} from here used for Android framework actions
 	 * @param sectionWarning A {@link SectionWarning} containing all the {@link Warning}s for the {@link Section}
 	 */
-	public WarningMeterListener(DailyMorningReport dmr, SectionWarning sectionWarning){
+	public WarningMeterListener(Activity activity, SectionWarning sectionWarning){
 		info = new StringBuilder();
-		dialog = new Dialog(dmr);
-		graph = new BarGraph(dmr, "");
-		scroll = new ScrollView(dmr);
-		main = new RelativeLayout(dmr);
-		text = new TextView(dmr);
-		ok = new Button(dmr);
+		dialog = new Dialog(activity);
+		graph = new BarGraph(activity, "");
+		scroll = new ScrollView(activity);
+		main = new RelativeLayout(activity);
+		text = new TextView(activity);
+		ok = new Button(activity);
 
 		InitiateWarningText initiateWarningText = new InitiateWarningText(sectionWarning);
 		info = initiateWarningText.getInfo();
@@ -83,7 +84,7 @@ public class WarningMeterListener implements OnClickListener{
 		text.setText(info.toString());
 
 		//Graph
-		int width = dmr.getWindowManager().getDefaultDisplay().getWidth();
+		int width = activity.getWindowManager().getDefaultDisplay().getWidth();
 		graph.setLayoutParams(new RelativeLayout.LayoutParams(width-20, 200));
 		graph.addBars("Target", Color.RED, generateTargetValues(sectionWarning));
 		graph.addBars("Actual", Color.GREEN, generateActualValues(sectionWarning));

@@ -1,9 +1,11 @@
 package com.tieto.ec.logic;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.R;
+import android.app.Activity;
 import android.app.Dialog;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
@@ -13,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import com.ec.prod.android.pilot.model.DataType;
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphPoint;
 import com.ec.prod.android.pilot.model.GraphSection;
@@ -22,11 +25,11 @@ import com.ec.prod.android.pilot.model.TableCell;
 import com.ec.prod.android.pilot.model.TableData;
 import com.ec.prod.android.pilot.model.TableRow;
 import com.ec.prod.android.pilot.model.TableSection;
+import com.ec.prod.android.pilot.service.ViewService;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.gui.dmr.WarningMeter;
 import com.tieto.ec.listeners.dialogs.HideDialogListener;
 import com.tieto.ec.listeners.dmr.WarningMeterListener;
-import com.tieto.ec.logic.SectionSaver.Location;
 import com.tieto.ec.model.GraphWarning;
 import com.tieto.ec.model.SectionWarning;
 import com.tieto.ec.model.TableWarning;
@@ -35,14 +38,16 @@ import com.tieto.ec.model.Warning.Type;
 
 public class WarningChecker {
 
-	private final DailyMorningReport dmr;
+	private final ViewService viewService;
+	private int resolution;
 
 	/**
 	 * Creates a new {@link WarningChecker} this class is used for checking if the {@link DailyMorningReport} contains any {@link Warning}
 	 * @param dmr {@link DailyMorningReport}
 	 */
-	public WarningChecker(DailyMorningReport dmr){
-		this.dmr = dmr;
+	public WarningChecker(ViewService viewService, int resolution){
+		this.viewService = viewService;
+		this.resolution = resolution;
 	}
 
 	/**
@@ -50,21 +55,21 @@ public class WarningChecker {
 	 * @param sectionWarnings A list containing the warnings
 	 * @return A new {@link Dialog} which displays the warnings
 	 */
-	public Dialog createWarningDialog(List<SectionWarning> sectionWarnings){
+	public Dialog createWarningDialog(Activity activity, List<SectionWarning> sectionWarnings){
 		//Init
-		Dialog dialog = new Dialog(dmr);
-		RelativeLayout main = new RelativeLayout(dmr);
-		TableLayout table = new TableLayout(dmr);
+		Dialog dialog = new Dialog(activity);
+		RelativeLayout main = new RelativeLayout(activity);
+		TableLayout table = new TableLayout(activity);
 
 		LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, 1f);
 		LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, 200, 1f);
 		for (int i = 0; i<sectionWarnings.size(); i+=2) {
 			//Init
-			 LinearLayout row1 = new LinearLayout(dmr);
-			 LinearLayout row2 = new LinearLayout(dmr);
+			 LinearLayout row1 = new LinearLayout(activity);
+			 LinearLayout row2 = new LinearLayout(activity);
 			
 			for (int j = 0; j < 2 && i+j < sectionWarnings.size(); j++) {
-				TextView title = new TextView(dmr);
+				TextView title = new TextView(activity);
 				
 				//Text
 				title.setPadding(0, 20, 0, 10);
@@ -72,8 +77,8 @@ public class WarningChecker {
 				title.setText(sectionWarnings.get(i+j).getSectionTitle() + ": " + (getNumberOfWarnings(sectionWarnings.get(i+j).getWarnings()) + getNumberOfCriticals(sectionWarnings.get(i+j).getWarnings())));
 				
 				//WarningBar
-				WarningMeter bar = new WarningMeter(dmr, sectionWarnings.get(i+j));
-				bar.setOnClickListener(new WarningMeterListener(dmr, sectionWarnings.get(i+j)));
+				WarningMeter bar = new WarningMeter(activity, sectionWarnings.get(i+j));
+				bar.setOnClickListener(new WarningMeterListener(activity, sectionWarnings.get(i+j)));
 				
 				//Childs
 				row1.addView(title, params1);
@@ -93,25 +98,25 @@ public class WarningChecker {
 		LinearLayout.LayoutParams standardParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		//Content
-		RelativeLayout content = new RelativeLayout(dmr);
+		RelativeLayout content = new RelativeLayout(activity);
 		
 		//Scroll
-		LinearLayout scrollLayout = new LinearLayout(dmr);
+		LinearLayout scrollLayout = new LinearLayout(activity);
 		RelativeLayout.LayoutParams scrollLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		final int SCROLL_BOTTOM_MARGIN = 80;
 		scrollLayoutParams.bottomMargin = SCROLL_BOTTOM_MARGIN;
-		ScrollView scroll = new ScrollView(dmr);
+		ScrollView scroll = new ScrollView(activity);
 		int scrollId = 1;
 		scroll.setId(scrollId);
 
 		//Exit button
-		LinearLayout okLayout = new LinearLayout(dmr);
+		LinearLayout okLayout = new LinearLayout(activity);
 		okLayout.setBackgroundResource(R.drawable.bottom_bar);
 		final int BUTTON_LAYOUT_HEIGHT = 75;
 		RelativeLayout.LayoutParams okLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, BUTTON_LAYOUT_HEIGHT);
 		okLayoutParams.addRule(RelativeLayout.BELOW, scrollId);
 		okLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);	
-		Button okButton = new Button(dmr);
+		Button okButton = new Button(activity);
 		okButton.setText("Ok");
 		okButton.setBackgroundResource(android.R.drawable.btn_default);
 		final int BUTTON_HEIGHT = 70;
@@ -121,7 +126,7 @@ public class WarningChecker {
 		okButton.setOnClickListener(new HideDialogListener(dialog));
 
 		//Table
-		LinearLayout tableLayout = new LinearLayout(dmr);
+		LinearLayout tableLayout = new LinearLayout(activity);
 		RelativeLayout.LayoutParams tableLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);		
 		
 		//Childs
@@ -140,14 +145,16 @@ public class WarningChecker {
 
 	/**
 	 * Checks each {@link Section} in the report for any warnings
+	 * @param fromDate 
+	 * @param toDate 
 	 * @return A List of {@link SectionWarnings} containing a list of {@link Warning} for each section
 	 */
-	public List<SectionWarning> checkForWarnings(){
+	public List<SectionWarning> checkForWarnings(Date fromDate, Date toDate){
 		List<SectionWarning> sectionWarnings = new ArrayList<SectionWarning>();
-		List<Section> sections = dmr.getSections();
+		List<Section> sections = viewService.getSections();
 
 		for (Section section : sections) {
-			List<Warning> warnings = checkSectionForWarnings(section);
+			List<Warning> warnings = checkSectionForWarnings(section, fromDate, toDate);
 			if(getNumberOfCriticals(warnings) > 0 || getNumberOfWarnings(warnings) > 0){
 				sectionWarnings.add(new SectionWarning(section.getSectionHeader(), warnings));
 			}
@@ -159,13 +166,15 @@ public class WarningChecker {
 	/**
 	 * Checks a {@link Section} for warnings
 	 * @param section The {@link Section} to check
+	 * @param fromDate 
+	 * @param toDate 
 	 * @return List {@link Warning} for this {@link Section}
 	 */
-	public List<Warning> checkSectionForWarnings(Section section) {
+	public List<Warning> checkSectionForWarnings(Section section, Date fromDate, Date toDate) {
 		if(section instanceof TableSection){
-			return checkTableForWarnings((TableSection) section);
+			return checkTableForWarnings((TableSection) section, fromDate, toDate);
 		}else if(section instanceof GraphSection){
-			return checkGraphForWarnings((GraphSection) section);
+			return checkGraphForWarnings((GraphSection) section, fromDate, toDate);
 		}else{
 			return new ArrayList<Warning>();			
 		}
@@ -174,13 +183,15 @@ public class WarningChecker {
 	/**
 	 * Checks a {@link GraphSection} for any warnings
 	 * @param section The {@link GraphSection} to check
+	 * @param fromDate 
+	 * @param toDate 
 	 * @return A list of warnings for this section
 	 */
-	private List<Warning> checkGraphForWarnings(GraphSection section) {
+	private List<Warning> checkGraphForWarnings(GraphSection section, Date fromDate, Date toDate) {
 		double actualValue, targetValue, differential;
 		List<Warning> warnings = new ArrayList<Warning>();
-		GraphData actual = (GraphData) dmr.getSaveManager().load(section, Location.ACTUAL);
-		GraphData target = (GraphData) dmr.getSaveManager().load(section, Location.TARGET);
+		GraphData actual = (GraphData) viewService.getGraphDataBySection(section, fromDate, toDate, resolution, DataType.ACTUAL);
+		GraphData target = (GraphData) viewService.getGraphDataBySection(section, fromDate, toDate, resolution, DataType.TARGET);
 		List<String> attributes = actual.getPointAttributes();
 		List<GraphPoint> pointsActual = actual.getGraphPoints();
 		List<GraphPoint> pointsTarget = target.getGraphPoints();
@@ -199,7 +210,7 @@ public class WarningChecker {
 //					warnings.add(new Warning(Type.OK, actualValue, targetValue, pointActual.getPointComment(attribute)));
 				}else if(differential < 0.95 && differential >= 0.9){
 					String time = "Could not find date";
-					if(dmr.getResolution() == Resolution.DAILY){
+					if(resolution == Resolution.DAILY){
 						time = DateConverter.parse(pointActual.getDaytime(), com.tieto.ec.logic.DateConverter.Type.TIME);
 					}else{
 						time = DateConverter.parse(pointActual.getDaytime(), com.tieto.ec.logic.DateConverter.Type.DATE);
@@ -207,7 +218,7 @@ public class WarningChecker {
 					warnings.add(new GraphWarning(Type.WARNING, attribute, time, actualValue, targetValue, pointActual.getPointComment(attribute)));
 				}else if(differential < 0.9){
 					String time = "Could not find date";
-					if(dmr.getResolution() == Resolution.DAILY){
+					if(resolution == Resolution.DAILY){
 						time = DateConverter.parse(pointActual.getDaytime(), com.tieto.ec.logic.DateConverter.Type.TIME);
 					}else{
 						time = DateConverter.parse(pointActual.getDaytime(), com.tieto.ec.logic.DateConverter.Type.DATE);
@@ -223,13 +234,15 @@ public class WarningChecker {
 	/**
 	 * Checks a {@link TableSection} for any warnings
 	 * @param section The {@link GraphSection} to check
+	 * @param fromdate 
+	 * @param toDate 
 	 * @return A list of warnings for this section
 	 */
-	private List<Warning> checkTableForWarnings(TableSection section) {
+	private List<Warning> checkTableForWarnings(TableSection section, Date fromdate, Date toDate) {
 		double actualValue, targetValue, differential;
 		List<Warning> warnings = new ArrayList<Warning>();
-		TableData actualData = (TableData) dmr.getSaveManager().load(section, Location.ACTUAL);
-		TableData targetData = (TableData) dmr.getSaveManager().load(section, Location.TARGET);
+		TableData actualData = (TableData) viewService.getTableData(section, fromdate, toDate, resolution, DataType.ACTUAL);
+		TableData targetData = (TableData) viewService.getTableData(section, fromdate, toDate, resolution, DataType.TARGET);
 
 		List<TableRow> actualRows = actualData.getTableRows();
 		List<TableRow> targetRows = targetData.getTableRows();
