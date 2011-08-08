@@ -87,8 +87,9 @@ public class ChooseSectionsDialog extends Dialog {
 		ok.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				boolean show = false;
+				body.append("MESSAGE:");
+
 				for (SectionWarning sectionWarning : dailyMorningReport.getWarnings()) {
-					body.append("MESSAGE:");
 					try{
 						Log.d("tieto", "Show Section: " + sectionWarning.getSectionTitle() + ": " + showSection.get(sectionWarning.getSectionTitle()));
 						if(showSection.get(sectionWarning.getSectionTitle()) == SectionBoxState.Checked){

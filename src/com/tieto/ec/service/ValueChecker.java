@@ -6,6 +6,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.ec.prod.android.pilot.client.DMRViewServiceUnmarshalled;
+import com.ec.prod.android.pilot.service.ExampleViewService;
 
 public class ValueChecker extends TimerTask{
 
@@ -21,7 +22,12 @@ public class ValueChecker extends TimerTask{
 	 */
 	public ValueChecker(Context context, String username, String password, String url, String namespace){
 		serviceNotification = new ServiceNotification(context);
-		new DMRViewServiceUnmarshalled(username, password, namespace, url);
+//		new DMRViewServiceUnmarshalled(username, password, namespace, url);
+		
+		//Test data
+		ExampleViewService exampleViewService = new ExampleViewService();
+		exampleViewService.getSections();
+		
 	}
 	
 	/**

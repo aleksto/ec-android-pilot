@@ -42,7 +42,7 @@ public class ServiceThread implements Runnable{
 //			updateInterval = -1;
 //			e.printStackTrace();
 //		}
-		updateInterval = 5000;
+		updateInterval = 20000;
 
 		Log.d("tieto", "Service Started with update interval:" + updateTime);
 
