@@ -114,7 +114,7 @@ public class DmrOptionsButtonListener implements OnMenuItemClickListener {
 
 	/**
 	 * Creates sub dialog root options
-	 * @param dialog {@link OptionDialog} dialog
+	 * @param data.dialog {@link OptionDialog} dialog
 	 */
 	private void createRootOptions() {
 		root.addOptionRow(OptionTitle.SecurityOptions, OptionRowType.NONE);

@@ -2,14 +2,22 @@ package com.tieto.ec.logic;
 
 import java.util.HashMap;
 
+import android.util.Log;
+
 import com.ec.prod.android.pilot.model.Section;
 
 public class SectionSaver {
 
 	public enum Location{ACTUAL, TARGET};
 	
-	private HashMap<Section, Object> dataActual = new HashMap<Section, Object>();
-	private HashMap<Section, Object> dataTarget = new HashMap<Section, Object>();
+	private HashMap<Section, Object> dataActual;
+	private HashMap<Section, Object> dataTarget;
+	
+	public SectionSaver(){
+		//Init 
+		dataActual = new HashMap<Section, Object>();
+		dataTarget = new HashMap<Section, Object>();
+	}
 	
 	/**
 	 * Returns true if the given section has been saved
@@ -36,6 +44,7 @@ public class SectionSaver {
 	public Object load(Section section, Location location){
 		switch (location) {
 		case ACTUAL:
+			Log.d("tieto", "DATA: " + dataActual.get(section));
 			return dataActual.get(section);
 		case TARGET:
 			return dataTarget.get(section);

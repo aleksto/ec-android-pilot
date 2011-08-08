@@ -8,7 +8,7 @@ public class SectionWarning {
 
 	private final String sectionTitle;
 	private final List<Warning> warnings;
-
+	
 	/**
 	 * Creates a new {@link SectionWarning}, this class represents a section that can have 0 or more {@link Warning}
 	 * @param sectionTitle The title of the {@link Section}

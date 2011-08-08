@@ -30,10 +30,10 @@ import com.tieto.ec.gui.dmr.ButtonRow;
 import com.tieto.ec.gui.dmr.DateRow;
 import com.tieto.ec.listeners.dmr.DmrOptionsButtonListener;
 import com.tieto.ec.listeners.dmr.DmrWarningButtonListener;
+import com.tieto.ec.listeners.dmr.SendWarningsByMailListener;
 import com.tieto.ec.logic.DateConverter;
 import com.tieto.ec.logic.DateConverter.Type;
 import com.tieto.ec.logic.FileManager;
-import com.tieto.ec.logic.ResolutionConverter;
 import com.tieto.ec.logic.SectionBuilder;
 import com.tieto.ec.logic.SectionSaver;
 import com.tieto.ec.logic.WarningChecker;
@@ -60,6 +60,11 @@ public class DailyMorningReport extends Activity{
 	private SectionSaver saveManager;
 	private Dialog warningDialog;
 
+	private List<SectionWarning> warnings;
+
+	public List<SectionWarning> getWarnings(){
+		return this.warnings;
+	}
 
 	/**
 	 * Main class for the daily morning report, this is the class started when you have logged in.
@@ -70,24 +75,33 @@ public class DailyMorningReport extends Activity{
 		//Super
 		super.onCreate(savedInstanceState);
 
-		//Date
-		toDate = new Date(System.currentTimeMillis());
-		toDate.setDate(toDate.getDate()-1);
-
-		//Init
-		scroll = new ScrollView(this);
-		table = new TableLayout(this);
-		main = new TableLayout(this);
-		sectionBuilder = new SectionBuilder(this);
-		warningChecker = new WarningChecker(this);
-		saveManager = new SectionSaver();
-		dateRow = new DateRow(this);
-		buttonRow = new ButtonRow(this);
+		try {
+			this.resolution = Integer.valueOf(FileManager.readPath(this, "DMR Report.Resolution"));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			Log.d("tieto", "Setting default resolution");
+			this.resolution = Resolution.DAILY;
+			FileManager.writePath(this, "DMR Report.Resolution", Resolution.DAILY+"");
+			e.printStackTrace();
+		}
+		
+		//Init 
 		username = getIntent().getExtras().getString(Webservice.username.toString());
 		password = getIntent().getExtras().getString(Webservice.password.toString());
 		namespace = getIntent().getExtras().getString(Webservice.namespace.toString());
 		url = getIntent().getExtras().getString(Webservice.url.toString());
-
+		toDate = new Date(System.currentTimeMillis());
+		toDate.setDate(toDate.getDate()-1);
+		table = new TableLayout(this);
+		sectionBuilder = new SectionBuilder(this);
+		dateRow = new DateRow(this);
+		warningChecker = new WarningChecker(this);
+		scroll = new ScrollView(this);
+		main = new TableLayout(this);
+		saveManager = new SectionSaver();
+		buttonRow = new ButtonRow(this);
+		
 		if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
 			Log.d("tieto", "Starting report with example view service");
 			webservice = new ExampleViewService();
@@ -99,20 +113,12 @@ public class DailyMorningReport extends Activity{
 		//Getting sections
 		sections = webservice.getSections();
 		
+		//Starting first screen dialog
+		setToDate(toDate);
+		refreshWarningDialog();
+		
 		//Sections Builder
 		sectionBuilder.updateColors();
-		
-		setToDate(toDate);
-		try {
-			setResolution(Integer.valueOf(FileManager.readPath(this, "DMR Report.Resolution")));
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			Log.d("tieto", "Setting default resolution");
-			setResolution(Resolution.DAILY);
-			FileManager.writePath(this, "DMR Report.Resolution", Resolution.DAILY+"");
-			e.printStackTrace();
-		}
 
 		//This
 		setContentView(main);
@@ -129,6 +135,9 @@ public class DailyMorningReport extends Activity{
 		main.addView(dateRow);
 		main.addView(scroll);
 		main.setBackgroundColor(backgroundColor);
+		
+		//Service
+		restartService();
 	}
 
 	/**
@@ -148,6 +157,11 @@ public class DailyMorningReport extends Activity{
 		MenuItem warningsButton = menu.findItem(R.id.dmr_warning);
 		warningsButton.setOnMenuItemClickListener(new DmrWarningButtonListener(this));
 		warningsButton.setIcon(android.R.drawable.ic_dialog_alert);
+		
+		MenuItem sendButton = menu.findItem(R.id.dmr_send_warnings);
+		sendButton.setOnMenuItemClickListener(new SendWarningsByMailListener(this));
+		sendButton.setIcon(android.R.drawable.ic_menu_send);
+		
 		return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -170,7 +184,8 @@ public class DailyMorningReport extends Activity{
 	 */
 	public void setToDate(Date date){
 		this.toDate = date;
-		sectionBuilder.listSections(true);
+//		sectionBuilder.listSections(true);
+		refresh(true);
 		
 		//WarningChecker
 		refreshWarningDialog();
@@ -190,7 +205,7 @@ public class DailyMorningReport extends Activity{
 	 * Creates a {@link Dialog} which show the warnings for each section
 	 */
 	private void refreshWarningDialog() {
-		List<SectionWarning> warnings = warningChecker.checkForWarnings();
+		warnings = warningChecker.checkForWarnings();
 		if(warnings.size() > 0){
 			warningDialog = warningChecker.createWarningDialog(warnings);
 		}
@@ -228,7 +243,8 @@ public class DailyMorningReport extends Activity{
 			serviceIntent.putExtra(Webservice.username.toString(), username);
 			serviceIntent.putExtra(Webservice.password.toString(), password);
 			serviceIntent.putExtra(Webservice.namespace.toString(), namespace);
-			serviceIntent.putExtra(Webservice.url.toString(), url);			
+			serviceIntent.putExtra(Webservice.url.toString(), url);	
+			
 		}else{
 			stopService(serviceIntent);
 		}
@@ -406,4 +422,6 @@ public class DailyMorningReport extends Activity{
 	public SectionSaver getSaveManager(){
 		return saveManager;
 	}
+	
+	
 }

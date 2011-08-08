@@ -19,9 +19,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tieto.R;
+import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.gui.dialogs.InfoDialog;
 import com.tieto.ec.gui.login.Slider;
-import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.listeners.login.LoginListener;
 import com.tieto.ec.listeners.login.LoginOptionsListener;
 import com.tieto.ec.logic.FileManager;
