@@ -289,7 +289,6 @@ public class ExampleViewService implements ViewService {
 			
 		}
 	
-
 	/**
 	 * Generates example of graph data from a Daily Morning Report
 	 */

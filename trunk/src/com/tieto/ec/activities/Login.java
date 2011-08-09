@@ -29,7 +29,7 @@ import com.tieto.ec.logic.FileManager;
 public class Login extends Activity{
 
 	private Handler handler;
-	private boolean quit;
+//	private boolean quit;
 	
 	/**
 	 * Main class for the login, this is the class started after introduction animation
@@ -103,15 +103,6 @@ public class Login extends Activity{
 		}
 		
 	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if(quit){
-			onBackPressed();
-		}
-		
-	}
 
 	/**
 	 * This method is executed when the user presses the menu button on the phone, and it builds up the menu,
@@ -140,9 +131,4 @@ public class Login extends Activity{
 			}
 		});
 	}
-
-	public void setQuit(boolean quit) {
-		this.quit = quit;
-	}
-
 }

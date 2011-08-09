@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.util.Log;
+
 import com.ec.prod.android.pilot.service.ViewServiceMarshalled;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.logic.DateConverter;
@@ -39,11 +41,12 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 	 * The method passes the response to generateResonseList() which parses the response string into a set of strings
 	 * which it returns in a list
 	 */
-	public List<String> getTableData(String section, Date fromdate, Date toDate, int resolution) {
-		Object response = executeWebservice("getTableData",  "arg0", section,
-														 	 "arg1", DateConverter.parse(fromdate, DateConverter.Type.DATE),
-															 "arg2", DateConverter.parse(toDate, DateConverter.Type.DATE),
-															 "arg3", Integer.toString(resolution));
+	public List<String> getTableData(String section, Date fromdate, Date toDate, int resolution, int type) {
+		Object response = executeWebservice("getTableData",  "section", section,
+														 	 "fromdate", DateConverter.parse(fromdate, DateConverter.Type.DATE),
+															 "todate", DateConverter.parse(toDate, DateConverter.Type.DATE),
+															 "resolution", Integer.toString(resolution),
+															 "type", Integer.toString(type));
 				return generateResponseList(response);
 	}
 
@@ -52,19 +55,22 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 	 * The method passes the response to generateResonseList() which parses the response string into a set of strings
 	 * which it returns in a list
 	 */
-	public List<String> getGraphDataBySection(String section, Date fromDate, Date toDate, int resolution) {
-		Object response = executeWebservice("getGraphDataBySection",  "arg0", section,
-																 	  "arg1", DateConverter.parse(fromDate, DateConverter.Type.DATE),
-																	  "arg2", DateConverter.parse(toDate, DateConverter.Type.DATE),
-																	  "arg3", Integer.toString(resolution));
+	public List<String> getGraphDataBySection(String section, Date fromDate, Date toDate, int resolution, int type) {
+		Log.d("tieto", "Executing webservice getGraphDataBySection(), Values: section: " + section);
+		Object response = executeWebservice("getGraphDataBySection",  "section", section,
+																 	  "fromdate", DateConverter.parse(fromDate, DateConverter.Type.DATE),
+																	  "todate", DateConverter.parse(toDate, DateConverter.Type.DATE),
+																	  "resolution", Integer.toString(resolution),
+																	  "type", Integer.toString(type));
 		return generateResponseList(response);
 	}
 
 	public List<String> getTextData(String section, Date fromDate, Date toDate, int resolution) {
-		Object response = executeWebservice("getTextData",  "arg0", section,
-															"arg1", DateConverter.parse(fromDate, DateConverter.Type.DATE),
-															"arg2", DateConverter.parse(toDate, DateConverter.Type.DATE),
-															"arg3", Integer.toString(resolution));
+		Log.d("tieto", "Executing webservice getTextData(), Values: section: " + section);
+		Object response = executeWebservice("getTextData",  "section", section,
+															"fromdate", DateConverter.parse(fromDate, DateConverter.Type.DATE),
+															"todate", DateConverter.parse(toDate, DateConverter.Type.DATE),
+															"resolution", Integer.toString(resolution));
 		return generateResponseList(response);
 	}
 
@@ -72,7 +78,7 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 	 * Not yet implemented
 	 */
 	public List<String> getGraphDataByRow(String row, Date fromDate,
-			Date toDate, int resolution) {
+			Date toDate, int resolution, int type) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -84,16 +90,21 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 	 * @return
 	 */
 	private List<String> generateResponseList(Object response) {
-		List<String> list = new ArrayList<String>();
-		String responseString = response.toString();
-		String[] responseList = responseString.toString().split("return=");
-		
-		int idx;
-		for (int i = 1; i < responseList.length; i++) {
-			idx = responseList[i].lastIndexOf(";");
-			list.add(responseList[i].substring(0, idx));
-		}		
-		return list;
+		if(response != null){			
+			List<String> list = new ArrayList<String>();
+			String responseString = response.toString();
+			String[] responseList = responseString.toString().split("return=");
+			
+			int idx;
+			for (int i = 1; i < responseList.length; i++) {
+				idx = responseList[i].lastIndexOf(";");
+				list.add(responseList[i].substring(0, idx));
+				Log.d("tieto", "Got response: " + list.get(list.size()-1));
+			}		
+			return list;
+		}else{
+			return null;
+		}
 	}
 		
 }

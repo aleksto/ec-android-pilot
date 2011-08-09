@@ -7,6 +7,8 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.util.Log;
+
 import com.ec.prod.android.pilot.service.MarshalService;
 
 public abstract class Webservice implements Runnable{
@@ -34,7 +36,6 @@ public abstract class Webservice implements Runnable{
 		this.namespace = namespace;
 		envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); 
 		httpTransport = new HttpTransportBasicAuth(url, username, password);
-		executeWebservice(url, args);
 	}
 	
 	/**
@@ -84,6 +85,7 @@ public abstract class Webservice implements Runnable{
 
  		//Envelope
 		envelope.setOutputSoapObject(request);
+		httpTransport.debug = true;
 
 		//Submiting
 		try {
@@ -93,10 +95,8 @@ public abstract class Webservice implements Runnable{
 			e.printStackTrace();
 		} catch(java.lang.ClassCastException e){
 			e.printStackTrace();
-			bodyIn = null;
 		} catch (XmlPullParserException e) {
 			e.printStackTrace();
-			bodyIn = new Object();
 		}
 
 		notify();

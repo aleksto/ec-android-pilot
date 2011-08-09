@@ -64,7 +64,7 @@ public class MarshalService {
 	public static String marshalGraphSection(GraphSection section) {
 		String sectionHeader = section.getSectionHeader();
 		int sectionId = section.getSectionId();
-		return sectionId + delimiter + sectionHeader;
+		return sectionId + delimiter + sectionHeader + delimiter + "GRAPH";
 	}
 
 	public static List<String> marshalSections(List<Section> sections) {
@@ -115,7 +115,7 @@ public class MarshalService {
 	public static String marshalTableSection(TableSection section) {
 		String sectionHeader = section.getSectionHeader();
 		int sectionId = section.getSectionId();
-		return sectionId + delimiter + sectionHeader;
+		return sectionId + delimiter + sectionHeader + delimiter + "TABLE";
 	}
 
 	public static List<String> marshalTextData(TextData textData) {
@@ -134,7 +134,7 @@ public class MarshalService {
 	public static String marshalTextSection(Section section) {
 		String sectionHeader = section.getSectionHeader();
 		int sectionId = section.getSectionId();
-		return sectionId + delimiter + sectionHeader;
+		return sectionId + delimiter + sectionHeader + delimiter + "TEXT";
 	}
 
 	public static GraphData unMarshalGraphData(List<String> graphData) {
