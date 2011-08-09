@@ -7,19 +7,22 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.ec.prod.android.pilot.model.Resolution;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.listeners.dmr.ChangeDayListener;
 import com.tieto.ec.listeners.dmr.DisplayButtonRowListener;
+import com.tieto.ec.logic.ResolutionConverter;
 
 public class DateRow extends RelativeLayout{
 
 	private TextView currentDay;
+	private TextView dmrTitle;
 
 	/**
 	 * Creates a new {@link DateRow} 
 	 * @param dmr {@link DailyMorningReport}
 	 */
-	public DateRow(DailyMorningReport dmr){
+	public DateRow(DailyMorningReport dmr, int resolution){
 		//Super
 		super(dmr);
 		
@@ -34,7 +37,7 @@ public class DateRow extends RelativeLayout{
 		Button previousDay = new Button(dmr);
 		Button nextDay = new Button(dmr);
 		RelativeLayout titleLayout = new RelativeLayout(dmr);
-		TextView dmrTitle = new TextView(dmr);
+		dmrTitle = new TextView(dmr);
 		currentDay = new TextView(dmr);
 		dmrTitle.setId(1);
 		
@@ -54,7 +57,7 @@ public class DateRow extends RelativeLayout{
 		nextDay.setBackgroundResource(android.R.drawable.ic_media_ff);
 		currentDay.setText(date.getDate() + "-" + (date.getMonth()+1) + "-" + (date.getYear()+1900));
 		currentDay.setTextColor(Color.BLACK);
-		dmrTitle.setText("Daily Morning Report");
+		updateTitle(resolution);
 		dmrTitle.setTextColor(Color.BLACK);
 		nextDay.setOnClickListener(new ChangeDayListener(dmr, ChangeDayListener.Action.NEXT_DAY));
 		previousDay.setOnClickListener(new ChangeDayListener(dmr, ChangeDayListener.Action.PREVIOUS_DAY));
@@ -75,5 +78,13 @@ public class DateRow extends RelativeLayout{
 	 */
 	public TextView getCurrentDayLabel(){
 		return currentDay;
+	}
+	
+	public void updateTitle(int resolution){
+		if(resolution == Resolution.DAILY){
+			dmrTitle.setText(ResolutionConverter.convert(resolution) + " Morning Report");
+		}else{
+			dmrTitle.setText(ResolutionConverter.convert(resolution) + " Report");
+		}
 	}
 }

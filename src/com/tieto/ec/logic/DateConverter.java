@@ -1,6 +1,11 @@
 package com.tieto.ec.logic;
 
+import java.util.Calendar;
 import java.util.Date;
+
+import android.util.Log;
+
+import com.ec.prod.android.pilot.model.Resolution;
 
 /**
  * Class for converting {@link Date} to String, and String to Date.
@@ -45,21 +50,33 @@ public class DateConverter {
 	 * @param type
 	 * @return
 	 */
-	public static String parse(Date date, Type type){
+	public static String parse(Date date, Type type, int resolution){
 		
 		switch (type) {
 		case DATE:
-			if((date.getMonth()+1) < 10 && date.getDate() < 10){
-				return (date.getYear()+OFFSET) + "-0" + (date.getMonth()+1) + "-0" + (date.getDate());			
-			}
-			if((date.getMonth()+1) >= 10 && date.getDate() < 10){
-				return (date.getYear()+OFFSET) + "-" + (date.getMonth()+1) + "-0" + (date.getDate());			
-			}
-			if((date.getMonth()+1) < 10 && date.getDate() >= 10){
-				return (date.getYear()+OFFSET) + "-0" + (date.getMonth()+1) + "-" + (date.getDate());			
-			}
-			else{
-				return (date.getYear()+OFFSET) + "-" + (date.getMonth()+1) + "-" + (date.getDate());			
+			if(resolution == Resolution.DAILY){				
+				if((date.getMonth()+1) < 10 && date.getDate() < 10){
+					return (date.getYear()+OFFSET) + "-0" + (date.getMonth()+1) + "-0" + (date.getDate());			
+				}
+				if((date.getMonth()+1) >= 10 && date.getDate() < 10){
+					return (date.getYear()+OFFSET) + "-" + (date.getMonth()+1) + "-0" + (date.getDate());			
+				}
+				if((date.getMonth()+1) < 10 && date.getDate() >= 10){
+					return (date.getYear()+OFFSET) + "-0" + (date.getMonth()+1) + "-" + (date.getDate());			
+				}
+				else{
+					return (date.getYear()+OFFSET) + "-" + (date.getMonth()+1) + "-" + (date.getDate());			
+				}
+			}else if(resolution == Resolution.WEEKLY){
+				Calendar cal = Calendar.getInstance();
+				cal.set(date.getYear(), date.getMonth(), date.getDate());
+				int day = cal.get(Calendar.DAY_OF_YEAR);
+				Log.d("tieto", day+"");
+				return "Week " + (day/7 + 1);
+			}else if(resolution == Resolution.MONTHLY){
+				return getMonthName(date);
+			}else{
+				return date.getYear()+OFFSET + "";
 			}
 		case TIME:
 			if(date.getHours() < 10 && date.getMinutes() < 10){
@@ -76,5 +93,40 @@ public class DateConverter {
 			}
 		}
 		return "";
+	}
+
+	/**
+	 * Returns the name of the month
+	 * @param date The given date
+	 * @return Name of the month
+	 */
+	private static String getMonthName(Date date) {
+		switch (date.getMonth()) {
+		case 0:
+			return "January" + " " + (date.getYear()+OFFSET);
+		case 1:
+			return "February" + " " + (date.getYear()+OFFSET);
+		case 2:
+			return "March" + " " + (date.getYear()+OFFSET);
+		case 3:
+			return "April" + " " + (date.getYear()+OFFSET);
+		case 4:
+			return "May" + " " + (date.getYear()+OFFSET);
+		case 5:
+			return "June" + " " + (date.getYear()+OFFSET);
+		case 6:
+			return "July" + " " + (date.getYear()+OFFSET);
+		case 7:
+			return "August" + " " + (date.getYear()+OFFSET);
+		case 8:
+			return "September" + " " + (date.getYear()+OFFSET);
+		case 9:
+			return "October" + " " + (date.getYear()+OFFSET);
+		case 10:
+			return "November" + " " + (date.getYear()+OFFSET);
+		case 11:
+			return "December" + " " + (date.getYear()+OFFSET);
+		}
+		return "GETTING MONTH NAME FAILED";
 	}
 }
