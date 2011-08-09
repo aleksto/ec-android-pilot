@@ -1,12 +1,21 @@
 package com.tieto.ec.listeners.login;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.List;
+
+import org.kobjects.base64.Base64;
 
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.EditText;
 
+import com.ec.prod.android.pilot.client.AndroidViewServiceMarshalled;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.activities.Login;
 import com.tieto.ec.gui.dialogs.InfoDialog;
@@ -71,13 +80,12 @@ public class LoginListener implements Runnable {
 			login(username, password);
 			e.printStackTrace();
 		}
-		login.setQuit(true);
 		
 		//Starting new intent
 		Intent intent = new Intent(login, DailyMorningReport.class);
 		intent.putExtra("username", username);
 		intent.putExtra("password", password);
-		intent.putExtra("namespace", namespace);
+		intent.putExtra("namespace", getNamespace(url, username, password));
 		intent.putExtra("url", url);
 		login.startActivity(intent);
 	}
@@ -101,11 +109,59 @@ public class LoginListener implements Runnable {
 				login(username.getText().toString(), password.getText().toString());				
 			}else{
 				//Normal login
-				login(username.getText().toString(), password.getText().toString());
+				if(validUsernameAndPassword(username.getText().toString(), password.getText().toString())){
+					login(username.getText().toString(), password.getText().toString());					
+				}else{
+					checkConnectionFaultReason();
+				}
 			}
 		}else{
 			//URL and namespace is not defined
 			InfoDialog.showInfoDialog(login, "if this is the first startup, please go to \nmenu->Options\n and set up url and namespace");
 		}
+	}
+
+	private void checkConnectionFaultReason() {
+		try {
+			URL urlObject = new URL(url);
+			URLConnection connection = urlObject.openConnection();
+			if(connection.getHeaderField(0).contains("404")){
+				login.toastFromOtherThreads("Webservice not found");
+			}else if(connection.getHeaderField(0).contains("401")){
+				login.toastFromOtherThreads("Username and/or password not valid");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private boolean validUsernameAndPassword(String username, String password) {
+		AndroidViewServiceMarshalled webservice = new AndroidViewServiceMarshalled(username, password, getNamespace(url, username, password), url);
+		List<String> sections = webservice.getSections();
+		return sections != null;
+	}
+
+	private String getNamespace(String url, String username, String password) {
+		try {
+			URL urlObj = new URL(url);
+			URLConnection connection = urlObj.openConnection();
+			String userpass = username + ":" + password;
+			String basicAuth = "Basic " + new String(Base64.encode(userpass.getBytes()));
+			connection.setRequestProperty ("Authorization", basicAuth);	
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			
+			String read = "";
+			while((read = in.readLine()) != null && !read.contains("targetNamespace")){
+				Log.d("tieto", "Read line: " + read);
+			}
+			
+			String split = read.split("targetNamespace='")[1];
+			return split.substring(0, split.indexOf("'"));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "GETTING NAMESPACE FAILED";
 	}
 }

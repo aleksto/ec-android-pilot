@@ -3,6 +3,8 @@ package com.ec.prod.android.pilot.client;
 import java.util.Date;
 import java.util.List;
 
+import android.util.Log;
+
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphSection;
 import com.ec.prod.android.pilot.model.Section;
@@ -25,31 +27,35 @@ public class DMRViewServiceUnmarshalled implements ViewService {
 
 	public List<Section> getSections() {
 		List<String> sections = viewService.getSections();
+		Log.d("tieto", "Getting sections #" + sections.size());
 		return MarshalService.unMarshalSections(sections);
 	}
 
 	public TableData getTableData(TableSection section, Date fromdate, Date toDate, int resolution, int type) {	
 		String tableSection = MarshalService.marshalTableSection(section);		
-		List<String> tableData = viewService.getTableData(tableSection, fromdate, toDate, resolution);
+		Log.d("tieto", "Getting table data for: " + section.getSectionHeader());
+		List<String> tableData = viewService.getTableData(tableSection, fromdate, toDate, resolution, type);
 		TableData unMarshalTableData = MarshalService.unMarshalTableData(tableData);
 		return unMarshalTableData;			
 	}
 
 	public GraphData getGraphDataBySection(GraphSection section, Date fromDate, Date toDate, int resolution, int type) {
 		String graphSection = MarshalService.marshalGraphSection(section);		
-		List<String> graphData = viewService.getGraphDataBySection(graphSection, fromDate, toDate, resolution);
+		Log.d("tieto", "Getting graph data for: " + section.getSectionHeader());
+		List<String> graphData = viewService.getGraphDataBySection(graphSection, fromDate, toDate, resolution, type);
 		GraphData unMarshalGraphData = MarshalService.unMarshalGraphData(graphData);
 		return unMarshalGraphData;
 	}
 
 	public GraphData getGraphDataByRow(TableRow row, Date fromDate, Date toDate, int resolution, int type) {
 		String tableRowSection = MarshalService.marshalTableRow(row);		
-		List<String> graphData = viewService.getGraphDataByRow(tableRowSection, fromDate, toDate, resolution);
+		List<String> graphData = viewService.getGraphDataByRow(tableRowSection, fromDate, toDate, resolution, type);
 		return MarshalService.unMarshalGraphData(graphData);
 	}
 
 	public TextData getTextData(TextSection section, Date fromDate, Date toDate, int resolution) {
 		String textSection = MarshalService.marshalTextSection(section);		
+		Log.d("tieto", "Getting text data for: " + section.getSectionHeader());
 		List<String> textData = viewService.getTextData(textSection, fromDate, toDate, resolution);
 		TextData unMarshalTextData = MarshalService.unMarshalTextData(textData);
 		return unMarshalTextData;

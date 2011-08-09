@@ -47,7 +47,7 @@ public class WarningChecker {
 	 */
 	public WarningChecker(ViewService viewService, int resolution){
 		this.viewService = viewService;
-		this.resolution = resolution;
+		this.setResolution(resolution);
 	}
 
 	/**
@@ -310,5 +310,13 @@ public class WarningChecker {
 		}
 
 		return count;
+	}
+
+	/**
+	 * Sets the {@link Resolution} for the {@link WarningChecker}
+	 * @param resolution
+	 */
+	public void setResolution(int resolution) {
+		this.resolution = resolution;
 	}
 }
