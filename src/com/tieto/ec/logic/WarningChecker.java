@@ -90,7 +90,7 @@ public class WarningChecker {
 		}
 
 		//Dialog
-		dialog.setTitle("Warnings");
+		dialog.setTitle("Status");
 		dialog.setContentView(main);
 		table.setStretchAllColumns(true);
 

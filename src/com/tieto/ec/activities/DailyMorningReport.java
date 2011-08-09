@@ -163,7 +163,7 @@ public class DailyMorningReport extends Activity{
 		optionButton.setOnMenuItemClickListener(new DmrOptionsButtonListener(this));
 		optionButton.setIcon(android.R.drawable.ic_menu_manage);
 
-		MenuItem warningsButton = menu.findItem(R.id.dmr_warning);
+		MenuItem warningsButton = menu.findItem(R.id.dmr_status);
 		warningsButton.setOnMenuItemClickListener(new DmrWarningButtonListener(this));
 		warningsButton.setIcon(android.R.drawable.ic_dialog_alert);
 		

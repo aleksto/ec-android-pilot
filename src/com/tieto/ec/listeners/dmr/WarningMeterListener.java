@@ -53,7 +53,7 @@ public class WarningMeterListener implements OnClickListener{
 			
 		//Dialog
 		dialog.setContentView(main);
-		dialog.setTitle("Levels");
+		dialog.setTitle("Levels and Warnings");
 		
 		//ID
 		graph.setId(1);

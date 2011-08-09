@@ -49,20 +49,19 @@ public class DialogActionListener implements OnClickListener, OnCheckedChangeLis
 	 */
 	public void onClick(View v) {
 		if(goBack){
-			dialog.dismiss();			
+			dialog.dismiss();		
 			if(!setDefault){
 				FileManager.writePath(dialog.getContext(), path, optionTitle);
 				Log.d("tieto", "Writing value: " + optionTitle + " to path: " + path);				
 			}
 			else {
 				dialog.setDefaultValues(dialog, path);
-				dialog.dismiss();
 			}
+			dialog.refresh();
 		}
 		else{
 			nextState.show();
 		}	
-	
 	}
 
 	/**
