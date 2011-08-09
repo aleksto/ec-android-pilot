@@ -22,6 +22,7 @@ public class SectionSaver implements ViewService{
 
 	public enum Location{ACTUAL, TARGET};
 	
+
 	private final DailyMorningReport dmr;
 	private HashMap<Section, Object> dataActual;
 	private HashMap<Section, Object> dataTarget;

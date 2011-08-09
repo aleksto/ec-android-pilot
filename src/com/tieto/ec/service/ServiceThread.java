@@ -34,15 +34,14 @@ public class ServiceThread implements Runnable{
 		//Init
 		String updateTime = "";
 		valueChecker = new ValueChecker(context, username, password, url, namespace);
-//		try {
-//			updateTime = FileManager.readPath(context, OptionTitle.DMRReport + "." + OptionTitle.ReportOptions + "." + OptionTitle.UpdateInterval);
-//			updateInterval = UpdateTimeConverter.parse(updateTime);
-//		} catch (IOException e) {
-//			FileManager.writePath(context, OptionTitle.DMRReport + "." + OptionTitle.ReportOptions + "." + OptionTitle.UpdateInterval, TimeType.off+"");
-//			updateInterval = -1;
-//			e.printStackTrace();
-//		}
-		updateInterval = 20000;
+		try {
+			updateTime = FileManager.readPath(context, OptionTitle.DMRReport + "." + OptionTitle.NotificationOptions);
+			updateInterval = UpdateTimeConverter.parse(updateTime);
+		} catch (IOException e) {
+			FileManager.writePath(context, OptionTitle.DMRReport + "." + OptionTitle.NotificationOptions, TimeType.off+"");
+			updateInterval = -1;
+			e.printStackTrace();
+		}
 
 		Log.d("tieto", "Service Started with update interval:" + updateTime);
 

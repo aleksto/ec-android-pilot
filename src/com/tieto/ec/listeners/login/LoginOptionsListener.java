@@ -6,9 +6,8 @@ import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 
-import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.gui.dialogs.OptionDialog;
-import com.tieto.ec.gui.dialogs.OptionRow.OptionRowType;
+import com.tieto.ec.logic.OptionBuilder;
 
 public class LoginOptionsListener implements OnMenuItemClickListener {
 
@@ -22,9 +21,7 @@ public class LoginOptionsListener implements OnMenuItemClickListener {
 	 * @param context {@link Context} used for Android framework actions
 	 */
 	public LoginOptionsListener(Context context){
-		dialog = new OptionDialog(context, OptionTitle.InputOptions);
-		dialog.addOptionRow(OptionTitle.WebserviceURL, OptionRowType.EDIT_BUTTON);
-		dialog.addOptionRow(OptionTitle.WebserviceNamespace, OptionRowType.EDIT_BUTTON);
+		dialog = OptionBuilder.buildLoginOption(context);
 	}
 
 	/**

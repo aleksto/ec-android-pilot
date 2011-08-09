@@ -13,7 +13,6 @@ import android.graphics.SweepGradient;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 
-import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.model.SectionWarning;
 import com.tieto.ec.model.Warning;
 import com.tieto.ec.model.Warning.Type;

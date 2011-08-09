@@ -52,7 +52,9 @@ public class ServiceNotification {
 		
 		//Display
 		notification.setLatestEventInfo(applicationContext, contentTitle, message, contentIntent);
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notificationManager.notify(NOTIFICATION_ID, notification);
+		
 	}
 
 }
