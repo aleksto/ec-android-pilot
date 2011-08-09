@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.ec.prod.android.pilot.model.Resolution;
 import com.ec.prod.android.pilot.service.ViewServiceMarshalled;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.logic.DateConverter;
@@ -41,8 +42,8 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 	 */
 	public List<String> getTableData(String section, Date fromdate, Date toDate, int resolution, int type) {
 		Object response = executeWebservice("getTableData",  "section", section,
-														 	 "fromdate", DateConverter.parse(fromdate, DateConverter.Type.DATE),
-															 "todate", DateConverter.parse(toDate, DateConverter.Type.DATE),
+														 	 "fromdate", DateConverter.parse(fromdate, DateConverter.Type.DATE, Resolution.DAILY),
+															 "todate", DateConverter.parse(toDate, DateConverter.Type.DATE, Resolution.DAILY),
 															 "resolution", Integer.toString(resolution),
 															 "type", Integer.toString(type));
 				return generateResponseList(response);
@@ -55,8 +56,8 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 	 */
 	public List<String> getGraphDataBySection(String section, Date fromDate, Date toDate, int resolution, int type) {
 		Object response = executeWebservice("getGraphDataBySection",  "section", section,
-																 	  "fromdate", DateConverter.parse(fromDate, DateConverter.Type.DATE),
-																	  "todate", DateConverter.parse(toDate, DateConverter.Type.DATE),
+																 	  "fromdate", DateConverter.parse(fromDate, DateConverter.Type.DATE, Resolution.DAILY),
+																	  "todate", DateConverter.parse(toDate, DateConverter.Type.DATE, Resolution.DAILY),
 																	  "resolution", Integer.toString(resolution),
 																	  "type", Integer.toString(type));
 		return generateResponseList(response);
@@ -64,8 +65,8 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 
 	public List<String> getTextData(String section, Date fromDate, Date toDate, int resolution) {
 		Object response = executeWebservice("getTextData",  "section", section,
-															"fromdate", DateConverter.parse(fromDate, DateConverter.Type.DATE),
-															"todate", DateConverter.parse(toDate, DateConverter.Type.DATE),
+															"fromdate", DateConverter.parse(fromDate, DateConverter.Type.DATE, Resolution.DAILY),
+															"todate", DateConverter.parse(toDate, DateConverter.Type.DATE, Resolution.DAILY),
 															"resolution", Integer.toString(resolution));
 		return generateResponseList(response);
 	}

@@ -31,10 +31,9 @@ import com.tieto.ec.gui.dmr.DateRow;
 import com.tieto.ec.listeners.dmr.DmrOptionsButtonListener;
 import com.tieto.ec.listeners.dmr.DmrWarningButtonListener;
 import com.tieto.ec.listeners.dmr.SendWarningsByMailListener;
-import com.tieto.ec.logic.DateConverter;
-import com.tieto.ec.logic.DateConverter.Type;
 import com.tieto.ec.logic.DateIntervalCalculator;
 import com.tieto.ec.logic.FileManager;
+import com.tieto.ec.logic.ResolutionConverter;
 import com.tieto.ec.logic.SectionBuilder;
 import com.tieto.ec.logic.SectionSaver;
 import com.tieto.ec.logic.WarningChecker;
@@ -115,7 +114,7 @@ public class DailyMorningReport extends Activity{
 		table = new TableLayout(this);
 		sectionBuilder = new SectionBuilder(this);
 		saveManager = new SectionSaver(this);
-		dateRow = new DateRow(this);
+		dateRow = new DateRow(this, resolution);
 		warningChecker = new WarningChecker(saveManager, resolution);
 		scroll = new ScrollView(this);
 		main = new TableLayout(this);
@@ -195,6 +194,7 @@ public class DailyMorningReport extends Activity{
 	 * @param date
 	 */
 	public void setToDate(Date date){
+		Log.d("tieto", "Setting toDate: " + date + "\tResolution: " + ResolutionConverter.convert(resolution));
 		this.toDate = date;
 		this.fromDate = DateIntervalCalculator.calcFromDate(toDate, resolution);
 		refresh(true);
@@ -237,6 +237,7 @@ public class DailyMorningReport extends Activity{
 	 * @param fromDate
 	 */
 	public void setFromDate(Date fromDate) {
+		Log.d("tieto", "Setting fromDate: " + fromDate);
 		this.fromDate = fromDate;
 	}
 	
@@ -262,7 +263,7 @@ public class DailyMorningReport extends Activity{
 		//Log
 		sectionBuilder.updateColors();
 		sectionBuilder.listSections(newWebserviceValues);
-		dateRow.getCurrentDayLabel().setText(DateConverter.parse(toDate, Type.DATE, resolution));
+//		dateRow.getCurrentDayLabel().setText(DateConverter.parse(toDate, Type.DATE, resolution));
 	}
 
 	/**
@@ -404,6 +405,7 @@ public class DailyMorningReport extends Activity{
 		this.resolution = resolution;
 		refreshWarningDialog();
 		refresh(true);
+		dateRow.updateTitle(resolution);
 	}
 	
 	/**

@@ -71,7 +71,7 @@ public class DateIntervalCalculator {
 	public static Date calcToDate(Date toDate, int resolution, boolean backward){
 		switch (resolution) {
 		case Resolution.DAILY:
-			return toDate;
+			return calcToDateDaily(toDate, backward);
 		case Resolution.WEEKLY:
 			return calcToDateWeekly(toDate, backward);
 		case Resolution.MONTHLY:
@@ -80,6 +80,24 @@ public class DateIntervalCalculator {
 			return calcToDateYearly(toDate, backward);
 		}
 		return toDate;
+	}
+
+	/**
+	 * Returns the previous/next day
+	 * @param toDate given toDate
+	 * @param backward previous or next
+	 * @return A new {@link Date}
+	 */
+	private static Date calcToDateDaily(Date toDate, boolean backward) {
+		if(backward){
+			Date date = new Date(toDate.getYear(), toDate.getMonth(), toDate.getDate());
+			date.setDate(date.getDate()-1);
+			return date;
+		}else{
+			Date date = new Date(toDate.getYear(), toDate.getMonth(), toDate.getDate());
+			date.setDate(date.getDate()+1);
+			return date;
+		}
 	}
 
 	/**
@@ -100,8 +118,11 @@ public class DateIntervalCalculator {
 			return newDate;
 		}else{
 			Date newDate = new Date(toDate.getYear(), toDate.getMonth(), toDate.getDate());
+			if(newDate.getDay() == 0){
+				newDate.setDate(newDate.getDate()+1);
+			}
 			while(newDate.getDay() != 0){
-				newDate.setDate(newDate.getDay()+1);
+				newDate.setDate(newDate.getDate()+1);
 			}
 			return newDate;
 		}

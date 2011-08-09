@@ -61,7 +61,7 @@ public class SectionBuilder {
 	public void listSections(boolean newWebserviceValues){
 		dmr.getTable().removeAllViews();
 		date = dmr.getToDate();
-		dmr.getCurrentdayLabel().setText(DateConverter.parse(date, Type.DATE));
+		dmr.getCurrentdayLabel().setText(DateConverter.parse(date, Type.DATE, dmr.getResolution()));
 
 		int resolution = dmr.getResolution();
 		Log.d("tieto", "Listing sections with resolution " + ResolutionConverter.convert(resolution));
@@ -295,7 +295,7 @@ public class SectionBuilder {
 		List<TextElement> textElements = textData.getTextElements();
 		for (TextElement text : textElements) {
 			TextView view = new TextView(dmr);
-			view.setText(DateConverter.parse(text.getDaytime(), DateConverter.Type.TIME) + "\n" + text.getText() + "\n");
+			view.setText(DateConverter.parse(text.getDaytime(), DateConverter.Type.TIME, Resolution.DAILY) + "\n" + text.getText() + "\n");
 			view.setTextColor(dmr.getTextColor());
 			view.setTypeface(Typeface.create("arial", Typeface.NORMAL));
 			table.addView(view);

@@ -5,6 +5,7 @@ import java.util.Date;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.widget.DatePicker;
 
+import com.ec.prod.android.pilot.model.Resolution;
 import com.tieto.ec.gui.dialogs.OptionDialog;
 import com.tieto.ec.logic.DateConverter;
 import com.tieto.ec.logic.DateConverter.Type;
@@ -22,6 +23,6 @@ public class DatePickerListener implements OnDateSetListener {
 	}
 
 	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-		FileManager.writePath(optionDialog.getContext(), path, DateConverter.parse(new Date(year, monthOfYear, dayOfMonth), Type.DATE));
+		FileManager.writePath(optionDialog.getContext(), path, DateConverter.parse(new Date(year, monthOfYear, dayOfMonth), Type.DATE, Resolution.DAILY));
 	}
 }

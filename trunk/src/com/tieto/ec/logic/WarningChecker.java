@@ -65,21 +65,21 @@ public class WarningChecker {
 		LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, 200, 1f);
 		for (int i = 0; i<sectionWarnings.size(); i+=2) {
 			//Init
-			 LinearLayout row1 = new LinearLayout(activity);
-			 LinearLayout row2 = new LinearLayout(activity);
-			
+			LinearLayout row1 = new LinearLayout(activity);
+			LinearLayout row2 = new LinearLayout(activity);
+
 			for (int j = 0; j < 2 && i+j < sectionWarnings.size(); j++) {
 				TextView title = new TextView(activity);
-				
+
 				//Text
 				title.setPadding(0, 20, 0, 10);
 				title.setTextSize(20);
 				title.setText(sectionWarnings.get(i+j).getSectionTitle() + ": " + (getNumberOfWarnings(sectionWarnings.get(i+j).getWarnings()) + getNumberOfCriticals(sectionWarnings.get(i+j).getWarnings())));
-				
+
 				//WarningBar
 				WarningMeter bar = new WarningMeter(activity, sectionWarnings.get(i+j));
 				bar.setOnClickListener(new WarningMeterListener(activity, sectionWarnings.get(i+j)));
-				
+
 				//Childs
 				row1.addView(title, params1);
 				row2.addView(bar, params2);
@@ -88,7 +88,7 @@ public class WarningChecker {
 			table.addView(row1);
 			table.addView(row2);
 		}
-		
+
 		//Dialog
 		dialog.setTitle("Warnings");
 		dialog.setContentView(main);
@@ -96,10 +96,10 @@ public class WarningChecker {
 
 		//Standard linearLayout params
 		LinearLayout.LayoutParams standardParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-		
+
 		//Content
 		RelativeLayout content = new RelativeLayout(activity);
-		
+
 		//Scroll
 		LinearLayout scrollLayout = new LinearLayout(activity);
 		RelativeLayout.LayoutParams scrollLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
@@ -128,7 +128,7 @@ public class WarningChecker {
 		//Table
 		LinearLayout tableLayout = new LinearLayout(activity);
 		RelativeLayout.LayoutParams tableLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);		
-		
+
 		//Childs
 		dialog.setContentView(main, standardParams);
 		main.addView(content, standardParams);
@@ -138,7 +138,7 @@ public class WarningChecker {
 		scroll.addView(tableLayout, tableLayoutParams);
 		tableLayout.addView(table, standardParams);
 		okLayout.addView(okButton, okParams);
-		
+
 
 		return dialog;
 	}
@@ -200,29 +200,21 @@ public class WarningChecker {
 			int idx = pointsActual.indexOf(pointActual);
 			GraphPoint pointTarget = pointsTarget.get(idx);
 
-			
+
 			for (String attribute : attributes) {
 				actualValue = Double.valueOf(pointActual.getValue(attribute));
 				targetValue = Double.valueOf(pointTarget.getValue(attribute));
 				differential = actualValue/targetValue; 
 
 				if(differential > 0.95){
-//					warnings.add(new Warning(Type.OK, actualValue, targetValue, pointActual.getPointComment(attribute)));
+					//					warnings.add(new Warning(Type.OK, actualValue, targetValue, pointActual.getPointComment(attribute)));
 				}else if(differential < 0.95 && differential >= 0.9){
 					String time = "Could not find date";
-					if(resolution == Resolution.DAILY){
-						time = DateConverter.parse(pointActual.getDaytime(), com.tieto.ec.logic.DateConverter.Type.TIME);
-					}else{
-						time = DateConverter.parse(pointActual.getDaytime(), com.tieto.ec.logic.DateConverter.Type.DATE);
-					}
+					time = DateConverter.parse(pointActual.getDaytime(), DateConverter.Type.TIME, resolution);
 					warnings.add(new GraphWarning(Type.WARNING, attribute, time, actualValue, targetValue, pointActual.getPointComment(attribute)));
 				}else if(differential < 0.9){
 					String time = "Could not find date";
-					if(resolution == Resolution.DAILY){
-						time = DateConverter.parse(pointActual.getDaytime(), com.tieto.ec.logic.DateConverter.Type.TIME);
-					}else{
-						time = DateConverter.parse(pointActual.getDaytime(), com.tieto.ec.logic.DateConverter.Type.DATE);
-					}
+					time = DateConverter.parse(pointActual.getDaytime(), DateConverter.Type.TIME, resolution);
 					warnings.add(new GraphWarning(Type.CRITICAL, attribute, time, actualValue, targetValue, pointActual.getPointComment(attribute)));
 				}
 			}
@@ -262,7 +254,7 @@ public class WarningChecker {
 					differential = actualValue/targetValue;
 
 					if(differential > 0.95){
-//						warnings.add(new Warning(Type.OK, actualValue, targetValue, actual.getComment()));
+						//						warnings.add(new Warning(Type.OK, actualValue, targetValue, actual.getComment()));
 					}else if(differential < 0.95 && differential >= 0.9){
 						warnings.add(new CellWarning(Type.WARNING, targetData.getTableColumns().get(idx2).getHeader(), actuals.get(0).getValue(), actualValue, targetValue, actual.getComment()));
 					}else if(differential < 0.9){
@@ -277,7 +269,7 @@ public class WarningChecker {
 
 		return warnings;
 	}
-	
+
 	/**
 	 * Calculates the number of warnings for a section
 	 * @param section {@link SectionWarnings} 
