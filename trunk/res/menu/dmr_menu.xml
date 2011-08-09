@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
   xmlns:android="http://schemas.android.com/apk/res/android"><item android:title="Options" android:id="@+id/dmr_options"></item>
-    <item android:title="Show Warnings" android:id="@+id/dmr_warning"></item>
+    <item android:title="Show Status" android:id="@+id/dmr_status"></item>
     <item android:title="Send Warnings" android:id="@+id/dmr_send_warnings"></item>
     
     
