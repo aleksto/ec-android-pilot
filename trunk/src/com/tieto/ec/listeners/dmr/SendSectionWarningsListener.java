@@ -22,6 +22,12 @@ public class SendSectionWarningsListener implements OnClickListener {
 	private StringBuilder body = new StringBuilder();
 
 
+	/**
+	 * This class makes a new intent where the user is able to send the section warnings as a mail. 
+	 * @param chooseSectionsToSendDialog
+	 * @param dailyMorningReport
+	 * @param showSection
+	 */
 	public SendSectionWarningsListener(ChooseSectionsToSendDialog chooseSectionsToSendDialog, DailyMorningReport dailyMorningReport, HashMap<String, SectionBoxState> showSection){
 		this.chooseSectionsToSendDialog = chooseSectionsToSendDialog;
 		this.dailyMorningReport = dailyMorningReport;
@@ -29,6 +35,10 @@ public class SendSectionWarningsListener implements OnClickListener {
 		
 	}
 	
+	/**
+	 * When the user presses the "Ok" button in the {@link ChooseSectionsToSendDialog} this method will check which check boxes are selected in the options,
+	 * and further on include these sections in the email intent. 
+	 */
 	public void onClick(View v) {
 		boolean show = false;
 		body.append("MESSAGE:");

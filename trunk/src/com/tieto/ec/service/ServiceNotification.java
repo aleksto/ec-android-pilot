@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.tieto.ec.activities.Login;
 
@@ -55,6 +56,7 @@ public class ServiceNotification {
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notificationManager.notify(NOTIFICATION_ID, notification);
 		
+		Log.d("tieto", "VALUE CHECKER RUN");
 	}
 
 }

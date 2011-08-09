@@ -117,7 +117,7 @@ public class OptionBuilder {
 	
 	private static void createServiceOptions(OptionDialog service) {
 		service.addOptionRow(TimeType.off, OptionRowType.CHOOSE_BUTTON);
-		service.addOptionRow(TimeType.sec5, OptionRowType.CHOOSE_BUTTON);
+		service.addOptionRow(TimeType.sec20, OptionRowType.CHOOSE_BUTTON);
 		service.addOptionRow(TimeType.min15, OptionRowType.CHOOSE_BUTTON);
 		service.addOptionRow(TimeType.min30, OptionRowType.CHOOSE_BUTTON);
 		service.addOptionRow(TimeType.min45, OptionRowType.CHOOSE_BUTTON);

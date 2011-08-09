@@ -9,10 +9,10 @@ public enum TimeType {
 		}
 	},
 	//Test
-	sec5{
+	sec20{
 		@Override
 		public String toString(){
-			return "Seconds 15";
+			return "Seconds 20";
 		}
 	},
 	min15{

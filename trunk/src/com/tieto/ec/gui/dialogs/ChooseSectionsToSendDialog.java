@@ -34,6 +34,11 @@ public class ChooseSectionsToSendDialog extends Dialog {
 	private String title = "Send Warnings";
 	private HashMap<String, SectionBoxState> showSection;
 
+	/**
+	 * Option for choosing which sections there should be sent a warning on. It creates this menu using the method addOptionRow
+	 * and sets up listeners.
+	 * @param dailyMorningReport
+	 */
 	public ChooseSectionsToSendDialog(final DailyMorningReport dailyMorningReport) {
 		super(dailyMorningReport);
 	
@@ -114,6 +119,11 @@ public class ChooseSectionsToSendDialog extends Dialog {
 		}	
 	}
 
+	/**
+	 * Adding rows for the option made by this class. It sets up check boxes for which sections should be included.
+	 * @param sectionTitle
+	 * @return
+	 */
 	private RelativeLayout addOptionRow(final String sectionTitle) {	
 		RelativeLayout main = new RelativeLayout(dailyMorningReport);
 		

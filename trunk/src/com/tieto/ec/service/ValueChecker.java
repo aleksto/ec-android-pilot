@@ -70,7 +70,9 @@ public class ValueChecker extends TimerTask{
 	 */
 	@Override
 	public void run() {
-		//Log
+
+		
+		 //Log
 		serviceNotification = new ServiceNotification(context);
 		StringBuilder text = new StringBuilder();
 		text.append(notifications.size() + "/" + viewService.getSections().size() + " warnings. ");
