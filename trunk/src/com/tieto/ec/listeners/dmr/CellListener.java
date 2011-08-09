@@ -22,7 +22,6 @@ public class CellListener implements OnClickListener{
 	 * Runs when the user clicks the {@link Cell}, and it displays a {@link InfoDialog} with some information
 	 */
 	public void onClick(View v) {
-		InfoDialog.showInfoDialog(cell.getContext(), cell.getActual().getComment() + "\n\nTarget: " +
-				cell.getTarget().getValue());
+		InfoDialog.showInfoDialog(cell.getContext(), cell.getActual().getComment() + "\n\nTarget: " + cell.getTarget().getValue());
 	}
 }

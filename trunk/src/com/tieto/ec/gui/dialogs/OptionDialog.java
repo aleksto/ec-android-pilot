@@ -9,7 +9,6 @@ import android.R;
 import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -19,6 +18,7 @@ import android.widget.TableLayout;
 
 import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.gui.dialogs.OptionRow.OptionRowType;
+import com.tieto.ec.listeners.dialogs.ExitOptionTree;
 import com.tieto.ec.logic.FileManager;
 
 public class OptionDialog extends Dialog {
@@ -95,21 +95,8 @@ public class OptionDialog extends Dialog {
 		LinearLayout.LayoutParams exitParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, BUTTON_HEIGHT);
 		final int BUTTON_MARGIN = 5;
 		exitParams.setMargins(BUTTON_MARGIN, BUTTON_MARGIN, BUTTON_MARGIN, BUTTON_MARGIN);
-		exit.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				dismissParent(OptionDialog.this);
-			}
+		exit.setOnClickListener(new ExitOptionTree(this));
 
-			private void dismissParent(OptionDialog dialog) {
-				if(dialog.hasParent()){
-					dismissParent(dialog.getParent()) ;
-				}
-				dialog.dismiss();
-			}
-		});
-		
-
-		
 		
 		//Table
 		LinearLayout tableLayout = new LinearLayout(context);

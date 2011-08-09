@@ -4,7 +4,7 @@ import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 
 import com.tieto.ec.activities.DailyMorningReport;
-import com.tieto.ec.gui.dialogs.ChooseSectionsDialog;
+import com.tieto.ec.gui.dialogs.ChooseSectionsToSendDialog;
 
 public class SendWarningsByMailListener implements OnMenuItemClickListener {
 
@@ -16,7 +16,7 @@ public class SendWarningsByMailListener implements OnMenuItemClickListener {
 
 	public boolean onMenuItemClick(MenuItem arg0) {
 		
-		ChooseSectionsDialog chooseSectionsDialog = new ChooseSectionsDialog(dailyMorningReport);
+		ChooseSectionsToSendDialog chooseSectionsDialog = new ChooseSectionsToSendDialog(dailyMorningReport);
 		chooseSectionsDialog.show();
 	
 		

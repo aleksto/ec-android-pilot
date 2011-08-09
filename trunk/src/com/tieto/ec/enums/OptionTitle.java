@@ -15,10 +15,10 @@ public enum OptionTitle {
 	        return "Color Options";
 	    }
 	}, 
-	ReportOptions{
+	NotificationOptions{
 	    @Override
 		public String toString() {
-	        return "Report Options";
+	        return "Notification Options";
 	    }
 	},
 	TextColor{
@@ -64,12 +64,6 @@ public enum OptionTitle {
 	    }
 	},
 	Interval,
-	UpdateInterval{
-		@Override
-		public String toString(){
-			return "Update Interval";
-		}
-	},
 	Dates,
 	ToDate{
 		@Override

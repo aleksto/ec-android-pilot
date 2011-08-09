@@ -5,7 +5,14 @@ public enum TimeType {
 	off{
 		@Override
 		public String toString(){
-			return "Off";
+			return "#Off";
+		}
+	},
+	//Test
+	sec5{
+		@Override
+		public String toString(){
+			return "Seconds 15";
 		}
 	},
 	min15{

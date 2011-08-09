@@ -13,6 +13,6 @@ public class HideDialogListener implements OnClickListener{
 	}
 	
 	public void onClick(View v) {
-		dialog.hide();
+		dialog.dismiss();
 	}
 }

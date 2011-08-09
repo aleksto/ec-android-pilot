@@ -137,8 +137,10 @@ public class DailyMorningReport extends Activity{
 		main.addView(scroll);
 		main.setBackgroundColor(backgroundColor);
 		
-		//Service
-		restartService();
+		//Exit service
+		if(serviceIntent != null){
+			stopService(serviceIntent);
+		}
 	}
 
 	/**
@@ -175,6 +177,8 @@ public class DailyMorningReport extends Activity{
 		if(main.getChildAt(1) == buttonRow){
 			toogleSubButtonRow();
 		}else{
+			//Service
+			restartService();
 			super.onBackPressed();					
 		}
 	}
@@ -190,17 +194,6 @@ public class DailyMorningReport extends Activity{
 		
 		//WarningChecker
 		refreshWarningDialog();
-		
-		//Checking if the user want to automatically display warning dialog
-		try {
-			if(Boolean.valueOf(FileManager.readPath(this, OptionTitle.DMRReport + "." + OptionTitle.DisplayWarnings))){
-				warningDialog.show();			
-			}
-		} catch (IOException e) {
-			FileManager.writePath(this, OptionTitle.DMRReport + "." + OptionTitle.DisplayWarnings, "true");
-			setToDate(date);
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -210,6 +203,17 @@ public class DailyMorningReport extends Activity{
 		warnings = warningChecker.checkForWarnings(fromDate, toDate);
 		if(warnings.size() > 0){
 			warningDialog = warningChecker.createWarningDialog(this, warnings);
+		}
+		
+		//Checking if the user want to automatically display warning dialog
+		try {
+			if(Boolean.valueOf(FileManager.readPath(this, OptionTitle.DMRReport + "." + OptionTitle.DisplayWarnings))){
+				warningDialog.show();			
+			}
+		} catch (IOException e) {
+			FileManager.writePath(this, OptionTitle.DMRReport + "." + OptionTitle.DisplayWarnings, "true");
+			setToDate(toDate);
+			e.printStackTrace();
 		}
 	}
 

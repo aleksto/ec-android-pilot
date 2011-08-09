@@ -50,8 +50,8 @@ public class UpdateTimeConverter {
 		else if(time.equalsIgnoreCase(TimeType.min45.toString())){
 			return 	45*60*1000;
 		}
-		else if(time.equalsIgnoreCase("Debug: 20 sec")){
-			return 20*1000;
+		else if(time.equalsIgnoreCase(TimeType.sec5.toString())){
+			return 5*1000;
 		}
 		else{
 			return -1;
