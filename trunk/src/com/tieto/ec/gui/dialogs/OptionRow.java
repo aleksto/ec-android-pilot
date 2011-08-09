@@ -121,13 +121,25 @@ public class OptionRow extends RelativeLayout{
 			setDefault = false;
 			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
 			break;
-		case CHOOSE_BUTTON:
+		case CHOOSE_BUTTON:		
+			Log.d("tieto", "OPTIONSTITLE: " + optionsTitle);
+			try {
+				Log.d("tieto", "READPATH: " + FileManager.readPath(optionDialog.getContext(), optionDialog.getPath()));
+				if(FileManager.readPath(optionDialog.getContext(), optionDialog.getPath()).equalsIgnoreCase(optionsTitle)){
+					optionsTextView.setTextColor(Color.RED);
+				}
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
 			//Listener
 			goBack = true;
 			setDefault = false;
 			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
 			break;
 		case CHECK_BOX:
+		
+			
 			//Init
 			CheckBox checkBox = new CheckBox(optionDialog.getContext());
 			

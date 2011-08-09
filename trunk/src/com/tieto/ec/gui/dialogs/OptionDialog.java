@@ -55,6 +55,7 @@ public class OptionDialog extends Dialog {
 		//Init
 		this.title = title;
 		setTitle(title.toString());
+		
 		path = title.toString();
 		childs = new ArrayList<OptionDialog>();
 		optionRowTypes = new TreeMap<String, OptionRowType>();
@@ -90,6 +91,7 @@ public class OptionDialog extends Dialog {
 		Button exit = new Button(context);
 		exit.setText("Exit");
 		exit.setBackgroundResource(android.R.drawable.btn_default);
+		
 		final int BUTTON_HEIGHT = 70;
 		LinearLayout.LayoutParams exitParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, BUTTON_HEIGHT);
 		final int BUTTON_MARGIN = 5;
