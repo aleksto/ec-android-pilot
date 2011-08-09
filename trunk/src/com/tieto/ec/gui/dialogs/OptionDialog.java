@@ -8,7 +8,6 @@ import java.util.TreeMap;
 import android.R;
 import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -257,13 +256,11 @@ public class OptionDialog extends Dialog {
 		
 		for (String optionsTitle : optionTexts) {
 			OptionRow optionRow = new OptionRow(dialog, optionsTitle, dialog.optionRowTypes.get(optionsTitle));
-			Log.d("tieto", "ADDING OPTION ROW: " + optionRow.getTitle());
 			dialog.optionRows.add(optionRow);
 			dialog.table.addView(optionRow);
 		
 			
 			if(dialog.optionRowTypes.get(optionsTitle) == OptionRowType.NONE){
-				Log.d("tieto", "Building dialog " + optionsTitle);
 				buildOptionDialogRows(dialog.getChild(optionsTitle));
 			}
 		}
@@ -277,12 +274,9 @@ public class OptionDialog extends Dialog {
 	 * @param path
 	 */
 	public void setDefaultValues(OptionDialog dialog, String path) {
-		Log.d("tieto", "SIZE: " + dialog.getOptionRows().size());
 		for (OptionRow optionRow : dialog.getOptionRows()) {
-			Log.d("tieto", "TITLE: " + optionRow.getTitle() + " TYPE: " + optionRow.getOptionRowType());
 			
 			if(optionRow.getOptionRowType() == OptionRowType.CHOOSE_BUTTON){
-				Log.d("tieto", "DELETING: " + path);
 				FileManager.deletePath(getContext(), path);
 			}
 			else if(optionRow.getOptionRowType() == OptionRowType.CHECK_BOX){
@@ -295,7 +289,6 @@ public class OptionDialog extends Dialog {
 				FileManager.deletePath(getContext(), path + "." + optionRow.getTitle());
 			}
 			else if(optionRow.getOptionRowType() == OptionRowType.NONE){
-				Log.d("tieto", "CHILD: " + dialog.getChild(optionRow.getTitle()).getTitle());
 				setDefaultValues(dialog.getChild(optionRow.getTitle()), path + "." + optionRow.getTitle());
 			}
 		}

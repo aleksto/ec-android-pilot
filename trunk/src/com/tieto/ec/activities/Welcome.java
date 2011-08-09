@@ -3,6 +3,8 @@ package com.tieto.ec.activities;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -22,6 +24,10 @@ public class Welcome extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		//Super
 		super.onCreate(savedInstanceState);
+		
+		//Cancel notifications if any 
+		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.cancelAll();
 		
 		//Init
 		try {

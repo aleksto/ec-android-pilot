@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.TimerTask;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.ec.prod.android.pilot.client.DMRViewServiceUnmarshalled;
 import com.ec.prod.android.pilot.model.Resolution;
 import com.ec.prod.android.pilot.service.ExampleViewService;
+import com.ec.prod.android.pilot.service.ViewService;
 import com.tieto.ec.logic.WarningChecker;
 import com.tieto.ec.model.SectionWarning;
 import com.tieto.ec.model.Warning;
@@ -19,7 +22,7 @@ public class ValueChecker extends TimerTask{
 	private ServiceNotification serviceNotification;
 	private ArrayList<String> notifications;
 	private Context context;
-	private ExampleViewService viewService;
+	private ViewService viewService;
 	private int criticallyLow;
 
 	/**
@@ -34,7 +37,11 @@ public class ValueChecker extends TimerTask{
 //		new DMRViewServiceUnmarshalled(username, password, namespace, url);
 		
 		this.context = context;
-		viewService = new ExampleViewService();
+		if(url.equalsIgnoreCase("debug")){
+			viewService = new ExampleViewService();			
+		}else{
+			viewService = new DMRViewServiceUnmarshalled(username, password, namespace, url);
+		}
 		WarningChecker warningChecker = new WarningChecker(viewService, Resolution.DAILY);
 		List<SectionWarning> sectionWarnings = warningChecker.checkForWarnings(new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()));
 		
@@ -79,7 +86,7 @@ public class ValueChecker extends TimerTask{
 		text.append(criticallyLow + "/" + viewService.getSections().size() + " critical values.");
 		serviceNotification.dislplayNotification(text.toString());	
 
-		
+		Log.d("tieto", "Value checker running, " + text.toString());
 	}
 	
 

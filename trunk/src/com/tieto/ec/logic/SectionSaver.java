@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import android.util.Log;
-
 import com.ec.prod.android.pilot.model.DataType;
 import com.ec.prod.android.pilot.model.GraphData;
 import com.ec.prod.android.pilot.model.GraphSection;
@@ -63,7 +61,6 @@ public class SectionSaver implements ViewService{
 	public Object load(Section section, Location location){
 		switch (location) {
 		case ACTUAL:
-			Log.d("tieto", "DATA: " + dataActual.get(section));
 			return dataActual.get(section);
 		case TARGET:
 			return dataTarget.get(section);

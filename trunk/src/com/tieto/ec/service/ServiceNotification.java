@@ -37,7 +37,7 @@ public class ServiceNotification {
 
 		//Manager
 		notificationManager = (NotificationManager) context.getSystemService(notificationService);
-		
+
 		//Intent
 		Intent notificationIntent = new Intent(context, Login.class);
 		contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);

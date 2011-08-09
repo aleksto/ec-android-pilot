@@ -4,8 +4,6 @@ import java.text.FieldPosition;
 import java.text.Format;
 import java.text.ParsePosition;
 
-import com.tieto.ec.gui.graphs.BarGraph;
-
 public class IndexFormat extends Format {
 
 	private static final long serialVersionUID = 1L;
