@@ -262,7 +262,7 @@ public class DailyMorningReport extends Activity{
 		//Log
 		sectionBuilder.updateColors();
 		sectionBuilder.listSections(newWebserviceValues);
-		dateRow.getCurrentDayLabel().setText(DateConverter.parse(toDate, Type.DATE));
+		dateRow.getCurrentDayLabel().setText(DateConverter.parse(toDate, Type.DATE, resolution));
 	}
 
 	/**
