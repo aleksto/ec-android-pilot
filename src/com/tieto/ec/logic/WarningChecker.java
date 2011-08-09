@@ -32,7 +32,7 @@ import com.tieto.ec.listeners.dialogs.HideDialogListener;
 import com.tieto.ec.listeners.dmr.WarningMeterListener;
 import com.tieto.ec.model.GraphWarning;
 import com.tieto.ec.model.SectionWarning;
-import com.tieto.ec.model.TableWarning;
+import com.tieto.ec.model.CellWarning;
 import com.tieto.ec.model.Warning;
 import com.tieto.ec.model.Warning.Type;
 
@@ -264,9 +264,9 @@ public class WarningChecker {
 					if(differential > 0.95){
 //						warnings.add(new Warning(Type.OK, actualValue, targetValue, actual.getComment()));
 					}else if(differential < 0.95 && differential >= 0.9){
-						warnings.add(new TableWarning(Type.WARNING, targetData.getTableColumns().get(idx2).getHeader(), actuals.get(0).getValue(), actualValue, targetValue, actual.getComment()));
+						warnings.add(new CellWarning(Type.WARNING, targetData.getTableColumns().get(idx2).getHeader(), actuals.get(0).getValue(), actualValue, targetValue, actual.getComment()));
 					}else if(differential < 0.9){
-						warnings.add(new TableWarning(Type.CRITICAL, targetData.getTableColumns().get(idx2).getHeader(), actuals.get(0).getValue(), actualValue, targetValue, actual.getComment()));
+						warnings.add(new CellWarning(Type.CRITICAL, targetData.getTableColumns().get(idx2).getHeader(), actuals.get(0).getValue(), actualValue, targetValue, actual.getComment()));
 					}
 				}catch(java.lang.NumberFormatException e){
 					//Nothing neccesary to do

@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.widget.DatePicker;
 
 import com.tieto.ec.activities.DailyMorningReport;
+import com.tieto.ec.logic.DateIntervalCalculator;
 
 public class ChangeDayListener implements OnClickListener, OnDateSetListener{
 	
@@ -43,13 +44,11 @@ public class ChangeDayListener implements OnClickListener, OnDateSetListener{
 		switch (action) {
 		case NEXT_DAY:
 			date = dmr.getToDate();
-			date.setDate(date.getDate()+1);
-			dmr.setToDate(date);	
+			dmr.setToDate(DateIntervalCalculator.calcToDate(date, dmr.getResolution(), false));	
 			break;
 		case PREVIOUS_DAY:
 			date = dmr.getToDate();
-			date.setDate(date.getDate()-1);
-			dmr.setToDate(date);
+			dmr.setToDate(DateIntervalCalculator.calcToDate(date, dmr.getResolution(), true));	
 			break;
 		case CHOOSE_DAY:
 			date = dmr.getToDate();

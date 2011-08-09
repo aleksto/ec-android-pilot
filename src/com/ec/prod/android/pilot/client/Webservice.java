@@ -7,8 +7,6 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.util.Log;
-
 import com.ec.prod.android.pilot.service.MarshalService;
 
 public abstract class Webservice implements Runnable{

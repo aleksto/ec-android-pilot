@@ -2,7 +2,7 @@ package com.tieto.ec.logic;
 
 import com.tieto.ec.model.GraphWarning;
 import com.tieto.ec.model.SectionWarning;
-import com.tieto.ec.model.TableWarning;
+import com.tieto.ec.model.CellWarning;
 import com.tieto.ec.model.Warning;
 import com.tieto.ec.model.Warning.Type;
 
@@ -26,7 +26,7 @@ public class InitiateWarningText {
 	public void initText(SectionWarning sectionWarning) {
 		if(sectionWarning.getWarnings().get(0) instanceof GraphWarning){
 			initGraphText(sectionWarning);
-		}else if(sectionWarning.getWarnings().get(0) instanceof TableWarning){
+		}else if(sectionWarning.getWarnings().get(0) instanceof CellWarning){
 			initTableText(sectionWarning);
 		}
 
@@ -76,14 +76,14 @@ public class InitiateWarningText {
 		int index = 1;
 		boolean first = true;
 		for (Warning warning : sectionWarning.getWarnings()) {
-			TableWarning tableWarning = (TableWarning) warning;
+			CellWarning tableWarning = (CellWarning) warning;
 			if(warning.getType() == Type.CRITICAL && first){
 				info.append("Critical:\n");
-				info.append(index + ". " + tableWarning.getRow() + ", " + tableWarning.getCollumn() + "\n" + warning.getComment() + "\n\n");
+				info.append(index + ". " + tableWarning.getRow() + ", " + tableWarning.getColumn() + "\n" + warning.getComment() + "\n\n");
 				first = false;
 				index++;
 			}else if(warning.getType() == Type.CRITICAL){
-				info.append(index + ". " + tableWarning.getRow() + ", " + tableWarning.getCollumn() + "\n" + warning.getComment() + "\n\n");
+				info.append(index + ". " + tableWarning.getRow() + ", " + tableWarning.getColumn() + "\n" + warning.getComment() + "\n\n");
 				index++;
 			}
 		}
@@ -91,14 +91,14 @@ public class InitiateWarningText {
 
 		first = true;
 		for (Warning warning : sectionWarning.getWarnings()) {
-			TableWarning tableWarning = (TableWarning) warning;
+			CellWarning tableWarning = (CellWarning) warning;
 			if(warning.getType() == Type.WARNING && first){
 				info.append("\nWarning:\n");
-				info.append(index + ". " + tableWarning.getRow() + ", " + tableWarning.getCollumn() + "\n" + warning.getComment() + "\n\n");
+				info.append(index + ". " + tableWarning.getRow() + ", " + tableWarning.getColumn() + "\n" + warning.getComment() + "\n\n");
 				first = false;
 				index++;
 			}else if(warning.getType() == Type.WARNING){
-				info.append(index + ". " + tableWarning.getRow() + ", " + tableWarning.getCollumn() + "\n" + warning.getComment() + "\n\n");
+				info.append(index + ". " + tableWarning.getRow() + ", " + tableWarning.getColumn() + "\n" + warning.getComment() + "\n\n");
 				index++;
 			}
 		}

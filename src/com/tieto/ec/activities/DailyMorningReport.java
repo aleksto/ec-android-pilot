@@ -75,8 +75,22 @@ public class DailyMorningReport extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		//Super
 		super.onCreate(savedInstanceState);
-
 		
+		username = getIntent().getExtras().getString(Webservice.username.toString());
+		password = getIntent().getExtras().getString(Webservice.password.toString());
+		namespace = getIntent().getExtras().getString(Webservice.namespace.toString());
+		url = getIntent().getExtras().getString(Webservice.url.toString());
+		
+		//Exit service
+		serviceIntent = new Intent(this, EcService.class);
+		serviceIntent.putExtra(Webservice.username.toString(), username);
+		serviceIntent.putExtra(Webservice.password.toString(), password);
+		serviceIntent.putExtra(Webservice.namespace.toString(), namespace);
+		serviceIntent.putExtra(Webservice.url.toString(), url);	
+		if(serviceIntent != null){
+			stopService(serviceIntent);
+		}
+
 		try {
 			this.resolution = Integer.valueOf(FileManager.readPath(this, "DMR Report.Resolution"));
 		} catch (NumberFormatException e) {
@@ -89,10 +103,6 @@ public class DailyMorningReport extends Activity{
 		}
 		
 		//Init 
-		username = getIntent().getExtras().getString(Webservice.username.toString());
-		password = getIntent().getExtras().getString(Webservice.password.toString());
-		namespace = getIntent().getExtras().getString(Webservice.namespace.toString());
-		url = getIntent().getExtras().getString(Webservice.url.toString());
 		if(url.equalsIgnoreCase("debug")){
 			Log.d("tieto", "Starting report with example view service");
 			webservice = new ExampleViewService();
@@ -137,8 +147,7 @@ public class DailyMorningReport extends Activity{
 		main.addView(scroll);
 		main.setBackgroundColor(backgroundColor);
 		
-		//Service
-		restartService();
+		
 	}
 
 	/**
@@ -175,7 +184,8 @@ public class DailyMorningReport extends Activity{
 		if(main.getChildAt(1) == buttonRow){
 			toogleSubButtonRow();
 		}else{
-			
+			//Service
+			restartService();
 			super.onBackPressed();					
 		}
 	}
@@ -241,16 +251,7 @@ public class DailyMorningReport extends Activity{
 	 * Restarts the background service, used when user sets new update interval on the service
 	 */
 	public void restartService() {
-		if(serviceIntent == null){
-			serviceIntent = new Intent(this, EcService.class);
-			serviceIntent.putExtra(Webservice.username.toString(), username);
-			serviceIntent.putExtra(Webservice.password.toString(), password);
-			serviceIntent.putExtra(Webservice.namespace.toString(), namespace);
-			serviceIntent.putExtra(Webservice.url.toString(), url);	
-			
-		}else{
-			stopService(serviceIntent);
-		}
+//		stopService(serviceIntent);
 		startService(serviceIntent);
 	}
 

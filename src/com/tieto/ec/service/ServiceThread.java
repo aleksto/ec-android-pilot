@@ -19,6 +19,11 @@ public class ServiceThread implements Runnable{
 	private Thread thread;
 	private long updateInterval;
 	private ValueChecker valueChecker;
+	private final Context context;
+	private final String username;
+	private final String password;
+	private final String url;
+	private final String namespace;
 
 	/**
 	 * Start a new {@link Thread} and a new {@link Timer}, 
@@ -32,8 +37,12 @@ public class ServiceThread implements Runnable{
 	 */
 	public ServiceThread(Context context, String username, String password, String url, String namespace){
 		//Init
+		this.context = context;
+		this.username = username;
+		this.password = password;
+		this.url = url;
+		this.namespace = namespace;
 		String updateTime = "";
-		valueChecker = new ValueChecker(context, username, password, url, namespace);
 		try {
 			updateTime = FileManager.readPath(context, OptionTitle.DMRReport + "." + OptionTitle.NotificationOptions);
 			updateInterval = UpdateTimeConverter.parse(updateTime);
@@ -70,7 +79,8 @@ public class ServiceThread implements Runnable{
 	 * and sets the {@link TimerTask} to {@link ValueChecker}
 	 */
 	public void run() {
-		timer = new Timer();	
+		valueChecker = new ValueChecker(context, username, password, url, namespace);
+		timer = new Timer();
 		timer.scheduleAtFixedRate(valueChecker, updateInterval, updateInterval);		
 	}
 }

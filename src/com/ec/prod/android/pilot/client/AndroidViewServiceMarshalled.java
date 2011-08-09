@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import android.util.Log;
-
 import com.ec.prod.android.pilot.service.ViewServiceMarshalled;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.logic.DateConverter;
@@ -56,7 +54,6 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 	 * which it returns in a list
 	 */
 	public List<String> getGraphDataBySection(String section, Date fromDate, Date toDate, int resolution, int type) {
-		Log.d("tieto", "Executing webservice getGraphDataBySection(), Values: section: " + section);
 		Object response = executeWebservice("getGraphDataBySection",  "section", section,
 																 	  "fromdate", DateConverter.parse(fromDate, DateConverter.Type.DATE),
 																	  "todate", DateConverter.parse(toDate, DateConverter.Type.DATE),
@@ -66,7 +63,6 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 	}
 
 	public List<String> getTextData(String section, Date fromDate, Date toDate, int resolution) {
-		Log.d("tieto", "Executing webservice getTextData(), Values: section: " + section);
 		Object response = executeWebservice("getTextData",  "section", section,
 															"fromdate", DateConverter.parse(fromDate, DateConverter.Type.DATE),
 															"todate", DateConverter.parse(toDate, DateConverter.Type.DATE),
@@ -77,8 +73,7 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 	/**
 	 * Not yet implemented
 	 */
-	public List<String> getGraphDataByRow(String row, Date fromDate,
-			Date toDate, int resolution, int type) {
+	public List<String> getGraphDataByRow(String row, Date fromDate, Date toDate, int resolution, int type) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -99,7 +94,6 @@ public class AndroidViewServiceMarshalled extends Webservice implements ViewServ
 			for (int i = 1; i < responseList.length; i++) {
 				idx = responseList[i].lastIndexOf(";");
 				list.add(responseList[i].substring(0, idx));
-				Log.d("tieto", "Got response: " + list.get(list.size()-1));
 			}		
 			return list;
 		}else{
