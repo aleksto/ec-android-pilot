@@ -76,6 +76,7 @@ public class DailyMorningReport extends Activity{
 		//Super
 		super.onCreate(savedInstanceState);
 
+		
 		try {
 			this.resolution = Integer.valueOf(FileManager.readPath(this, "DMR Report.Resolution"));
 		} catch (NumberFormatException e) {
@@ -92,7 +93,7 @@ public class DailyMorningReport extends Activity{
 		password = getIntent().getExtras().getString(Webservice.password.toString());
 		namespace = getIntent().getExtras().getString(Webservice.namespace.toString());
 		url = getIntent().getExtras().getString(Webservice.url.toString());
-		if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
+		if(url.equalsIgnoreCase("debug")){
 			Log.d("tieto", "Starting report with example view service");
 			webservice = new ExampleViewService();
 		}else{
@@ -116,7 +117,6 @@ public class DailyMorningReport extends Activity{
 		
 		//Starting first screen dialog
 		setToDate(toDate);
-		refreshWarningDialog();
 		
 		//Sections Builder
 		sectionBuilder.updateColors();
@@ -137,10 +137,8 @@ public class DailyMorningReport extends Activity{
 		main.addView(scroll);
 		main.setBackgroundColor(backgroundColor);
 		
-		//Exit service
-		if(serviceIntent != null){
-			stopService(serviceIntent);
-		}
+		//Service
+		restartService();
 	}
 
 	/**
@@ -177,8 +175,7 @@ public class DailyMorningReport extends Activity{
 		if(main.getChildAt(1) == buttonRow){
 			toogleSubButtonRow();
 		}else{
-			//Service
-			restartService();
+			
 			super.onBackPressed();					
 		}
 	}
