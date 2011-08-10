@@ -64,6 +64,8 @@ public class DailyMorningReport extends Activity{
 
 	private List<SectionWarning> warnings;
 
+	private TranslateAnimation animation;
+
 	public List<SectionWarning> getWarnings(){
 		return this.warnings;
 	}
@@ -76,6 +78,9 @@ public class DailyMorningReport extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		//Super
 		super.onCreate(savedInstanceState);
+		
+		//Log
+		Log.d("tieto", "onCreate");
 		
 		//EXTRAS
 		Bundle extras = getIntent().getExtras();
@@ -154,7 +159,7 @@ public class DailyMorningReport extends Activity{
 		scroll.addView(table);
 
 		//Animation
-		TranslateAnimation animation = new TranslateAnimation(0, 0, 0, 0, 0, -50, 0, 0);
+		animation = new TranslateAnimation(0, 0, 0, 0, 0, -50, 0, 0);
 		animation.setDuration(1000);
 		dateRow.setAnimation(animation);
 		
@@ -197,13 +202,37 @@ public class DailyMorningReport extends Activity{
 	 */
 	@Override
 	public void onBackPressed() {
+		//Log
+		Log.d("tieto", "onBackPressed");
+		
 		if(main.getChildAt(1) == buttonRow){
 			toogleSubButtonRow();
 		}else{
 			//Service
 			restartService();
+			if(!animation.hasEnded()){
+				animation.cancel();
+			}
 			super.onBackPressed();					
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		//Super
+		super.onDestroy();
+		
+		//Log
+		Log.d("tieto", "onDestroy");
+	}
+	
+	@Override
+	protected void onResume() {
+		//Super
+		super.onResume();
+		
+		//Log
+		Log.d("tieto", "onResume");
 	}
 	
 	/**

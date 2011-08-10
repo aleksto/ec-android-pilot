@@ -29,6 +29,7 @@ import com.tieto.ec.logic.FileManager;
 public class Login extends Activity{
 
 	private Handler handler;
+	private boolean quit;
 	
 	/**
 	 * Main class for the login, this is the class started after introduction animation
@@ -137,5 +138,25 @@ public class Login extends Activity{
 				Toast.makeText(Login.this, msg, Toast.LENGTH_SHORT).show();
 			}
 		});
+	}
+	
+	/**
+	 * This runs when the app is resumed, and this makes sure of quiting the
+	 * app if the {@link TranslateAnimation} in the {@link DailyMorningReport} is running
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(quit){
+			onBackPressed();			
+		}
+	}
+
+	/**
+	 * If true, the {@link Login} activity will quit on resume
+	 * @param quit
+	 */
+	public void setQuit(boolean quit) {
+		this.quit = quit;
 	}
 }
