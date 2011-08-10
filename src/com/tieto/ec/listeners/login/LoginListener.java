@@ -82,37 +82,37 @@ public class LoginListener implements Runnable {
 					FileManager.writePath(login, "DMR Report.Security Options", username + "¤#@#¤" + password);		
 				}
 			}
+			
+			//Setting login to quit
+			login.setQuit(true);
+			
+			//Starting new intent
+			String namespace = getNamespace(url, username, password);
+			if(namespace.equalsIgnoreCase(NAMESPACE_NOT_FOUND)){
+				try {
+					namespace = FileManager.readPath(login, "Input Options.Webservice Namespace");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}	
+			}
+			
+			Intent intent = new Intent(login, DailyMorningReport.class);
+			intent.putExtra("username", username);
+			intent.putExtra("password", password);
+			intent.putExtra("namespace", namespace);
+			intent.putExtra("url", url);
+			
+			if (!previousDay) {
+				intent.putExtra("toDate", DateConverter.parse(new Date(System.currentTimeMillis()), Type.DATE, Resolution.DAILY));
+				intent.putExtra("resolution", Resolution.DAILY);			
+			}
+			
+			login.startActivity(intent);
 		} catch (IOException e) {
 			FileManager.writePath(login, "DMR Report.Security Options.Remember Login\nCredentials", "true");
 			login(username, password);
 			e.printStackTrace();
 		}
-		
-		//Setting login to quit
-		login.setQuit(true);
-		
-		//Starting new intent
-		String namespace = getNamespace(url, username, password);
-		if(namespace.equalsIgnoreCase(NAMESPACE_NOT_FOUND)){
-			try {
-				namespace = FileManager.readPath(login, "Input Options.Webservice Namespace");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}	
-		}
-		
-		Intent intent = new Intent(login, DailyMorningReport.class);
-		intent.putExtra("username", username);
-		intent.putExtra("password", password);
-		intent.putExtra("namespace", namespace);
-		intent.putExtra("url", url);
-		
-		if (!previousDay) {
-			intent.putExtra("toDate", DateConverter.parse(new Date(System.currentTimeMillis()), Type.DATE, Resolution.DAILY));
-			intent.putExtra("resolution", Resolution.DAILY);			
-		}
-		
-		login.startActivity(intent);
 	}
 
 	/**
