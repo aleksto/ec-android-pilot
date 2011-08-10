@@ -328,7 +328,7 @@ public class SectionBuilder {
 	 * Updates the colors of the report, but doesn't update the UI {@link listSections()} 
 	 */
 	public void updateColors(){
-		String basePath = OptionTitle.DMRReport + "." + OptionTitle.ColorOptions + ".";
+		String basePath = OptionTitle.Options + "." + OptionTitle.ColorOptions + ".";
 		try {
 			//if(basePath + OptionTitle.Default))
 			dmr.setBackgroundColor(ColorConverter.parseColor(FileManager.readPath(dmr, basePath + OptionTitle.BackgroundColor)));

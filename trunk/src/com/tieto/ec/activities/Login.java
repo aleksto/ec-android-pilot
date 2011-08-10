@@ -105,7 +105,7 @@ public class Login extends Activity{
 	protected void onRestart() {
 		super.onResume();
 		try {
-			String exist = FileManager.readPath(this, OptionTitle.DMRReport + "." + OptionTitle.SecurityOptions);
+			String exist = FileManager.readPath(this, OptionTitle.Options + "." + OptionTitle.SecurityOptions);
 			if(exist.equalsIgnoreCase(OptionTitle.ClearUsernameAndPassword.toString())){
 				onCreate(null);	
 			}

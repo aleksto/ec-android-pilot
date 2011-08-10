@@ -257,11 +257,11 @@ public class DailyMorningReport extends Activity{
 		
 		//Checking if the user want to automatically display warning dialog
 		try {
-			if(Boolean.valueOf(FileManager.readPath(this, OptionTitle.DMRReport + "." + OptionTitle.DisplayWarnings))){
+			if(Boolean.valueOf(FileManager.readPath(this, OptionTitle.Options + "." + OptionTitle.DisplayWarnings))){
 				warningDialog.show();			
 			}
 		} catch (IOException e) {
-			FileManager.writePath(this, OptionTitle.DMRReport + "." + OptionTitle.DisplayWarnings, "true");
+			FileManager.writePath(this, OptionTitle.Options + "." + OptionTitle.DisplayWarnings, "true");
 			setToDate(toDate);
 			e.printStackTrace();
 		}
