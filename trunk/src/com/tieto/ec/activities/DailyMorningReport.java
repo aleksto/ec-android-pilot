@@ -167,8 +167,6 @@ public class DailyMorningReport extends Activity{
 		main.addView(dateRow);
 		main.addView(scroll);
 		main.setBackgroundColor(backgroundColor);
-		
-		
 	}
 
 	/**

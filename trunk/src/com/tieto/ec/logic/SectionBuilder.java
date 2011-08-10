@@ -35,6 +35,7 @@ import com.tieto.ec.gui.graphs.BarGraph;
 import com.tieto.ec.gui.graphs.Graph;
 import com.tieto.ec.gui.graphs.LineGraph;
 import com.tieto.ec.gui.table.Cell;
+import com.tieto.ec.listeners.dmr.CellListener;
 import com.tieto.ec.listeners.dmr.GraphFullScreenListener;
 import com.tieto.ec.listeners.dmr.GraphLineChooserListener;
 import com.tieto.ec.listeners.dmr.ShowHideSection;
@@ -254,7 +255,12 @@ public class SectionBuilder {
 				//Add Cell
 				String header = tableColumns.get(i).getHeader();
 				if(activeColumns.contains(header)){
-					row.addView(new Cell(dmr, valuesActual.get(i), valuesTarget.get(i), dmr.getCellBackgroundColor(), dmr.getCellTextColor(), dmr.getCellBorderColor()));
+					Cell cell = new Cell(dmr, valuesActual.get(i), valuesTarget.get(i), dmr.getCellBackgroundColor(), dmr.getCellTextColor(), dmr.getCellBorderColor());
+					row.addView(cell);
+					
+					if(i>0){
+						cell.setOnClickListener(new CellListener(cell));
+					}
 				}
 			}
 
@@ -338,7 +344,6 @@ public class SectionBuilder {
 		dmr.getScrollView().setBackgroundColor(dmr.getBackgroundColor());
 		dmr.getTable().setBackgroundColor(dmr.getBackgroundColor());
 	}
-
 
 	/**
 	 * This method sets the default color of the daily morning repost class

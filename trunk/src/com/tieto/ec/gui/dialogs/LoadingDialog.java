@@ -42,7 +42,7 @@ public class LoadingDialog implements Runnable{
 	public void hide(){
 		handler.post(new Runnable() {
 			public void run() {
-				dialog.hide();
+				dialog.dismiss();
 			}
 		});
 	}

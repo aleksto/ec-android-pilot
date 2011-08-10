@@ -1,13 +1,12 @@
 package com.tieto.ec.gui.table;
 
-import com.ec.prod.android.pilot.model.TableCell;
-import com.tieto.ec.listeners.dmr.CellListener;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.ec.prod.android.pilot.model.TableCell;
 
 public class Cell extends RelativeLayout{
 	
@@ -56,7 +55,6 @@ public class Cell extends RelativeLayout{
 		}catch(java.lang.NumberFormatException e){
 			setBackgroundColor(backgroundColor);
 		}
-		setOnClickListener(new CellListener(this));
 		
 		//Params
 		LayoutParams textParams = new LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
