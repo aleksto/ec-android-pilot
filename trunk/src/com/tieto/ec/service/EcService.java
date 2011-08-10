@@ -45,7 +45,7 @@ public class EcService extends Service{
 		Log.d("tieto", "Stopping service");
 		
 		//Stopping timer
-		if(serviceThread.getTimer() != null){
+		if(serviceThread != null && serviceThread.getTimer() != null){
 			serviceThread.getTimer().cancel();			
 		}
 		

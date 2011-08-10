@@ -88,6 +88,9 @@ public class LoginListener implements Runnable {
 			e.printStackTrace();
 		}
 		
+		//Setting login to quit
+		login.setQuit(true);
+		
 		//Starting new intent
 		String namespace = getNamespace(url, username, password);
 		if(namespace.equalsIgnoreCase(NAMESPACE_NOT_FOUND)){
@@ -104,7 +107,6 @@ public class LoginListener implements Runnable {
 		intent.putExtra("namespace", namespace);
 		intent.putExtra("url", url);
 		
-		Log.d("tieto", previousDay+"");
 		if (!previousDay) {
 			intent.putExtra("toDate", DateConverter.parse(new Date(System.currentTimeMillis()), Type.DATE, Resolution.DAILY));
 			intent.putExtra("resolution", Resolution.DAILY);			
@@ -163,7 +165,6 @@ public class LoginListener implements Runnable {
 		}
 	}
 
-	
 	/**
 	 * Checks the username and password provided
 	 * @param username Provided username
@@ -176,7 +177,6 @@ public class LoginListener implements Runnable {
 		return sections != null;
 	}
 
-	
 	/**
 	 * Tries to get the namespace for a webservice from the url
 	 * @param url Provided url
