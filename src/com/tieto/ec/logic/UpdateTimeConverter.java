@@ -51,7 +51,7 @@ public class UpdateTimeConverter {
 			return 	45*60*1000;
 		}
 		else if(time.equalsIgnoreCase(TimeType.sec20.toString())){
-			return 5*1000;
+			return 20*1000;
 		}
 		else{
 			return -1;

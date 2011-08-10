@@ -56,6 +56,12 @@ public class Login extends Activity{
     	ImageView image = (ImageView) findViewById(R.id.background);
     	image.setScaleType(ScaleType.CENTER_INSIDE);
     	
+    	try{
+    		image.setImageResource(R.drawable.tieto);    		
+    	}catch(java.lang.OutOfMemoryError e){
+    		toastFromOtherThreads("Not enough memory to display background image");
+    	}
+    	
     	//Background
     	RelativeLayout relativ = (RelativeLayout) findViewById(R.id.relativeLayout2);
     	relativ.setBackgroundColor(Color.WHITE);
