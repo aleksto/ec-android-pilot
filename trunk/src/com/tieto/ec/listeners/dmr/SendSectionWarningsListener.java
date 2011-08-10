@@ -2,17 +2,17 @@ package com.tieto.ec.listeners.dmr;
 
 import java.util.HashMap;
 
-import com.tieto.ec.activities.DailyMorningReport;
-import com.tieto.ec.gui.dialogs.ChooseSectionsToSendDialog;
-import com.tieto.ec.gui.dialogs.ChooseSectionsToSendDialog.SectionBoxState;
-import com.tieto.ec.logic.InitiateWarningText;
-import com.tieto.ec.model.SectionWarning;
-
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
+
+import com.tieto.ec.activities.DailyMorningReport;
+import com.tieto.ec.gui.dialogs.ChooseSectionsToSendDialog;
+import com.tieto.ec.gui.dialogs.ChooseSectionsToSendDialog.SectionBoxState;
+import com.tieto.ec.logic.InitiateWarningText;
+import com.tieto.ec.model.SectionWarning;
 
 public class SendSectionWarningsListener implements OnClickListener {
 
