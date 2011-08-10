@@ -44,10 +44,10 @@ public class ServiceThread implements Runnable{
 		this.namespace = namespace;
 		String updateTime = "";
 		try {
-			updateTime = FileManager.readPath(context, OptionTitle.DMRReport + "." + OptionTitle.NotificationOptions);
+			updateTime = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions);
 			updateInterval = UpdateTimeConverter.parse(updateTime);
 		} catch (IOException e) {
-			FileManager.writePath(context, OptionTitle.DMRReport + "." + OptionTitle.NotificationOptions, TimeType.off+"");
+			FileManager.writePath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions, TimeType.off+"");
 			updateInterval = -1;
 			e.printStackTrace();
 		}

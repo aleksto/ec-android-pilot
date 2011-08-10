@@ -3,6 +3,7 @@ package com.tieto.ec.enums;
 public enum OptionTitle {
 	
 	//Daily Morning Report
+	Options,
 	SecurityOptions{
 	    @Override
 		public String toString() {
@@ -43,12 +44,6 @@ public enum OptionTitle {
 	    @Override
 		public String toString() {
 	        return "Cell Border Color";
-	    }
-	},
-	DMRReport{
-	    @Override
-		public String toString() {
-	        return "DMR Report";
 	    }
 	},
 	ClearUsernameAndPassword {
@@ -130,7 +125,6 @@ public enum OptionTitle {
 	        return "Choose Sections";
 	    }
 	},
-
 
 
 

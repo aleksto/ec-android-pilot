@@ -9,6 +9,16 @@ import android.widget.DatePicker;
 
 public class ChooseDate extends DatePickerDialog {
 
+	/**
+	 * This class in an extension of the DatePickerDialog class. It is extended because the need to make a custom 
+	 * title for the DatePicker in the format of DayOfWeek, Month DD, YYYY 
+	 * @param context
+	 * @param date
+	 * @param callBack
+	 * @param year
+	 * @param monthOfYear
+	 * @param dayOfMonth
+	 */
 	public ChooseDate(Context context, Date date, OnDateSetListener callBack, int year, int monthOfYear, int dayOfMonth) {
 		super(context, callBack, year, monthOfYear, dayOfMonth);
 		Calendar c = Calendar.getInstance();
@@ -20,6 +30,10 @@ public class ChooseDate extends DatePickerDialog {
 		setTitle(dayOfTheWeek + ", " + monthOfTheYear + " " + c.get(Calendar.DATE) + ", " + c.get(Calendar.YEAR));	
 	}
 	
+	/**
+	 * This method is overwritten to be able to change the title of the the DatePickerDialog to a custom one.
+	 * The format of the custom date is DayOfWeek, Month DD, YYYY
+	 */
 	@Override
 	public void onDateChanged(DatePicker view, int year, int month, int day) {
 		Date date = new Date(year, month, day-1);
@@ -33,6 +47,11 @@ public class ChooseDate extends DatePickerDialog {
 		setTitle(dayOfTheWeek + ", " + monthOfTheYear + " " + day + ", " + year);
 	}
 		
+	/**
+	 * Returns the String of a {@link Calendar}s month of the year integer
+	 * @param monthOfYear
+	 * @return
+	 */
 	public String getMonthOfYear(int monthOfYear) {
 		if(monthOfYear == Calendar.JANUARY)
 			return "January";
@@ -62,6 +81,11 @@ public class ChooseDate extends DatePickerDialog {
 		
 	}
 
+	/**
+	 * Returns the String of {@link Calendar}s day of the month integer
+	 * @param dayOfWeek
+	 * @return
+	 */
 	public String getDayOfWeek(int dayOfWeek) {
 		if(dayOfWeek == Calendar.SUNDAY)
 			return "Sunday";

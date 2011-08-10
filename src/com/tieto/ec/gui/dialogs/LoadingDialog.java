@@ -13,11 +13,19 @@ public class LoadingDialog implements Runnable{
 	private Context context;
 	private ProgressDialog dialog;
 	
-	public LoadingDialog(Context context) {
+	/**
+	 * In this class we use a thread to show a loading (process dialog) for heavy calculations.
+	 * @param context
+	 */
+	public LoadingDialog(Context context) {		
 		//Init
 		this.context = context;
 	}
 
+	/**
+	 * The thread where the process dialog screen is made and shown. There is also used a Looper 
+	 * which checks if this thread has any runnables in the que
+	 */
 	public void run() {
 		Looper.prepare();
 		
@@ -33,12 +41,19 @@ public class LoadingDialog implements Runnable{
 		Looper.loop();
 	}
 	
+	/**
+	 * This method starts the thread where the process dialog screen is shown. 
+	 */
 	public void show(){
 		//Thread
 		thread = new Thread(this);
 		thread.start();	
 	}
 	
+	/**
+	 * This method can be called when the process dialog needs to be dismissed, in the 
+	 * end of a heavy calculation/process.
+	 */
 	public void hide(){
 		handler.post(new Runnable() {
 			public void run() {

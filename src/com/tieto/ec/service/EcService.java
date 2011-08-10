@@ -48,7 +48,6 @@ public class EcService extends Service{
 		if(serviceThread != null && serviceThread.getTimer() != null){
 			serviceThread.getTimer().cancel();			
 		}
-		
 		//Super
 		super.onDestroy();
 	}

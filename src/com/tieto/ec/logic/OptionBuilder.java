@@ -21,7 +21,7 @@ public class OptionBuilder {
 	
 	public static OptionDialog buildDailyMorningReportOption(DailyMorningReport dailyMorningReport){
 		//Level1
-		OptionDialog root = new OptionDialog(dailyMorningReport, OptionTitle.DMRReport);
+		OptionDialog root = new OptionDialog(dailyMorningReport, OptionTitle.Options);
 
 		//Level2
 		OptionDialog security = new OptionDialog(dailyMorningReport, OptionTitle.SecurityOptions);
