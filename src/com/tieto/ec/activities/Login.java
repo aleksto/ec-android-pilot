@@ -29,7 +29,6 @@ import com.tieto.ec.logic.FileManager;
 public class Login extends Activity{
 
 	private Handler handler;
-//	private boolean quit;
 	
 	/**
 	 * Main class for the login, this is the class started after introduction animation
@@ -43,6 +42,14 @@ public class Login extends Activity{
     	
     	//Init
     	handler = new Handler(Looper.getMainLooper());
+    	
+    	//Log
+    	boolean previousDay;
+    	if(getIntent().getExtras() != null){
+    		previousDay = true;
+    	}else{
+    		previousDay = false;
+    	}
     	
     	//Image
     	ImageView image = (ImageView) findViewById(R.id.background);
@@ -65,7 +72,7 @@ public class Login extends Activity{
     	password.setTextColor(Color.BLACK);
     	
     	//Login slider
-    	Slider slider = new Slider(this, new LoginListener(username, password, this), "Slide to login");
+    	Slider slider = new Slider(this, new LoginListener(this, username, password, previousDay), "Slide to login");
     	relativ.addView(slider);
     	
     	//Animation

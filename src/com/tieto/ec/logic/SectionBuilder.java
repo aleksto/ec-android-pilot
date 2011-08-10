@@ -66,28 +66,11 @@ public class SectionBuilder {
 		int resolution = dmr.getResolution();
 		Log.d("tieto", "Listing sections with resolution " + ResolutionConverter.convert(resolution));
 		Date fromDate = DateIntervalCalculator.calcFromDate(date, resolution);
-		switch (resolution) {
-		case Resolution.DAILY:
-			for (Section section : dmr.getSections()) {
-				addSection(section, date, date, resolution, newWebserviceValues);			
-			}
-			break;
-		case Resolution.WEEKLY:
-			for (Section section : dmr.getSections()) {
-				addSection(section, fromDate, date, resolution, newWebserviceValues);			
-			}
-			break;
-		case Resolution.MONTHLY:
-			for (Section section : dmr.getSections()) {
-				addSection(section, fromDate, date, resolution, newWebserviceValues);			
-			}
-			break;
-		case Resolution.YEARLY:
-			for (Section section : dmr.getSections()) {
-				addSection(section, fromDate, date, resolution, newWebserviceValues);			
-			}
-			break;
+	
+		for (Section section : dmr.getSections()) {
+			addSection(section, date, date, resolution, newWebserviceValues);			
 		}
+
 		dmr.setFromDate(fromDate);	
 	}
 

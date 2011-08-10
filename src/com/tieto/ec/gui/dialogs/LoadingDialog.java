@@ -8,14 +8,14 @@ import android.os.Looper;
 public class LoadingDialog implements Runnable{
 
 	private Handler handler;
-	
 	private Thread thread;
-	private Context context;
-	private ProgressDialog dialog; 
 	
-	public LoadingDialog(Context context) {		
+	private Context context;
+	private ProgressDialog dialog;
+	
+	public LoadingDialog(Context context) {
 		//Init
-		this.context = context;	
+		this.context = context;
 	}
 
 	public void run() {
@@ -23,11 +23,11 @@ public class LoadingDialog implements Runnable{
 		
 		//Init
 		handler = new Handler(Looper.myLooper());
+		dialog = new ProgressDialog(context);		
 		
 		//Dialog
-		dialog = new ProgressDialog(context);
-		dialog.setTitle("Loading Report");
-		dialog.setMessage("Please Wait...");
+		dialog.setTitle("Loading report");
+		dialog.setMessage("Please wait....");
 		dialog.show();
 		
 		Looper.loop();
@@ -36,15 +36,14 @@ public class LoadingDialog implements Runnable{
 	public void show(){
 		//Thread
 		thread = new Thread(this);
-		thread.start();
+		thread.start();	
 	}
 	
 	public void hide(){
-		handler.post(new Runnable(){
-			public void run(){
+		handler.post(new Runnable() {
+			public void run() {
 				dialog.hide();
 			}
 		});
 	}
-
 }

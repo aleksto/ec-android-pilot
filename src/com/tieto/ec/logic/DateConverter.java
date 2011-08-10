@@ -3,8 +3,6 @@ package com.tieto.ec.logic;
 import java.util.Calendar;
 import java.util.Date;
 
-import android.util.Log;
-
 import com.ec.prod.android.pilot.model.Resolution;
 
 /**
@@ -71,7 +69,6 @@ public class DateConverter {
 				Calendar cal = Calendar.getInstance();
 				cal.set(date.getYear(), date.getMonth(), date.getDate());
 				int day = cal.get(Calendar.DAY_OF_YEAR);
-				Log.d("tieto", day+"");
 				return "Week " + (day/7 + 1);
 			}else if(resolution == Resolution.MONTHLY){
 				return getMonthName(date);

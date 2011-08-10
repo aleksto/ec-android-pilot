@@ -33,7 +33,9 @@ public class Welcome extends Activity{
 		try {
 			if(Boolean.valueOf(FileManager.readPath(this, "Welcome Activity.3D Seen"))){
 				quit = true;
-				startActivity(new Intent(this, Login.class));
+				Intent intent = new Intent(this, Login.class);
+				intent.putExtra("Parent", "Welcome");
+				startActivity(intent);
 			}
 		} catch (IOException e) {
 			animation = new WelcomeAnimation(this);
