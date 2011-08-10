@@ -69,7 +69,8 @@ public class WarningMeterListener implements OnClickListener{
 		RelativeLayout.LayoutParams graphLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		graphLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 		final int GRAPH_HEIGHT = 200;
-		RelativeLayout.LayoutParams graphParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, 200);
+		int graphWidth = activity.getWindowManager().getDefaultDisplay().getWidth()/3;
+		RelativeLayout.LayoutParams graphParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, graphWidth);
 		
 		//Scroll
 		LinearLayout scrollLayout = new LinearLayout(activity);
