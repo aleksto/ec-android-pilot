@@ -26,6 +26,7 @@ public class WelcomeListener implements OnClickListener {
 	 */
 	public void onClick(View arg0) {
 		Intent intent = new Intent(context, Login.class);
+		intent.putExtra("Parent", "Welcome");
 		context.startActivity(intent);
 	}
 }

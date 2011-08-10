@@ -32,9 +32,9 @@ import com.tieto.ec.gui.dmr.DateRow;
 import com.tieto.ec.listeners.dmr.DmrOptionsButtonListener;
 import com.tieto.ec.listeners.dmr.DmrWarningButtonListener;
 import com.tieto.ec.listeners.dmr.SendWarningsByMailListener;
+import com.tieto.ec.logic.DateConverter;
 import com.tieto.ec.logic.DateIntervalCalculator;
 import com.tieto.ec.logic.FileManager;
-import com.tieto.ec.logic.ResolutionConverter;
 import com.tieto.ec.logic.SectionBuilder;
 import com.tieto.ec.logic.SectionSaver;
 import com.tieto.ec.logic.WarningChecker;
@@ -60,6 +60,7 @@ public class DailyMorningReport extends Activity{
 	private WarningChecker warningChecker;
 	private SectionSaver saveManager;
 	private Dialog warningDialog;
+	private LoadingDialog progressDialog;
 
 	private List<SectionWarning> warnings;
 
@@ -76,10 +77,34 @@ public class DailyMorningReport extends Activity{
 		//Super
 		super.onCreate(savedInstanceState);
 		
-		username = getIntent().getExtras().getString(Webservice.username.toString());
-		password = getIntent().getExtras().getString(Webservice.password.toString());
-		namespace = getIntent().getExtras().getString(Webservice.namespace.toString());
-		url = getIntent().getExtras().getString(Webservice.url.toString());
+		//EXTRAS
+		Bundle extras = getIntent().getExtras();
+		username = extras.getString(Webservice.username.toString());
+		password = extras.getString(Webservice.password.toString());
+		namespace = extras.getString(Webservice.namespace.toString());
+		url = extras.getString(Webservice.url.toString());
+		
+		//Optionally extras
+		if (extras.containsKey("toDate")) {
+			toDate = DateConverter.parse(extras.getString("toDate"));
+		}else{
+			toDate = new Date(System.currentTimeMillis());
+			toDate.setDate(toDate.getDate()-1);
+		}
+		if(extras.containsKey("resolution")){
+			resolution = extras.getInt("resolution");
+		}else{
+			try {
+				this.resolution = Integer.valueOf(FileManager.readPath(this, "DMR Report.Resolution"));
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				Log.d("tieto", "Setting default resolution");
+				this.resolution = Resolution.DAILY;
+				FileManager.writePath(this, "DMR Report.Resolution", Resolution.DAILY+"");
+				e.printStackTrace();
+			}
+		}
 		
 		//Exit service
 		serviceIntent = new Intent(this, EcService.class);
@@ -91,16 +116,7 @@ public class DailyMorningReport extends Activity{
 			stopService(serviceIntent);
 		}
 
-		try {
-			this.resolution = Integer.valueOf(FileManager.readPath(this, "DMR Report.Resolution"));
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			Log.d("tieto", "Setting default resolution");
-			this.resolution = Resolution.DAILY;
-			FileManager.writePath(this, "DMR Report.Resolution", Resolution.DAILY+"");
-			e.printStackTrace();
-		}
+
 		
 		//Init 
 		if(url.equalsIgnoreCase("debug")){
@@ -110,8 +126,7 @@ public class DailyMorningReport extends Activity{
 			Log.d("tieto", "Starting report with webservice");
 			webservice = new DMRViewServiceUnmarshalled(username, password, namespace, url);
 		}
-		toDate = new Date(System.currentTimeMillis());
-		toDate.setDate(toDate.getDate()-1);
+
 		table = new TableLayout(this);
 		sectionBuilder = new SectionBuilder(this);
 		saveManager = new SectionSaver(this);
@@ -120,6 +135,7 @@ public class DailyMorningReport extends Activity{
 		scroll = new ScrollView(this);
 		main = new TableLayout(this);
 		buttonRow = new ButtonRow(this);
+		progressDialog = new LoadingDialog(this);
 		
 
 		//Getting sections
@@ -195,7 +211,6 @@ public class DailyMorningReport extends Activity{
 	 * @param date
 	 */
 	public void setToDate(Date date){
-		Log.d("tieto", "Setting toDate: " + date + "\tResolution: " + ResolutionConverter.convert(resolution));
 		this.toDate = date;
 		this.fromDate = DateIntervalCalculator.calcFromDate(toDate, resolution);
 		refresh(true);
@@ -238,7 +253,6 @@ public class DailyMorningReport extends Activity{
 	 * @param fromDate
 	 */
 	public void setFromDate(Date fromDate) {
-		Log.d("tieto", "Setting fromDate: " + fromDate);
 		this.fromDate = fromDate;
 	}
 	
@@ -261,14 +275,10 @@ public class DailyMorningReport extends Activity{
 	 * Refreshing the sections and colors of the report
 	 */
 	public void refresh(boolean newWebserviceValues){
-		//Log
-		LoadingDialog loadingDialog = new LoadingDialog(this);
-		loadingDialog.show();
+		progressDialog.show();
 		sectionBuilder.updateColors();
 		sectionBuilder.listSections(newWebserviceValues);
-		loadingDialog.hide();
-		
-//		dateRow.getCurrentDayLabel().setText(DateConverter.parse(toDate, Type.DATE, resolution));
+		progressDialog.hide();
 	}
 
 	/**

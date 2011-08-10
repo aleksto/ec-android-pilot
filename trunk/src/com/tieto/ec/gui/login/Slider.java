@@ -81,6 +81,7 @@ public class Slider extends RelativeLayout implements OnTouchListener{
 			if(padding > getWidth()-170){
 				//Complete
 				onFinish.run();
+				padding = 0;
 			}else{
 				padding = 0;	
 				text.setTextColor(Color.argb(200, 120, 120, 120));

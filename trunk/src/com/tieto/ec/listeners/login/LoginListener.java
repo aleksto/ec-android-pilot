@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Date;
 import java.util.List;
 
 import org.kobjects.base64.Base64;
@@ -14,18 +15,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.ec.prod.android.pilot.client.AndroidViewServiceMarshalled;
+import com.ec.prod.android.pilot.model.Resolution;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.activities.Login;
 import com.tieto.ec.gui.dialogs.InfoDialog;
+import com.tieto.ec.logic.DateConverter;
+import com.tieto.ec.logic.DateConverter.Type;
 import com.tieto.ec.logic.FileManager;
 
 public class LoginListener implements Runnable {
 
 	//Webservice
 	//private ViewService service;
-	private String namespace, url; 
+	private final String NAMESPACE_NOT_FOUND = "NOT_FOUND";
+	private final boolean previousDay;
+	private String url; 
 	private EditText username, password;
 	private Login login;
 
@@ -36,16 +43,16 @@ public class LoginListener implements Runnable {
 	 * @param password {@link EditText} where user types in the password
 	 * @param context {@link Context} used for Android framework actions 
 	 */
-	public LoginListener(EditText username, EditText password, Login login){
+	public LoginListener(Login login, EditText username, EditText password, boolean previousDay){
 		//Init
 		this.login = login;
 		this.password = password;
 		this.username = username;
 		this.password = password;
+		this.previousDay = previousDay;
 
 		//Reading saved data
 		try {
-			namespace = FileManager.readPath(login, "Input Options.Webservice Namespace");
 			url = FileManager.readPath(login, "Input Options.Webservice URL");
 			String usernameAndPassword = FileManager.readPath(login, "DMR Report.Security Options");
 			
@@ -82,11 +89,27 @@ public class LoginListener implements Runnable {
 		}
 		
 		//Starting new intent
+		String namespace = getNamespace(url, username, password);
+		if(namespace.equalsIgnoreCase(NAMESPACE_NOT_FOUND)){
+			try {
+				namespace = FileManager.readPath(login, "Input Options.Webservice Namespace");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		}
+		
 		Intent intent = new Intent(login, DailyMorningReport.class);
 		intent.putExtra("username", username);
 		intent.putExtra("password", password);
-		intent.putExtra("namespace", getNamespace(url, username, password));
+		intent.putExtra("namespace", namespace);
 		intent.putExtra("url", url);
+		
+		Log.d("tieto", previousDay+"");
+		if (!previousDay) {
+			intent.putExtra("toDate", DateConverter.parse(new Date(System.currentTimeMillis()), Type.DATE, Resolution.DAILY));
+			intent.putExtra("resolution", Resolution.DAILY);			
+		}
+		
 		login.startActivity(intent);
 	}
 
@@ -97,14 +120,13 @@ public class LoginListener implements Runnable {
 	public void run() {
 		try {
 			//Reading new url and namespace if it is changed
-			namespace = FileManager.readPath(login, "Input Options.Webservice Namespace");
 			url = FileManager.readPath(login, "Input Options.Webservice URL");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		if(namespace != null && url != null){
-			if(url.equalsIgnoreCase("debug") && namespace.equalsIgnoreCase("debug")){
+		if(url != null){
+			if(url.equalsIgnoreCase("debug")){
 				//DEBUG loggin
 				login(username.getText().toString(), password.getText().toString());				
 			}else{
@@ -121,6 +143,9 @@ public class LoginListener implements Runnable {
 		}
 	}
 
+	/**
+	 * Checks why the user could not connect, and shows a {@link Toast} whith the reason
+	 */
 	private void checkConnectionFaultReason() {
 		try {
 			URL urlObject = new URL(url);
@@ -129,18 +154,36 @@ public class LoginListener implements Runnable {
 				login.toastFromOtherThreads("Webservice not found");
 			}else if(connection.getHeaderField(0).contains("401")){
 				login.toastFromOtherThreads("Username and/or password not valid");
+			}else{
+				login.toastFromOtherThreads("Other error");
 			}
 		} catch (IOException e) {
+			login.toastFromOtherThreads("Could not establish connection");
 			e.printStackTrace();
 		}
 	}
 
+	
+	/**
+	 * Checks the username and password provided
+	 * @param username Provided username
+ 	 * @param password Provided password
+	 * @return true if connection was successful
+	 */
 	private boolean validUsernameAndPassword(String username, String password) {
 		AndroidViewServiceMarshalled webservice = new AndroidViewServiceMarshalled(username, password, getNamespace(url, username, password), url);
 		List<String> sections = webservice.getSections();
 		return sections != null;
 	}
 
+	
+	/**
+	 * Tries to get the namespace for a webservice from the url
+	 * @param url Provided url
+	 * @param username Username for the webservice(if any)
+	 * @param password Password for the webservice(if any)
+	 * @return
+	 */
 	private String getNamespace(String url, String username, String password) {
 		try {
 			URL urlObj = new URL(url);
@@ -162,6 +205,6 @@ public class LoginListener implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return "GETTING NAMESPACE FAILED";
+		return NAMESPACE_NOT_FOUND;
 	}
 }
