@@ -26,6 +26,7 @@ import com.ec.prod.android.pilot.service.ViewService;
 import com.tieto.R;
 import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.enums.Webservice;
+import com.tieto.ec.gui.dialogs.LoadingDialog;
 import com.tieto.ec.gui.dmr.ButtonRow;
 import com.tieto.ec.gui.dmr.DateRow;
 import com.tieto.ec.listeners.dmr.DmrOptionsButtonListener;
@@ -261,8 +262,12 @@ public class DailyMorningReport extends Activity{
 	 */
 	public void refresh(boolean newWebserviceValues){
 		//Log
+		LoadingDialog loadingDialog = new LoadingDialog(this);
+		loadingDialog.show();
 		sectionBuilder.updateColors();
 		sectionBuilder.listSections(newWebserviceValues);
+		loadingDialog.hide();
+		
 //		dateRow.getCurrentDayLabel().setText(DateConverter.parse(toDate, Type.DATE, resolution));
 	}
 
