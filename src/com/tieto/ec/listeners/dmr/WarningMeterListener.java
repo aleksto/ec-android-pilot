@@ -2,13 +2,16 @@ package com.tieto.ec.listeners.dmr;
 
 import java.util.ArrayList;
 
+import android.R;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -28,9 +31,7 @@ public class WarningMeterListener implements OnClickListener{
 
 	private StringBuilder info;
 	private Dialog dialog;
-	private ScrollView scroll;
-	private RelativeLayout main;
-	private TextView text;
+	private LinearLayout main;
 	private BarGraph graph;
 	private Button ok;
 
@@ -40,12 +41,10 @@ public class WarningMeterListener implements OnClickListener{
 	 * @param sectionWarning A {@link SectionWarning} containing all the {@link Warning}s for the {@link Section}
 	 */
 	public WarningMeterListener(Activity activity, SectionWarning sectionWarning){
+		main = new LinearLayout(activity);
 		info = new StringBuilder();
 		dialog = new Dialog(activity);
 		graph = new BarGraph(activity, "");
-		scroll = new ScrollView(activity);
-		main = new RelativeLayout(activity);
-		text = new TextView(activity);
 		ok = new Button(activity);
 
 		InitiateWarningText initiateWarningText = new InitiateWarningText(sectionWarning);
@@ -59,30 +58,63 @@ public class WarningMeterListener implements OnClickListener{
 		graph.setId(1);
 		ok.setId(2);
 
-		//Layoutparams
-		RelativeLayout.LayoutParams graphParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, 200);
-		RelativeLayout.LayoutParams scrollParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-		graphParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-		buttonParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		scrollParams.addRule(RelativeLayout.BELOW, graph.getId());
-		scrollParams.addRule(RelativeLayout.ABOVE, ok.getId());
-		
-		//Childs
-		main.addView(graph, graphParams);
-		main.addView(scroll, scrollParams);
-		main.addView(ok, buttonParams);
+		//Standard linearLayout params
+		LinearLayout.LayoutParams standardParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 
-		//Button
-		ok.setText("Ok");
-		ok.setOnClickListener(new HideDialogListener(dialog));
+		//Content
+		RelativeLayout content = new RelativeLayout(activity);
+
+		//Graph (Layout)
+		RelativeLayout graphLayout = new RelativeLayout(activity);
+		RelativeLayout.LayoutParams graphLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+		graphLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+		final int GRAPH_HEIGHT = 200;
+		RelativeLayout.LayoutParams graphParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, 200);
 		
 		//Scroll
-		scroll.addView(text);
+		LinearLayout scrollLayout = new LinearLayout(activity);
+		RelativeLayout.LayoutParams scrollLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+		final int SCROLL_BOTTOM_MARGIN = 80;
+		scrollLayoutParams.bottomMargin = SCROLL_BOTTOM_MARGIN;
+		scrollLayoutParams.topMargin = GRAPH_HEIGHT;
+		ScrollView scroll = new ScrollView(activity);
+		int scrollId = 2;
+		scroll.setId(scrollId);
+
+		//Exit button
+		LinearLayout okLayout = new LinearLayout(activity);
+		okLayout.setBackgroundResource(R.drawable.bottom_bar);
+		final int BUTTON_LAYOUT_HEIGHT = 75;
+		RelativeLayout.LayoutParams okLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, BUTTON_LAYOUT_HEIGHT);
+		okLayoutParams.addRule(RelativeLayout.BELOW, scrollId);
+		okLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);	
+		Button okButton = new Button(activity);
+		okButton.setText("Ok");
+		okButton.setBackgroundResource(android.R.drawable.btn_default);
+		final int BUTTON_HEIGHT = 70;
+		LinearLayout.LayoutParams okParams = new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, BUTTON_HEIGHT);
+		final int BUTTON_MARGIN = 5;
+		okParams.setMargins(BUTTON_MARGIN, BUTTON_MARGIN, BUTTON_MARGIN, BUTTON_MARGIN);
+		okButton.setOnClickListener(new HideDialogListener(dialog));
 
 		//Text
+		LinearLayout textLayout = new LinearLayout(activity);
+		RelativeLayout.LayoutParams textLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+		TextView text = new TextView(activity);
 		text.setText(info.toString());
-
+		
+		//Childs
+		dialog.setContentView(main, standardParams);
+		main.addView(content, standardParams);
+		content.addView(scrollLayout, scrollLayoutParams);
+		content.addView(graphLayout, graphLayoutParams);
+		content.addView(okLayout, okLayoutParams);
+		graphLayout.addView(graph, graphParams);
+		scrollLayout.addView(scroll, standardParams);		
+		scroll.addView(textLayout, textLayoutParams);
+		textLayout.addView(text, standardParams);
+		okLayout.addView(okButton, okParams);
+	
 		//Graph
 		int width = activity.getWindowManager().getDefaultDisplay().getWidth();
 		graph.setLayoutParams(new RelativeLayout.LayoutParams(width-20, 200));
