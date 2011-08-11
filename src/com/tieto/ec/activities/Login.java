@@ -91,7 +91,8 @@ public class Login extends Activity{
     	try {
 			FileManager.readPath(this, "Login.First Time");
 		} catch (IOException e) {
-			InfoDialog.showInfoDialog(this, "Welcome to Energy Components pilot for Android. To start, click the menu button and fill in the webservice url and namespace");
+			InfoDialog.showInfoDialog(this, "Welcome to Energy Components pilot for Android. To start, click the menu button and fill in the webservice url.\nNamespace is not " +
+					"necessary, but is an option if the application was not successful to retrive the namespace from the provided url.");
 			FileManager.writePath(this, "Login.First Time", "Shown welcome message");
 			e.printStackTrace();
 		}
@@ -107,9 +108,11 @@ public class Login extends Activity{
 		try {
 			String exist = FileManager.readPath(this, OptionTitle.Options + "." + OptionTitle.SecurityOptions);
 			if(exist.equalsIgnoreCase(OptionTitle.ClearUsernameAndPassword.toString())){
+				setQuit(false);
 				onCreate(null);	
 			}
 			else{
+				setQuit(true);
 				onBackPressed();
 			}
 		} catch (IOException e) {

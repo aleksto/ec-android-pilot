@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ import com.tieto.ec.logic.SectionSaver.Location;
 
 public class SectionBuilder {
 
+	private ArrayList<String> openSections;
 	private DailyMorningReport dmr;
 	private Date date; 
 
@@ -53,6 +55,7 @@ public class SectionBuilder {
 	 * @param dmr {@link DailyMorningReport} for refreshing the report
 	 */
 	public SectionBuilder(DailyMorningReport dmr){
+		openSections = new ArrayList<String>();
 		this.dmr = dmr;
 	}
 
@@ -85,21 +88,39 @@ public class SectionBuilder {
 	 */
 	private void addSection(Section section, Date fromdate, Date toDate, int resolution, boolean newWebserviceValues){
 		//Init
+		LinearLayout titleRow = new LinearLayout(dmr);
 		TextView sectionTitle = new TextView(dmr);
+		View status = new View(dmr);
 
 		//Title
 		sectionTitle.setText(section.getSectionHeader() + ":");
 		sectionTitle.setTextSize(30);
 		sectionTitle.setTextColor(dmr.getTextColor());
 		sectionTitle.setTypeface(Typeface.create("arial", Typeface.NORMAL));
-		sectionTitle.setPadding(0, 20, 0, 0);
+		sectionTitle.setMaxLines(1);
+		sectionTitle.setHorizontallyScrolling(true);
+		sectionTitle.setHorizontalScrollBarEnabled(true);
+//		sectionTitle.setBackgroundColor(Color.WHITE);
+		
+		//List
+		openSections.add(section.getSectionHeader());
 
 		//Childs
-		dmr.getTable().addView(sectionTitle);
+		dmr.getTable().addView(titleRow);
 		dmr.getTable().setPadding(10, 10, 10, 0);
+		
+		//Status
+		status.setBackgroundResource(android.R.drawable.radiobutton_on_background);
+		status.setLayoutParams(new LayoutParams(50, 50));
+		
+		//TitleRow
+		titleRow.setPadding(0, 20, 0, 0);
+		titleRow.addView(status);
+		titleRow.addView(sectionTitle);
+		Log.d("tieto", "Building section " + section.getSectionHeader());
 
 		//Listeners
-		sectionTitle.setOnClickListener(new ShowHideSection(section.getSectionHeader(), dmr.getTable()));
+		sectionTitle.setOnClickListener(new ShowHideSection(this, section.getSectionHeader(), dmr.getTable(), status));
 
 		//Values
 		if(section instanceof TextSection){
@@ -360,5 +381,12 @@ public class SectionBuilder {
 		FileManager.writePath(dmr, basePath + OptionTitle.TextColor, ColorType.Black.toString());
 		FileManager.writePath(dmr, basePath + OptionTitle.CellBackgroundColor, ColorType.White.toString());
 		FileManager.writePath(dmr, basePath + OptionTitle.CellBorderColor, ColorType.Black.toString());
+	}
+
+	/**
+	 * @return A list containing all open sections
+	 */
+	public ArrayList<String> getOpenSections() {
+		return openSections;
 	}
 }
