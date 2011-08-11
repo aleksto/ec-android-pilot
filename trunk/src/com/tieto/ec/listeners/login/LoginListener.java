@@ -21,6 +21,7 @@ import com.ec.prod.android.pilot.client.AndroidViewServiceMarshalled;
 import com.ec.prod.android.pilot.model.Resolution;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.activities.Login;
+import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.gui.dialogs.InfoDialog;
 import com.tieto.ec.logic.DateConverter;
 import com.tieto.ec.logic.DateConverter.Type;
@@ -54,7 +55,7 @@ public class LoginListener implements Runnable {
 		//Reading saved data
 		try {
 			url = FileManager.readPath(login, "Input Options.Webservice URL");
-			String usernameAndPassword = FileManager.readPath(login, "DMR Report.Security Options");
+			String usernameAndPassword = FileManager.readPath(login, OptionTitle.Options + "." + OptionTitle.SecurityOptions);
 			
 			if(!usernameAndPassword.equalsIgnoreCase("Clear Username\nAnd Password")){
 				String[] split = usernameAndPassword.split("¤#@#¤");
@@ -77,9 +78,9 @@ public class LoginListener implements Runnable {
 	private void login(String username, String password) {		
 		//Saving username and password
 		try {
-			if(Boolean.valueOf(FileManager.readPath(login, "DMR Report.Security Options.Remember Login\nCredentials"))){
+			if(Boolean.valueOf(FileManager.readPath(login, OptionTitle.Options + "." + OptionTitle.SecurityOptions + "." + OptionTitle.RememberLoginCredentials))){
 				if(!username.equalsIgnoreCase("") && !password.equalsIgnoreCase("")){
-					FileManager.writePath(login, "DMR Report.Security Options", username + "¤#@#¤" + password);		
+					FileManager.writePath(login, OptionTitle.Options + "." + OptionTitle.SecurityOptions, username + "¤#@#¤" + password);		
 				}
 			}
 			
@@ -109,7 +110,7 @@ public class LoginListener implements Runnable {
 			
 			login.startActivity(intent);
 		} catch (IOException e) {
-			FileManager.writePath(login, "DMR Report.Security Options.Remember Login\nCredentials", "true");
+			FileManager.writePath(login, OptionTitle.Options + "." + OptionTitle.SecurityOptions + "." + OptionTitle.RememberLoginCredentials, "true");
 			login(username, password);
 			e.printStackTrace();
 		}

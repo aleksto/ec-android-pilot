@@ -34,8 +34,8 @@ public class OptionRow extends RelativeLayout{
 		DATE_BUTTON, 
 		CHOOSE_BUTTON, 
 		CHECK_BOX,
+		X_EDIT_BUTTON,
 		DEFAULT;
-	
 	}
 	
 	/**
@@ -172,6 +172,12 @@ public class OptionRow extends RelativeLayout{
 			setDefault = true;
 			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
 			break;
+		
+		case X_EDIT_BUTTON:
+			goBack = false;
+			setDefault = false;
+//			nextState;
+			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
 		}
 	}
 
