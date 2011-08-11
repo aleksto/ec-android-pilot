@@ -21,22 +21,32 @@ public class DateConverter {
 	 * @param string
 	 * @return
 	 */
-	public static Date parse(String string){
-		//YYYY-MM-DDT00:00:00Z
+	public static Date parse(String string, Type type){
 		Date date;
-		int year = Integer.valueOf(string.substring(0, 4));
-		int month = Integer.valueOf(string.substring(5, 7));
-		int day = Integer.valueOf(string.substring(8, 10));
-		if(string.length() > 10){
-			int hour = Integer.valueOf(string.substring(11, 13));
-			int min = Integer.valueOf(string.substring(14, 16));
-			int sec = Integer.valueOf(string.substring(17, 19));
-			date = new Date(year-OFFSET, (month-1), day, hour, min, sec);
+		switch (type) {
+		case DATE:			
+			//YYYY-MM-DDT00:00:00Z
+			int year = Integer.valueOf(string.substring(0, 4));
+			int month = Integer.valueOf(string.substring(5, 7));
+			int day = Integer.valueOf(string.substring(8, 10));
+			if(string.length() > 10){
+				int hour = Integer.valueOf(string.substring(11, 13));
+				int min = Integer.valueOf(string.substring(14, 16));
+				int sec = Integer.valueOf(string.substring(17, 19));
+				date = new Date(year-OFFSET, (month-1), day, hour, min, sec);
+			}
+			else{
+				date = new Date(year-OFFSET, (month-1), day);
+			}
+			return date;
+		case TIME:
+			//00:00:00Z
+			int hour = Integer.valueOf(string.substring(0, 4));
+			int min = Integer.valueOf(string.substring(5, 7));
+			int sec = Integer.valueOf(string.substring(8, 10));
+			return new Date(1, 1, 1, hour, min, sec);
 		}
-		else{
-			date = new Date(year-OFFSET, (month-1), day);
-		}
-		return date;
+		return null;
 	}
 	
 	/**

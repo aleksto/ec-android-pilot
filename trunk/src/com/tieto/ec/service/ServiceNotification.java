@@ -1,5 +1,6 @@
 package com.tieto.ec.service;
 
+import java.io.IOException;
 import java.util.Date;
 
 import android.app.Notification;
@@ -10,7 +11,9 @@ import android.content.Intent;
 
 import com.ec.prod.android.pilot.model.Resolution;
 import com.tieto.ec.activities.Login;
+import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.logic.DateConverter;
+import com.tieto.ec.logic.FileManager;
 import com.tieto.ec.logic.DateConverter.Type;
 
 public class ServiceNotification {
@@ -56,9 +59,22 @@ public class ServiceNotification {
 		//Init
 		notification = new Notification(icon, tickerText, System.currentTimeMillis());
 		
-		//Display
+		//Notification
 		notification.setLatestEventInfo(applicationContext, contentTitle, message, contentIntent);
 		notification.flags |= Notification.FLAG_AUTO_CANCEL;
+		try {
+			if(Boolean.valueOf(FileManager.readPath(applicationContext, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.sound))){
+				notification.defaults |= Notification.DEFAULT_SOUND;
+			}
+			if(Boolean.valueOf(FileManager.readPath(applicationContext, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.vibrate))){
+				notification.defaults |= Notification.DEFAULT_VIBRATE;
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		//NotificationManager
 		notificationManager.notify(NOTIFICATION_ID, notification);
 		
 		//Setting dailyMorningReport time

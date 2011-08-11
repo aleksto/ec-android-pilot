@@ -59,11 +59,12 @@ public class OptionBuilder {
 
 		//Listeners
 		DmrRefreshListener listener = new DmrRefreshListener(dailyMorningReport);
-		textColor.setOnDismissListener(listener);
-		backgroundColor.setOnDismissListener(listener);
-		cellTextColor.setOnDismissListener(listener);
-		cellBackgroundColor.setOnDismissListener(listener);
-		color.setOnDismissListener(listener);
+		root.setOnDismissListener(listener);
+//		textColor.setOnDismissListener(listener);
+//		backgroundColor.setOnDismissListener(listener);
+//		cellTextColor.setOnDismissListener(listener);
+//		cellBackgroundColor.setOnDismissListener(listener);
+//		color.setOnDismissListener(listener);
 		return root;
 	}
 	
@@ -72,16 +73,15 @@ public class OptionBuilder {
 	 * @param data.dialog {@link OptionDialog} dialog
 	 */
 	private static void createRootOptions(OptionDialog root) {
-		root.addOptionRow(OptionTitle.SecurityOptions, OptionRowType.NONE);
-		root.addOptionRow(OptionTitle.ColorOptions, OptionRowType.NONE);
 		root.addOptionRow(OptionTitle.DisplayWarnings, OptionRowType.CHECK_BOX);
 		root.addOptionRow(OptionTitle.NotificationOptions, OptionRowType.NONE);
 		root.addOptionRow(OptionTitle.SentOptions, OptionRowType.NONE);
+		root.addOptionRow(OptionTitle.ColorOptions, OptionRowType.NONE);
+		root.addOptionRow(OptionTitle.SecurityOptions, OptionRowType.NONE);
 	}
 	
 	private static void createEmailOptions(OptionDialog dialog) {
-		
-		dialog.addOptionRow(OptionTitle.StandardReceiver, OptionRowType.EDIT_BUTTON);
+		dialog.addOptionRow(OptionTitle.StandardReceiver, OptionRowType.X_EDIT_BUTTON);
 		dialog.addOptionRow(OptionTitle.StandardTopic, OptionRowType.EDIT_BUTTON);
 		dialog.addOptionRow(OptionTitle.Signature, OptionRowType.EDIT_BUTTON);
 	}
@@ -120,14 +120,16 @@ public class OptionBuilder {
 	 * @param dialog {@link OptionDialog} dialog
 	 */
 	private static void createColorOptions(OptionDialog dialog) {
+		dialog.addOptionRow(OptionTitle.Default, OptionRowType.DEFAULT);
 		dialog.addOptionRow(OptionTitle.TextColor, OptionRowType.NONE);
 		dialog.addOptionRow(OptionTitle.BackgroundColor, OptionRowType.NONE);
 		dialog.addOptionRow(OptionTitle.CellBackgroundColor, OptionRowType.NONE);
 		dialog.addOptionRow(OptionTitle.CellBorderColor, OptionRowType.NONE);
-		dialog.addOptionRow(OptionTitle.Default, OptionRowType.DEFAULT);
 	}
 	
 	private static void createServiceOptions(OptionDialog service) {
+		service.addOptionRow(OptionTitle.vibrate, OptionRowType.CHECK_BOX);
+		service.addOptionRow(OptionTitle.sound, OptionRowType.CHECK_BOX);
 		service.addOptionRow(TimeType.off, OptionRowType.CHOOSE_BUTTON);
 		service.addOptionRow(TimeType.sec20, OptionRowType.CHOOSE_BUTTON);
 		service.addOptionRow(TimeType.min15, OptionRowType.CHOOSE_BUTTON);
@@ -143,10 +145,4 @@ public class OptionBuilder {
 		service.addOptionRow(TimeType.day3, OptionRowType.CHOOSE_BUTTON);
 
 	}
-
-
-	
-	
-		
-	
 }

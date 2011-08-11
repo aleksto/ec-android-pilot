@@ -117,7 +117,7 @@ public enum OptionTitle {
 	Default {
 		@Override
 		public String toString() {
-	        return "#Default";
+	        return "Default";
 	    }
 	}, 
 	ChooseSections {
@@ -135,7 +135,7 @@ public enum OptionTitle {
 	StandardReceiver{
 		@Override
 		public String toString() {
-	        return "Standard Receiver";
+	        return "Standard Receiver(s)";
 	    }
 	}, 
 	StandardTopic{
@@ -144,8 +144,16 @@ public enum OptionTitle {
 	        return "Standard Topic";
 	    }
 	}, Signature, 
-
-
-
-	
+	sound{
+		@Override
+		public String toString() {
+			return "Sound";
+		}
+	}, 
+	vibrate{
+		@Override
+		public String toString() {
+			return "Vibrate";
+		}
+	},
 }

@@ -8,6 +8,7 @@ import java.util.TreeMap;
 import android.R;
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -22,6 +23,7 @@ import com.tieto.ec.logic.FileManager;
 
 public class OptionDialog extends Dialog {
 	
+	private int count = 0;
 	private String title;
 	private String path;
 	private TreeMap<String, OptionRowType> optionRowTypes;
@@ -214,7 +216,14 @@ public class OptionDialog extends Dialog {
 	 * @param optionRowType
 	 */
 	public void addOptionRow(String text, OptionRowType optionRowType){
-		optionRowTypes.put(text, optionRowType);
+		if(count<10){
+			optionRowTypes.put("00" + count + "." + text, optionRowType);			
+		}else{
+			optionRowTypes.put("0" + count + "." + text, optionRowType);	
+		}
+		
+		Log.d("tieto", "Putting row 00" + count + "." + text + " into dialog " + getTitle());
+		count++;
 	}
 	
 	/**
@@ -257,17 +266,18 @@ public class OptionDialog extends Dialog {
 		Set<String> optionTexts = dialog.optionRowTypes.keySet();
 		
 		for (String optionsTitle : optionTexts) {
-			OptionRow optionRow = new OptionRow(dialog, optionsTitle, dialog.optionRowTypes.get(optionsTitle));
+			String title = optionsTitle.substring(optionsTitle.indexOf(".")+1);
+//			OptionRow optionRow = new OptionRow(dialog, optionsTitle, dialog.optionRowTypes.get(optionsTitle));
+			OptionRow optionRow = new OptionRow(dialog, title, dialog.optionRowTypes.get(optionsTitle));
 			dialog.optionRows.add(optionRow);
 			dialog.table.addView(optionRow);
 		
-			
 			if(dialog.optionRowTypes.get(optionsTitle) == OptionRowType.NONE){
-				buildOptionDialogRows(dialog.getChild(optionsTitle));
+				buildOptionDialogRows(dialog.getChild(title));
+//				buildOptionDialogRows(dialog.getChild(optionsTitle));
 			}
 		}
 	}
-
 
 	/**
 	 * This method will delete the local memory of all the childs of the given {@link OptionDialog}.
@@ -295,9 +305,4 @@ public class OptionDialog extends Dialog {
 			}
 		}
 	}
-	
-	
-	
-	
-	
 }

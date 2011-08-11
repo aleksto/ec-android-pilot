@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  *This class is used for reading and writing {@link String} to the local drive on the phone.
@@ -20,6 +21,7 @@ public class FileManager {
 	 */
 	public static void writePath(Context context, String path, String text) {
 		try {
+			Log.d("tieto", "Writing to path: " + path + "\tValue: " + text);
 			//Replacing "/" with "###" because a path cant contain the path seperator "/"
 			if(path.contains("/")){
 				path = path.replaceAll("/", "###");
@@ -58,6 +60,7 @@ public class FileManager {
 		inputStream.close();
 		
 		
+		Log.d("tieto", "Reading path: " + path + "\tValue: " + a);
 		return a;
 	}
 	

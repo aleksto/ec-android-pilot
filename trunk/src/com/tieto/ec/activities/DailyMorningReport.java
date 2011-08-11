@@ -38,6 +38,7 @@ import com.tieto.ec.logic.FileManager;
 import com.tieto.ec.logic.SectionBuilder;
 import com.tieto.ec.logic.SectionSaver;
 import com.tieto.ec.logic.WarningChecker;
+import com.tieto.ec.logic.DateConverter.Type;
 import com.tieto.ec.model.SectionWarning;
 import com.tieto.ec.service.EcService;
 
@@ -91,7 +92,7 @@ public class DailyMorningReport extends Activity{
 		
 		//Optionally extras
 		if (extras.containsKey("toDate")) {
-			toDate = DateConverter.parse(extras.getString("toDate"));
+			toDate = DateConverter.parse(extras.getString("toDate"), Type.DATE);
 		}else{
 			toDate = new Date(System.currentTimeMillis());
 			toDate.setDate(toDate.getDate()-1);
