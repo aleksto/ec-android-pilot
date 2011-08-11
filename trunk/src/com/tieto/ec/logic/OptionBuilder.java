@@ -27,6 +27,7 @@ public class OptionBuilder {
 		OptionDialog security = new OptionDialog(dailyMorningReport, OptionTitle.SecurityOptions);
 		OptionDialog color = new OptionDialog(dailyMorningReport, OptionTitle.ColorOptions);
 		OptionDialog notification = new OptionDialog(dailyMorningReport, OptionTitle.NotificationOptions);
+		OptionDialog send = new OptionDialog(dailyMorningReport, OptionTitle.SentOptions);
 
 		//Level3
 		OptionDialog textColor = new OptionDialog(dailyMorningReport, OptionTitle.TextColor);
@@ -39,6 +40,7 @@ public class OptionBuilder {
 		createRootOptions(root);
 		createColorOptions(color);
 		createSecurityOptions(security);
+		createEmailOptions(send);
 		createSubColorOptions(textColor);
 		createSubColorOptions(backgroundColor);
 		createSubColorOptions(cellBackgroundColor);
@@ -48,6 +50,7 @@ public class OptionBuilder {
 		root.addChild(security);
 		root.addChild(color);
 		root.addChild(notification);
+		root.addChild(send);
 
 		color.addChild(textColor);
 		color.addChild(backgroundColor);
@@ -73,6 +76,14 @@ public class OptionBuilder {
 		root.addOptionRow(OptionTitle.ColorOptions, OptionRowType.NONE);
 		root.addOptionRow(OptionTitle.DisplayWarnings, OptionRowType.CHECK_BOX);
 		root.addOptionRow(OptionTitle.NotificationOptions, OptionRowType.NONE);
+		root.addOptionRow(OptionTitle.SentOptions, OptionRowType.NONE);
+	}
+	
+	private static void createEmailOptions(OptionDialog dialog) {
+		
+		dialog.addOptionRow(OptionTitle.StandardReceiver, OptionRowType.EDIT_BUTTON);
+		dialog.addOptionRow(OptionTitle.StandardTopic, OptionRowType.EDIT_BUTTON);
+		dialog.addOptionRow(OptionTitle.Signature, OptionRowType.EDIT_BUTTON);
 	}
 
 	/**
@@ -80,6 +91,7 @@ public class OptionBuilder {
 	 * @param dialog {@link OptionDialog} dialog
 	 */
 	private static void createSubColorOptions(OptionDialog dialog) {
+		
 		dialog.addOptionRow(ColorType.Black, OptionRowType.CHOOSE_BUTTON);
 		dialog.addOptionRow(ColorType.Blue, OptionRowType.CHOOSE_BUTTON);
 		dialog.addOptionRow(ColorType.LightBlue, OptionRowType.CHOOSE_BUTTON);

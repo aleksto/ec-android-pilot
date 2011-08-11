@@ -1,5 +1,6 @@
 package com.tieto.ec.listeners.dmr;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import android.content.Intent;
@@ -9,8 +10,10 @@ import android.view.View.OnClickListener;
 import android.widget.Toast;
 
 import com.tieto.ec.activities.DailyMorningReport;
+import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.gui.dialogs.ChooseSectionsToSendDialog;
 import com.tieto.ec.gui.dialogs.ChooseSectionsToSendDialog.SectionBoxState;
+import com.tieto.ec.logic.FileManager;
 import com.tieto.ec.logic.InitiateWarningText;
 import com.tieto.ec.model.SectionWarning;
 
@@ -43,6 +46,8 @@ public class SendSectionWarningsListener implements OnClickListener {
 		boolean show = false;
 		body.append("MESSAGE:");
 
+		
+		
 		for (SectionWarning sectionWarning : dailyMorningReport.getWarnings()) {
 			try{
 				Log.d("tieto", "Show Section: " + sectionWarning.getSectionTitle() + ": " + showSection.get(sectionWarning.getSectionTitle()));
@@ -57,18 +62,52 @@ public class SendSectionWarningsListener implements OnClickListener {
 				}	
 			}catch(NullPointerException e){
 				e.printStackTrace();
-			}
+			}			
 		}
+		
+		String signature;
+		try {
+			signature = FileManager.readPath(chooseSectionsToSendDialog.getContext(), OptionTitle.Options + "." + OptionTitle.SentOptions + "." + OptionTitle.Signature);
+		} catch (IOException e1) {
+			signature = "";
+		}
+		body.append(signature);
 			
 		
 		if(show){
-			Intent i = new Intent(Intent.ACTION_SEND);
-			i.setType("text/plain");
-			i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"Energy.Components@tieto.com"});
-			i.putExtra(Intent.EXTRA_SUBJECT, "Energy Components: Warning Raport");
-			i.putExtra(Intent.EXTRA_TEXT, body.toString());
+			//Read
+			
+			
+			//Intent
+			Intent sentIntent = new Intent(Intent.ACTION_SEND);
+			sentIntent.setType("text/plain");
+			
+			//From email
+			String email;
 			try {
-				dailyMorningReport.startActivity(Intent.createChooser(i, "Send mail..."));
+				email = FileManager.readPath(chooseSectionsToSendDialog.getContext(), OptionTitle.Options + "." + OptionTitle.SentOptions + "." + OptionTitle.StandardReceiver);
+				Log.d("tieto", "TRY OK");
+			} catch (IOException e) {
+				Log.d("tieto", "CATCHING");
+				email = "";
+			}
+			Log.d("tieto", "EMAIL: " + email);
+			sentIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+			
+			//Topic
+			String topic;
+			try {
+				topic = FileManager.readPath(chooseSectionsToSendDialog.getContext(), OptionTitle.Options + "." + OptionTitle.SentOptions + "." + OptionTitle.StandardTopic);
+			} catch (IOException e) {
+				topic = "Energy Components: Warning Report";
+			}
+			sentIntent.putExtra(Intent.EXTRA_SUBJECT, topic);
+			
+			//Body
+			sentIntent.putExtra(Intent.EXTRA_TEXT, body.toString());
+			
+			try {
+				dailyMorningReport.startActivity(Intent.createChooser(sentIntent, "Send mail..."));
 			} catch (android.content.ActivityNotFoundException ex) {
 			    Toast.makeText(dailyMorningReport, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
 			}

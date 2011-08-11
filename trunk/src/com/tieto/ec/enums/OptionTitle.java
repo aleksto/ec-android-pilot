@@ -119,12 +119,31 @@ public enum OptionTitle {
 		public String toString() {
 	        return "#Default";
 	    }
-	}, ChooseSections {
+	}, 
+	ChooseSections {
 		@Override
 		public String toString() {
 	        return "Choose Sections";
 	    }
-	},
+	}, 
+	SentOptions{
+		@Override
+		public String toString() {
+	        return "Email Options";
+	    }
+	}, 
+	StandardReceiver{
+		@Override
+		public String toString() {
+	        return "Standard Receiver";
+	    }
+	}, 
+	StandardTopic{
+		@Override
+		public String toString() {
+	        return "Standard Topic";
+	    }
+	}, Signature, 
 
 
 
