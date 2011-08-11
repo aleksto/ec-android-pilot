@@ -176,7 +176,7 @@ public class OptionRow extends RelativeLayout{
 		case X_EDIT_BUTTON:
 			goBack = false;
 			setDefault = false;
-//			nextState;
+			nextState = new XEditTextDialog(optionDialog.getContext(), optionDialog.getPath(), optionsTitle);
 			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
 		}
 	}

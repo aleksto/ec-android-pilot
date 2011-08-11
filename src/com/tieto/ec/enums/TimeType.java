@@ -5,7 +5,7 @@ public enum TimeType {
 	off{
 		@Override
 		public String toString(){
-			return "#Off";
+			return "Off";
 		}
 	},
 	//Test

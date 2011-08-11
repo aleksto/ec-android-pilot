@@ -97,10 +97,6 @@ public class SectionBuilder {
 		sectionTitle.setTextSize(30);
 		sectionTitle.setTextColor(dmr.getTextColor());
 		sectionTitle.setTypeface(Typeface.create("arial", Typeface.NORMAL));
-		sectionTitle.setMaxLines(1);
-		sectionTitle.setHorizontallyScrolling(true);
-		sectionTitle.setHorizontalScrollBarEnabled(true);
-//		sectionTitle.setBackgroundColor(Color.WHITE);
 		
 		//List
 		openSections.add(section.getSectionHeader());

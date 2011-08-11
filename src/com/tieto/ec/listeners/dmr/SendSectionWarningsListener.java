@@ -83,16 +83,25 @@ public class SendSectionWarningsListener implements OnClickListener {
 			sentIntent.setType("text/plain");
 			
 			//From email
-			String email;
+			String[] emails;
+			String readVal = "";
 			try {
-				email = FileManager.readPath(chooseSectionsToSendDialog.getContext(), OptionTitle.Options + "." + OptionTitle.SentOptions + "." + OptionTitle.StandardReceiver);
-				Log.d("tieto", "TRY OK");
+				int size = Integer.valueOf(FileManager.readPath(dailyMorningReport, OptionTitle.Options + "." + OptionTitle.SentOptions + "." + OptionTitle.StandardReceiver + "." + "numberOfValues"));
+				emails = new String[size];
+				
+				for (int i = 0; i < emails.length; i++) {					
+					readVal = FileManager.readPath(chooseSectionsToSendDialog.getContext(), OptionTitle.Options + "." + OptionTitle.SentOptions + "." + OptionTitle.StandardReceiver + "." + i);
+					
+					if(!readVal.equalsIgnoreCase("")){
+						emails[i] = readVal;	
+						Log.d("tieto", "Putting email " + readVal + " into mail");
+					}
+				}
 			} catch (IOException e) {
-				Log.d("tieto", "CATCHING");
-				email = "";
+				emails = new String[]{""};
 			}
-			Log.d("tieto", "EMAIL: " + email);
-			sentIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+			
+			sentIntent.putExtra(Intent.EXTRA_EMAIL, emails);
 			
 			//Topic
 			String topic;
