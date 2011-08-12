@@ -9,6 +9,12 @@ public enum TimeType {
 		}
 	},
 	//Test
+	min1{
+		@Override
+		public String toString(){
+			return "Minutes 1";
+		}
+	},
 	sec20{
 		@Override
 		public String toString(){
@@ -80,5 +86,5 @@ public enum TimeType {
 		public String toString(){
 			return "Days 3";
 		}
-	},
+	}, 
 }
