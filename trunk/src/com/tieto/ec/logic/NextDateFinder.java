@@ -42,17 +42,25 @@ public class NextDateFinder {
 	 */
 	private static Date check(Date time, int dayToCheck){
 		Calendar cal = Calendar.getInstance();
+		
+		//An offset is needed to make monday the "Start of the week" day
+		int offset = 0;
+		//The Date class automatically sets sunday as "Start of the week", so when toDate is sunday
+		//an offset of 6 days is needed
+		if(cal.get(Calendar.DAY_OF_WEEK) == 0)
+			offset = -6;
+		
 		if(cal.get(Calendar.HOUR) > time.getHours()){
 			cal.set(Calendar.DATE, cal.get(Calendar.DATE)+1);
 		}else if(cal.get(Calendar.HOUR) ==  time.getHours() && cal.get(Calendar.MINUTE) >= time.getMinutes()){
 			cal.set(Calendar.DATE, cal.get(Calendar.DATE)+1);
 		}
 		
-		while(cal.get(Calendar.DAY_OF_WEEK) != dayToCheck){
+		while(cal.get(Calendar.DAY_OF_WEEK)+offset != dayToCheck){
 			cal.set(Calendar.DATE, cal.get(Calendar.DATE)+1);
 		}
 		
-		cal.set(Calendar.HOUR, time.getHours());
+		cal.set(Calendar.HOUR_OF_DAY, time.getHours());
 		cal.set(Calendar.MINUTE, time.getMinutes());
 		cal.set(Calendar.SECOND, 0);
 		return cal.getTime();
