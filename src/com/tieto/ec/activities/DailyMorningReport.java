@@ -216,24 +216,6 @@ public class DailyMorningReport extends Activity{
 		}
 	}
 
-	@Override
-	protected void onDestroy() {
-		//Super
-		super.onDestroy();
-		
-		//Log
-		Log.d("tieto", "onDestroy");
-	}
-	
-	@Override
-	protected void onResume() {
-		//Super
-		super.onResume();
-		
-		//Log
-		Log.d("tieto", "onResume");
-	}
-	
 	/**
 	 * Setting the date showed in the button row at top of activity
 	 * @param date

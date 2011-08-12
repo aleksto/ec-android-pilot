@@ -14,12 +14,13 @@ public class DateConverter {
 	public enum Type{DATE, TIME}
 	private final static int OFFSET = 1900;
 	
+
 	/**
-	 * This method takes a String of type YYYY-MM-DDT00:00:00Z. 
-	 * YYYY is year, MM is month, DD is day, and 00:00:00 is time.
-	 * T and Z are string constants. The String is converted to a {@link Date}
-	 * @param string
-	 * @return
+	 * Converts a string representing a date to a new {@link Date} object.
+	 * Type can be either DATE or TIME.
+	 * @param string The string representing the date
+	 * @param type Type of converting
+	 * @return A new {@link Date}
 	 */
 	public static Date parse(String string, Type type){
 		Date date;
@@ -49,13 +50,16 @@ public class DateConverter {
 		return null;
 	}
 	
+
 	/**
-	 * This method takes a {@link Date}, checks if it contains a Time or only a Date. 
-	 * From this information it converts the Date into a String which is Webservice ready.
-	 * The return format is YYYY-MM-DDT00:00:00Z where YYYY is year, MM is month, DD is day, and 00:00:00 is time.
-	 * T and Z are string constants.
-	 * @param date
-	 * @param type
+	 * Creates a string representing a date. {@link Resolution} will determine the format of the string
+	 * YEARlY - YYYY
+	 * MONTHLY - Name of month
+	 * WEEKLY - Week number
+	 * DAILY - DD-MM-YYYY 
+	 * @param date The given date
+	 * @param type Type of conversion
+	 * @param resolution Resolution for the conversion
 	 * @return
 	 */
 	public static String parse(Date date, Type type, int resolution){
