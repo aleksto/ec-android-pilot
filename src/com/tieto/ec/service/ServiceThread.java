@@ -82,6 +82,7 @@ public class ServiceThread implements Runnable{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		Date date = DateConverter.parse(notificationTime, Type.TIME);
 
 		for (String days : notificationDays) {

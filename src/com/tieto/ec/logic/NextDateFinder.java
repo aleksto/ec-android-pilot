@@ -48,7 +48,7 @@ public class NextDateFinder {
 			cal.set(Calendar.DATE, cal.get(Calendar.DATE)+1);
 		}
 		
-		while(cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY){
+		while(cal.get(Calendar.DAY_OF_WEEK) != dayToCheck){
 			cal.set(Calendar.DATE, cal.get(Calendar.DATE)+1);
 		}
 		return cal.getTime();
