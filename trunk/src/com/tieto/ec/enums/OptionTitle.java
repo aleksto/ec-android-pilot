@@ -143,9 +143,35 @@ public enum OptionTitle {
 		public String toString() {
 	        return "Standard Topic";
 	    }
-	}, Signature, 
-	sound{
+	}, 
+	Signature, 
+	TimeDeterminedNotification{
 		@Override
+		public String toString() {
+	        return "Time Determined";
+	    }
+	},  
+	IntervalDeterminedNotification{
+		@Override
+		public String toString() {
+	        return "Interval Determined";
+	    }
+	}, 
+	SetTime{
+		@Override
+		public String toString() {
+	        return "Set Time";
+	    }
+	}, 
+	Monday, 
+	Tuesday,
+	Wednsday,
+	Thursday,
+	Friday,
+	Saturday,
+	Sunday,
+	sound{
+ 		@Override
 		public String toString() {
 			return "Sound";
 		}

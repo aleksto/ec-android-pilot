@@ -34,6 +34,9 @@ public class OptionBuilder {
 		OptionDialog backgroundColor = new OptionDialog(dailyMorningReport, OptionTitle.BackgroundColor);
 		OptionDialog cellTextColor = new OptionDialog(dailyMorningReport, OptionTitle.CellBackgroundColor);
 		OptionDialog cellBackgroundColor = new OptionDialog(dailyMorningReport, OptionTitle.CellBorderColor);
+		OptionDialog timeDeterminedNotification = new OptionDialog(dailyMorningReport, OptionTitle.TimeDeterminedNotification);
+		OptionDialog intervalDeterminedNotification = new OptionDialog(dailyMorningReport, OptionTitle.IntervalDeterminedNotification);
+
 
 
 		// Root options
@@ -41,21 +44,26 @@ public class OptionBuilder {
 		createColorOptions(color);
 		createSecurityOptions(security);
 		createEmailOptions(send);
+		createNotificationOptions(notification);
 		createSubColorOptions(textColor);
 		createSubColorOptions(backgroundColor);
 		createSubColorOptions(cellBackgroundColor);
 		createSubColorOptions(cellTextColor);
-		createServiceOptions(notification);
+		createIntervalDeterminedNotification(intervalDeterminedNotification);
+		createTimeDeterminedNotification(timeDeterminedNotification);
 
 		root.addChild(security);
 		root.addChild(color);
 		root.addChild(notification);
 		root.addChild(send);
-
+	
 		color.addChild(textColor);
 		color.addChild(backgroundColor);
 		color.addChild(cellTextColor);
 		color.addChild(cellBackgroundColor);
+		
+		notification.addChild(timeDeterminedNotification);
+		notification.addChild(intervalDeterminedNotification);
 
 		//Listeners
 		DmrRefreshListener listener = new DmrRefreshListener(dailyMorningReport);
@@ -68,16 +76,33 @@ public class OptionBuilder {
 		return root;
 	}
 	
+	
+
+
+
+	private static void createTimeDeterminedNotification(OptionDialog dialog) {
+		dialog.addOptionRow(OptionTitle.SetTime, OptionRowType.Time_Button);
+		dialog.addOptionRow(OptionTitle.Monday, OptionRowType.CHECK_BOX);
+		dialog.addOptionRow(OptionTitle.Tuesday, OptionRowType.CHECK_BOX);
+		dialog.addOptionRow(OptionTitle.Wednsday, OptionRowType.CHECK_BOX);
+		dialog.addOptionRow(OptionTitle.Thursday, OptionRowType.CHECK_BOX);
+		dialog.addOptionRow(OptionTitle.Friday, OptionRowType.CHECK_BOX);
+		dialog.addOptionRow(OptionTitle.Saturday, OptionRowType.CHECK_BOX);
+		dialog.addOptionRow(OptionTitle.Sunday, OptionRowType.CHECK_BOX);
+
+		
+	}
+
 	/**
 	 * Creates sub dialog root options
 	 * @param data.dialog {@link OptionDialog} dialog
 	 */
 	private static void createRootOptions(OptionDialog root) {
 		root.addOptionRow(OptionTitle.DisplayWarnings, OptionRowType.CHECK_BOX);
-		root.addOptionRow(OptionTitle.NotificationOptions, OptionRowType.NONE);
-		root.addOptionRow(OptionTitle.SentOptions, OptionRowType.NONE);
-		root.addOptionRow(OptionTitle.ColorOptions, OptionRowType.NONE);
-		root.addOptionRow(OptionTitle.SecurityOptions, OptionRowType.NONE);
+//		root.addOptionRow(OptionTitle.NotificationOptions, OptionRowType.NONE);
+//		root.addOptionRow(OptionTitle.SentOptions, OptionRowType.NONE);
+//		root.addOptionRow(OptionTitle.ColorOptions, OptionRowType.NONE);
+//		root.addOptionRow(OptionTitle.SecurityOptions, OptionRowType.NONE);
 	}
 	
 	private static void createEmailOptions(OptionDialog dialog) {
@@ -121,28 +146,36 @@ public class OptionBuilder {
 	 */
 	private static void createColorOptions(OptionDialog dialog) {
 		dialog.addOptionRow(OptionTitle.Default, OptionRowType.DEFAULT);
-		dialog.addOptionRow(OptionTitle.TextColor, OptionRowType.NONE);
-		dialog.addOptionRow(OptionTitle.BackgroundColor, OptionRowType.NONE);
-		dialog.addOptionRow(OptionTitle.CellBackgroundColor, OptionRowType.NONE);
-		dialog.addOptionRow(OptionTitle.CellBorderColor, OptionRowType.NONE);
+//		dialog.addOptionRow(OptionTitle.TextColor, OptionRowType.NONE);
+//		dialog.addOptionRow(OptionTitle.BackgroundColor, OptionRowType.NONE);
+//		dialog.addOptionRow(OptionTitle.CellBackgroundColor, OptionRowType.NONE);
+//		dialog.addOptionRow(OptionTitle.CellBorderColor, OptionRowType.NONE);
 	}
 	
-	private static void createServiceOptions(OptionDialog service) {
-		service.addOptionRow(OptionTitle.vibrate, OptionRowType.CHECK_BOX);
-		service.addOptionRow(OptionTitle.sound, OptionRowType.CHECK_BOX);
-		service.addOptionRow(TimeType.off, OptionRowType.CHOOSE_BUTTON);
-		service.addOptionRow(TimeType.sec20, OptionRowType.CHOOSE_BUTTON);
-		service.addOptionRow(TimeType.min15, OptionRowType.CHOOSE_BUTTON);
-		service.addOptionRow(TimeType.min30, OptionRowType.CHOOSE_BUTTON);
-		service.addOptionRow(TimeType.min45, OptionRowType.CHOOSE_BUTTON);
-		service.addOptionRow(TimeType.hour1, OptionRowType.CHOOSE_BUTTON);
-		service.addOptionRow(TimeType.hour2, OptionRowType.CHOOSE_BUTTON);
-		service.addOptionRow(TimeType.hour5, OptionRowType.CHOOSE_BUTTON);
-		service.addOptionRow(TimeType.hour10, OptionRowType.CHOOSE_BUTTON);
-		service.addOptionRow(TimeType.hour12, OptionRowType.CHOOSE_BUTTON);
-		service.addOptionRow(TimeType.day1, OptionRowType.CHOOSE_BUTTON);
-		service.addOptionRow(TimeType.day2, OptionRowType.CHOOSE_BUTTON);
-		service.addOptionRow(TimeType.day3, OptionRowType.CHOOSE_BUTTON);
-
+	private static void createNotificationOptions(OptionDialog notification) {
+//		notification.addOptionRow(OptionTitle.IntervalDeterminedNotification, OptionRowType.NONE);
+//		notification.addOptionRow(OptionTitle.TimeDeterminedNotification, OptionRowType.NONE);
+		
 	}
+	
+	private static void createIntervalDeterminedNotification(OptionDialog dialog) {
+		dialog.addOptionRow(TimeType.off, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.sec20, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.min15, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.min30, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.min45, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.hour1, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.hour2, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.hour5, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.hour10, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.hour12, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.day1, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.day2, OptionRowType.CHOOSE_BUTTON);
+		dialog.addOptionRow(TimeType.day3, OptionRowType.CHOOSE_BUTTON);
+		
+	}
+	
+	
+
+
 }

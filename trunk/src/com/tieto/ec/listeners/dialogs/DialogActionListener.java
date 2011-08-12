@@ -1,6 +1,7 @@
 package com.tieto.ec.listeners.dialogs;
 
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -61,7 +62,11 @@ public class DialogActionListener implements OnClickListener, OnCheckedChangeLis
 		}
 		else{
 			nextState.show();
-		}	
+		}
+		
+		if(nextState instanceof TimePickerDialog){
+			dialog.refresh();
+		}
 	}
 
 	/**

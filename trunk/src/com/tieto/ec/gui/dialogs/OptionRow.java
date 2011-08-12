@@ -5,14 +5,15 @@ import java.util.Calendar;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tieto.ec.listeners.dialogs.DatePickerListener;
 import com.tieto.ec.listeners.dialogs.DialogActionListener;
+import com.tieto.ec.listeners.dialogs.PickerListener;
 import com.tieto.ec.logic.FileManager;
 
 public class OptionRow extends RelativeLayout{
@@ -35,7 +36,8 @@ public class OptionRow extends RelativeLayout{
 		CHOOSE_BUTTON, 
 		CHECK_BOX,
 		X_EDIT_BUTTON,
-		DEFAULT;
+		DEFAULT, 
+		Time_Button;
 	}
 	
 	/**
@@ -111,10 +113,10 @@ public class OptionRow extends RelativeLayout{
 			}
 			
 
-			Calendar c = Calendar.getInstance();
-			nextState = new DatePickerDialog(optionDialog.getContext(), new DatePickerListener(optionDialog, optionDialog.getPath() + "." + optionsTitle), c.get(Calendar.YEAR),
-					c.get(Calendar.MONTH),
-					c.get(Calendar.DATE));
+			Calendar dateReference = Calendar.getInstance();
+			nextState = new DatePickerDialog(optionDialog.getContext(), new PickerListener(optionDialog, optionDialog.getPath() + "." + optionsTitle, optionsSubTextView), dateReference.get(Calendar.YEAR),
+					dateReference.get(Calendar.MONTH),
+					dateReference.get(Calendar.DATE));
 			
 			//Listener
 			goBack = false;
@@ -138,8 +140,6 @@ public class OptionRow extends RelativeLayout{
 			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
 			break;
 		case CHECK_BOX:
-		
-			
 			//Init
 			CheckBox checkBox = new CheckBox(optionDialog.getContext());
 			
@@ -178,6 +178,28 @@ public class OptionRow extends RelativeLayout{
 			setDefault = false;
 			nextState = new XEditTextDialog(optionDialog.getContext(), optionDialog.getPath(), optionsTitle);
 			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
+		case Time_Button:
+			
+			String readValue;
+			try {
+				Log.d("tieto", "READING FROM PATH: " + optionDialog.getPath() + "." + optionsTitle);
+				readValue = FileManager.readPath(optionDialog.getContext(), optionDialog.getPath() + "." + optionsTitle);
+				optionsSubTextView.setText(readValue);
+				Log.d("tieto", "Read path: " + optionDialog.getPath() + "." + optionsTitle + " for subtext. \tString read: " + optionsSubTextView.getText());
+			} catch (IOException e) {
+				optionsSubTextView.setText("");
+				readValue = "00:00";
+				e.printStackTrace();
+			}
+						
+			nextState = new TimePickerDialog(optionDialog.getContext(), new PickerListener(optionDialog, optionDialog.getPath() + "." + optionsTitle, optionsSubTextView), 
+											 Integer.valueOf(readValue.substring(0, 2)), Integer.valueOf(readValue.substring(3, 5)), true);
+			
+			//Listener
+			goBack = false;
+			setDefault = false;
+			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
+			break;
 		}
 	}
 

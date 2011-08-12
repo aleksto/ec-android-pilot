@@ -8,6 +8,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.ec.prod.android.pilot.model.Section;
+import com.tieto.R;
 import com.tieto.ec.logic.SectionBuilder;
 
 public class ShowHideSection implements OnClickListener{
@@ -49,7 +50,7 @@ public class ShowHideSection implements OnClickListener{
 				setAnimation(removed, false);
 				table.removeViewAt(getIdx()+1);
 				sectionBuilder.getOpenSections().remove(title);
-				status.setBackgroundResource(android.R.drawable.radiobutton_off_background);
+				status.setBackgroundResource(R.drawable.expander_ic_minimized);
 				table.invalidate();
 				showing = false;
 			}
@@ -57,7 +58,7 @@ public class ShowHideSection implements OnClickListener{
 				setAnimation(removed, true);
 				table.addView(removed, getIdx()+1);
 				sectionBuilder.getOpenSections().add(title);
-				status.setBackgroundResource(android.R.drawable.radiobutton_on_background);
+				status.setBackgroundResource(R.drawable.expander_ic_maximized);
 				showing = true;
 			}
 		}	

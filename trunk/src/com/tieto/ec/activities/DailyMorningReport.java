@@ -471,6 +471,14 @@ public class DailyMorningReport extends Activity{
 	public SectionSaver getSaveManager(){
 		return saveManager;
 	}
+
+	public void setSectionBuilder(SectionBuilder sectionBuilder) {
+		this.sectionBuilder = sectionBuilder;
+	}
+
+	public SectionBuilder getSectionBuilder() {
+		return sectionBuilder;
+	}
 	
 	
 }
