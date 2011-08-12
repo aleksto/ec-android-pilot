@@ -11,37 +11,37 @@ public enum TimeType {
 	min30{
 		@Override
 		public String toString(){
-			return "Minutes 30";
+			return "30 Minutes";
 		}
 	},
 	hour1{
 		@Override
 		public String toString(){
-			return "Hour 1";
+			return "1 Hour";
 		}
 	},
 	hour2{
 		@Override
 		public String toString(){
-			return "Hour 2";
+			return "2 Hours";
 		}
 	},
 	hour5{
 		@Override
 		public String toString(){
-			return "Hour 5";
+			return "5 Hours";
 		}
 	},
 	hour10{
 		@Override
 		public String toString(){
-			return "Hour 10";
+			return "10 Hours";
 		}
 	},
 	hour12{
 		@Override
 		public String toString(){
-			return "Hour 12";
+			return "12 Hours";
 		}
 	},
 }
