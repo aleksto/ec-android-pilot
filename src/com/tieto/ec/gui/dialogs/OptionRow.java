@@ -124,9 +124,7 @@ public class OptionRow extends RelativeLayout{
 			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
 			break;
 		case CHOOSE_BUTTON:		
-			Log.d("tieto", "OPTIONSTITLE: " + optionsTitle);
 			try {
-				Log.d("tieto", "READPATH: " + FileManager.readPath(optionDialog.getContext(), optionDialog.getPath()));
 				if(FileManager.readPath(optionDialog.getContext(), optionDialog.getPath()).equalsIgnoreCase(optionsTitle)){
 					optionsTextView.setTextColor(Color.RED);
 				}
@@ -182,7 +180,6 @@ public class OptionRow extends RelativeLayout{
 			
 			String readValue;
 			try {
-				Log.d("tieto", "READING FROM PATH: " + optionDialog.getPath() + "." + optionsTitle);
 				readValue = FileManager.readPath(optionDialog.getContext(), optionDialog.getPath() + "." + optionsTitle);
 				optionsSubTextView.setText(readValue);
 				Log.d("tieto", "Read path: " + optionDialog.getPath() + "." + optionsTitle + " for subtext. \tString read: " + optionsSubTextView.getText());

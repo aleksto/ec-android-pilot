@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.enums.ColorType;
+import com.tieto.ec.enums.Days;
 import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.enums.TimeType;
 import com.tieto.ec.gui.dialogs.OptionDialog;
@@ -75,22 +76,12 @@ public class OptionBuilder {
 //		color.setOnDismissListener(listener);
 		return root;
 	}
-	
-	
-
-
 
 	private static void createTimeDeterminedNotification(OptionDialog dialog) {
 		dialog.addOptionRow(OptionTitle.SetTime, OptionRowType.Time_Button);
-		dialog.addOptionRow(OptionTitle.Monday, OptionRowType.CHECK_BOX);
-		dialog.addOptionRow(OptionTitle.Tuesday, OptionRowType.CHECK_BOX);
-		dialog.addOptionRow(OptionTitle.Wednsday, OptionRowType.CHECK_BOX);
-		dialog.addOptionRow(OptionTitle.Thursday, OptionRowType.CHECK_BOX);
-		dialog.addOptionRow(OptionTitle.Friday, OptionRowType.CHECK_BOX);
-		dialog.addOptionRow(OptionTitle.Saturday, OptionRowType.CHECK_BOX);
-		dialog.addOptionRow(OptionTitle.Sunday, OptionRowType.CHECK_BOX);
-
-		
+		for (Days day : Days.values()) {
+			dialog.addOptionRow(day, OptionRowType.CHECK_BOX);
+		}		
 	}
 
 	/**
@@ -116,19 +107,9 @@ public class OptionBuilder {
 	 * @param dialog {@link OptionDialog} dialog
 	 */
 	private static void createSubColorOptions(OptionDialog dialog) {
-		
-		dialog.addOptionRow(ColorType.Black, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(ColorType.Blue, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(ColorType.LightBlue, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(ColorType.Cyan, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(ColorType.DarkGray, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(ColorType.LightGray, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(ColorType.Gray, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(ColorType.Green, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(ColorType.Magenta, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(ColorType.Red, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(ColorType.White, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(ColorType.Yellow, OptionRowType.CHOOSE_BUTTON);
+		for (ColorType color : ColorType.values()) {
+			dialog.addOptionRow(color, OptionRowType.CHOOSE_BUTTON);
+		}		
 	}
 
 	/**
@@ -159,20 +140,9 @@ public class OptionBuilder {
 	}
 	
 	private static void createIntervalDeterminedNotification(OptionDialog dialog) {
-		dialog.addOptionRow(TimeType.off, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.sec20, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.min15, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.min30, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.min45, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.hour1, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.hour2, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.hour5, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.hour10, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.hour12, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.day1, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.day2, OptionRowType.CHOOSE_BUTTON);
-		dialog.addOptionRow(TimeType.day3, OptionRowType.CHOOSE_BUTTON);
-		
+		for (TimeType timeType : TimeType.values()) {
+			dialog.addOptionRow(timeType, OptionRowType.CHOOSE_BUTTON);		
+		}	
 	}
 	
 	

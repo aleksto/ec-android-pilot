@@ -2,6 +2,7 @@ package com.tieto.ec.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -9,10 +10,13 @@ import android.content.Context;
 import android.util.Log;
 
 import com.ec.prod.android.pilot.service.ViewService;
+import com.tieto.ec.enums.Days;
 import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.enums.TimeType;
+import com.tieto.ec.logic.DateConverter;
 import com.tieto.ec.logic.FileManager;
 import com.tieto.ec.logic.UpdateTimeConverter;
+import com.tieto.ec.logic.DateConverter.Type;
 
 public class ServiceThread implements Runnable{
 	
@@ -55,7 +59,12 @@ public class ServiceThread implements Runnable{
 		Log.d("tieto", "Service Started with update interval:" + updateTime);
 
 		
-		ArrayList<String> notificationDays = loadNotificationDays();
+		
+		ArrayList<Date> timeDeterminedNotificationDates = getTimeDeterminedNotificationDates();
+		
+		
+		
+		
 		
 		//Thread
 		if(updateInterval > 0){
@@ -63,43 +72,45 @@ public class ServiceThread implements Runnable{
 		}
 	}
 
+	private ArrayList<Date> getTimeDeterminedNotificationDates() {
+		ArrayList<Date> notificationDates = new ArrayList<Date>();
+		ArrayList<String> notificationDays = loadNotificationDays();
+		
+		String notificationTime = "";
+		try {
+			notificationTime = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.SetTime);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Date date = DateConverter.parse(notificationTime, Type.TIME);
+
+		for (String days : notificationDays) {
+			Log.d("tieto", "DAYS TO BE ADDED: " + days);
+			Log.d("tieto", "DATE TO BE ADDED: " + date+"");
+
+			//Date date = new Date(year, month, day, hour, minute)
+		}
+	
+		
+		
+		return notificationDates;
+	}
+
 	private ArrayList<String> loadNotificationDays() {
-		try {
-			String monday = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.Monday);
-		} catch (IOException e) {
-			e.printStackTrace();
+		ArrayList<String> notificationDays = new ArrayList<String>();
+		for (Days day : Days.values()) {
+			try {
+				String isChecked = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + day);
+				if(Boolean.valueOf(isChecked)){
+					notificationDays.add(day.toString());
+				}
+						
+					
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		try {
-			String monday = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.Monday);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			String monday = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.Monday);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			String monday = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.Monday);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			String monday = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.Monday);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			String monday = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.Monday);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			String monday = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.Monday);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return notificationDays;
 	}
 
 	/**

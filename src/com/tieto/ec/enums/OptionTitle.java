@@ -163,13 +163,6 @@ public enum OptionTitle {
 	        return "Set Time";
 	    }
 	}, 
-	Monday, 
-	Tuesday,
-	Wednsday,
-	Thursday,
-	Friday,
-	Saturday,
-	Sunday,
 	sound{
  		@Override
 		public String toString() {
