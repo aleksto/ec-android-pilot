@@ -5,11 +5,13 @@
       android:versionName="1.0">
     <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="10"/>
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 
     <application android:icon="@drawable/icon" android:label="Energy Components">
         <activity android:name=".ec.activities.Welcome"
                   android:label="Energy Components"
-                  android:theme="@android:style/Theme.NoTitleBar">
+                  android:theme="@android:style/Theme.NoTitleBar"
+				  android:configChanges="orientation" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -17,8 +19,19 @@
         </activity>
 
 
-		<activity android:name=".ec.activities.Login" android:label="Login" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<activity android:name=".ec.activities.DailyMorningReport" android:label="Daily Morning Report" android:theme="@android:style/Theme.NoTitleBar"></activity>
-		<service android:name=".ec.service.EcService"></service>
+		<activity 
+		android:name=".ec.activities.Login" 
+		android:label="Login" 
+		android:theme="@android:style/Theme.NoTitleBar"
+		android:configChanges="orientation" ></activity>
+		<activity 
+		android:name=".ec.activities.DailyMorningReport" 
+		android:label="Daily Morning Report" 
+		android:configChanges="orientation" 
+		android:theme="@android:style/Theme.NoTitleBar"
+		android:launchMode="singleTop"></activity>
+		<service 
+		android:name=".ec.service.EcService">
+		</service>
     </application>
 </manifest>
