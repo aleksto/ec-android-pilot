@@ -8,35 +8,10 @@ public enum TimeType {
 			return "Off";
 		}
 	},
-	//Test
-	min1{
-		@Override
-		public String toString(){
-			return "Minutes 1";
-		}
-	},
-	sec20{
-		@Override
-		public String toString(){
-			return "Seconds 20";
-		}
-	},
-	min15{
-		@Override
-		public String toString(){
-			return "Minutes 15";
-		}
-	},
 	min30{
 		@Override
 		public String toString(){
 			return "Minutes 30";
-		}
-	},
-	min45{
-		@Override
-		public String toString(){
-			return "Minutes 45";
 		}
 	},
 	hour1{
@@ -69,22 +44,4 @@ public enum TimeType {
 			return "Hour 12";
 		}
 	},
-	day1{
-		@Override
-		public String toString(){
-			return "Day 1";
-		}
-	},
-	day2{
-		@Override
-		public String toString(){
-			return "Days 2";
-		}
-	},
-	day3{
-		@Override
-		public String toString(){
-			return "Days 3";
-		}
-	}, 
 }

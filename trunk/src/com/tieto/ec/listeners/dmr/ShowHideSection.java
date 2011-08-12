@@ -18,7 +18,7 @@ public class ShowHideSection implements OnClickListener{
 	private boolean showing;
 	private final View status;
 	private final SectionBuilder sectionBuilder;
-	private AlphaAnimation scaleIn, scaleOut;
+	private AlphaAnimation scaleIn;
 	private View removed;
 	
 	/**

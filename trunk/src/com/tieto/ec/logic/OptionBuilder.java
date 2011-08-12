@@ -134,6 +134,8 @@ public class OptionBuilder {
 	}
 	
 	private static void createNotificationOptions(OptionDialog notification) {
+		notification.addOptionRow(OptionTitle.sound, OptionRowType.CHECK_BOX);
+		notification.addOptionRow(OptionTitle.vibrate, OptionRowType.CHECK_BOX);
 //		notification.addOptionRow(OptionTitle.IntervalDeterminedNotification, OptionRowType.NONE);
 //		notification.addOptionRow(OptionTitle.TimeDeterminedNotification, OptionRowType.NONE);
 		
