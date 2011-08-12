@@ -21,11 +21,9 @@ import com.tieto.ec.logic.DateConverter.Type;
 
 public class ServiceThread implements Runnable{
 	
-	private Timer timer;
 	private Thread thread;
 	private long updateInterval;
-	private ValueChecker valueChecker;
-	private final Context context;
+	private final EcService service;
 	private final String username;
 	private final String password;
 	private final String url;
@@ -42,31 +40,31 @@ public class ServiceThread implements Runnable{
 	 * @param url The URL for {@link ViewService}
 	 * @param namespace The Namespace for {@link ViewService}
 	 */
-	public ServiceThread(Context context, String username, String password, String url, String namespace){
+	public ServiceThread(EcService service, String username, String password, String url, String namespace){
 		//Init
-		this.context = context;
+		this.service = service;
 		this.username = username;
 		this.password = password;
 		this.url = url;
 		this.namespace = namespace;
 		String updateTime = "";
 		try {
-			updateTime = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions);
+			updateTime = FileManager.readPath(service, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.IntervalDeterminedNotification);
 			updateInterval = UpdateTimeConverter.parse(updateTime);
 		} catch (IOException e) {
-			FileManager.writePath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions, TimeType.off+"");
-			updateInterval = -1;
+			FileManager.writePath(service, OptionTitle.Options + "." + OptionTitle.NotificationOptions, TimeType.off+"");
+			updateInterval = 1000000000;
 			e.printStackTrace();
 		}
 		Log.d("tieto", "Service Started with update interval:" + updateTime);
 	
 		timeDeterminedNotificationDates = getTimeDeterminedNotificationDates();
-		
+		Log.d("tieto", "SIZE OF DATES IS " + timeDeterminedNotificationDates.size());
 		
 		//Thread
-		if(updateInterval > 0){
+//		if(updateInterval > 0){
 			thread = new Thread(this);			
-		}
+//		}
 	}
 
 	private ArrayList<Date> getTimeDeterminedNotificationDates() {
@@ -75,7 +73,7 @@ public class ServiceThread implements Runnable{
 		
 		String notificationTimeString = "";
 		try {
-			notificationTimeString = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.SetTime);
+			notificationTimeString = FileManager.readPath(service, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.SetTime);
 			Date notificationTime = DateConverter.parse(notificationTimeString, Type.TIME);
 
 			for (Days notificationDay : notificationDays) {
@@ -84,6 +82,7 @@ public class ServiceThread implements Runnable{
 
 				
 				notificationDates.add(NextDateFinder.findNextDate(notificationDay, notificationTime));
+				Log.d("tieto", "ADDING DATE " + NextDateFinder.findNextDate(notificationDay, notificationTime) + " TO LIST");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -95,7 +94,7 @@ public class ServiceThread implements Runnable{
 		ArrayList<Days> notificationDays = new ArrayList<Days>();
 		for (Days day : Days.values()) {
 			try {
-				String isChecked = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + day);
+				String isChecked = FileManager.readPath(service, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + day);
 				if(Boolean.valueOf(isChecked)){
 					notificationDays.add(day);
 				}
@@ -116,23 +115,27 @@ public class ServiceThread implements Runnable{
 	}
 
 	/**
-	 * @return the {@link Timer} that is checking for updates
-	 */
-	public Timer getTimer(){
-		return timer;
-	}
-
-	/**
 	 * Runs when the {@link Thread} is started, and this initialize the {@link Timer}
 	 * and sets the {@link TimerTask} to {@link ValueChecker}
 	 */
 	public void run() {
-		valueChecker = new ValueChecker(context, username, password, url, namespace);
-		timer = new Timer();
-		timer.scheduleAtFixedRate(valueChecker, updateInterval, updateInterval);
+		Log.d("tieto", "UPDATEINTERVAL: " + updateInterval);
+		Timer timer = new Timer();
+		ValueChecker valueChecker = new ValueChecker(service, username, password, url, namespace);
+		
+		if(updateInterval != -1){			
+			Log.d("tieto", "NOTITICATION DATE IS SET TO--------------------" + updateInterval);
+			timer = new Timer();
+			timer.scheduleAtFixedRate(valueChecker, updateInterval, updateInterval);
+			service.addTimer(timer);	
+		}
 		
 		for (Date notificationDate : timeDeterminedNotificationDates) {
-			timer.schedule(valueChecker, notificationDate, UpdateTimeConverter.parse(TimeType.min1.toString()));
+			Log.d("tieto", "NOTITICATION DATE IS SET TO--------------------" + notificationDate+"");
+			timer = new Timer();
+			valueChecker = new ValueChecker(service, username, password, url, namespace);
+			timer.schedule(valueChecker, notificationDate, 7*24*60*60*1000);
+			service.addTimer(timer);	
 		}
 
 	}

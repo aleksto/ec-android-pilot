@@ -1,5 +1,8 @@
 package com.tieto.ec.service;
 
+import java.util.ArrayList;
+import java.util.Timer;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -9,6 +12,7 @@ import com.tieto.ec.enums.Webservice;
 
 public class EcService extends Service{
 	
+	private ArrayList<Timer> timers;
 	private ServiceThread serviceThread;
 
 	/**
@@ -27,6 +31,7 @@ public class EcService extends Service{
 		String password = intent.getExtras().getString(Webservice.password.toString());
 		String namespace = intent.getExtras().getString(Webservice.namespace.toString());
 		String url = intent.getExtras().getString(Webservice.url.toString());
+		timers = new ArrayList<Timer>();
 		
 		//Thread
 		serviceThread = new ServiceThread(this, username, password, url, namespace);
@@ -45,11 +50,21 @@ public class EcService extends Service{
 		Log.d("tieto", "Stopping service");
 		
 		//Stopping timer
-		if(serviceThread != null && serviceThread.getTimer() != null){
-			serviceThread.getTimer().cancel();			
+		if(serviceThread != null){
+			cancelAll();
 		}
 		//Super
 		super.onDestroy();
+	}
+	
+	private void cancelAll(){
+		for (Timer timer : timers) {
+			timer.cancel();
+		}
+	}
+	
+	public void addTimer(Timer timer){
+		timers.add(timer);
 	}
 	
 	/**

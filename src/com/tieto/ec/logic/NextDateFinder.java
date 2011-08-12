@@ -51,6 +51,10 @@ public class NextDateFinder {
 		while(cal.get(Calendar.DAY_OF_WEEK) != dayToCheck){
 			cal.set(Calendar.DATE, cal.get(Calendar.DATE)+1);
 		}
+		
+		cal.set(Calendar.HOUR, time.getHours());
+		cal.set(Calendar.MINUTE, time.getMinutes());
+		cal.set(Calendar.SECOND, 0);
 		return cal.getTime();
 	}
 }

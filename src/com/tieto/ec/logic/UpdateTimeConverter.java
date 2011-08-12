@@ -17,16 +17,7 @@ public class UpdateTimeConverter {
 	 * @return number off milliseconds for given {@link TimeType}
 	 */
 	public static long parse(String time){
-		if(time.equalsIgnoreCase(TimeType.day1.toString())){
-			return 	1*24*60*60*1000;
-		}
-		else if(time.equalsIgnoreCase(TimeType.day2.toString())){
-			return 	2*24*60*60*1000;
-		}
-		else if(time.equalsIgnoreCase(TimeType.day3.toString())){
-			return 	3*24*60*60*1000;
-		}
-		else if(time.equalsIgnoreCase(TimeType.hour1.toString())){
+		if(time.equalsIgnoreCase(TimeType.hour1.toString())){
 			return 	1*60*60*1000;
 		}
 		else if(time.equalsIgnoreCase(TimeType.hour2.toString())){
@@ -41,20 +32,8 @@ public class UpdateTimeConverter {
 		else if(time.equalsIgnoreCase(TimeType.hour12.toString())){
 			return 	12*60*60*1000;
 		}
-		else if(time.equalsIgnoreCase(TimeType.min15.toString())){
-			return 	15*60*1000;
-		}
 		else if(time.equalsIgnoreCase(TimeType.min30.toString())){
 			return 	30*60*1000;
-		}
-		else if(time.equalsIgnoreCase(TimeType.min45.toString())){
-			return 	45*60*1000;
-		}
-		else if(time.equalsIgnoreCase(TimeType.sec20.toString())){
-			return 20*1000;
-		}
-		else if(time.equalsIgnoreCase(TimeType.min1.toString())){
-			return 60*1000;
 		}
 		else{
 			return -1;
