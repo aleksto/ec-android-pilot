@@ -30,7 +30,7 @@ public class NextDateFinder {
 		case Sunday:
 			return check(time, Calendar.SUNDAY);
 		}
-		
+		 
 		return null;
 	}
 	

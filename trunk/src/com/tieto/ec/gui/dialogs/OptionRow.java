@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.tieto.ec.listeners.dialogs.DialogActionListener;
 import com.tieto.ec.listeners.dialogs.PickerListener;
+import com.tieto.ec.logic.DateConverter;
+import com.tieto.ec.logic.DateConverter.Type;
 import com.tieto.ec.logic.FileManager;
 
 public class OptionRow extends RelativeLayout{
@@ -185,7 +187,10 @@ public class OptionRow extends RelativeLayout{
 				Log.d("tieto", "Read path: " + optionDialog.getPath() + "." + optionsTitle + " for subtext. \tString read: " + optionsSubTextView.getText());
 			} catch (IOException e) {
 				optionsSubTextView.setText("");
-				readValue = "00:00";
+				Calendar cal = Calendar.getInstance();
+				readValue = DateConverter.parse(cal.getTime(), Type.TIME, 1);
+				optionsSubTextView.setText(readValue);
+				FileManager.writePath(getContext(), optionDialog.getPath() + "." + optionsTitle, readValue);
 				e.printStackTrace();
 			}
 						

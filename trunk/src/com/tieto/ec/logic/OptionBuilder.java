@@ -37,7 +37,7 @@ public class OptionBuilder {
 		OptionDialog cellBackgroundColor = new OptionDialog(dailyMorningReport, OptionTitle.CellBorderColor);
 		OptionDialog timeDeterminedNotification = new OptionDialog(dailyMorningReport, OptionTitle.TimeDeterminedNotification);
 		OptionDialog intervalDeterminedNotification = new OptionDialog(dailyMorningReport, OptionTitle.IntervalDeterminedNotification);
-
+		
 
 
 		// Root options
@@ -62,6 +62,7 @@ public class OptionBuilder {
 		color.addChild(backgroundColor);
 		color.addChild(cellTextColor);
 		color.addChild(cellBackgroundColor);
+		
 		
 		notification.addChild(timeDeterminedNotification);
 		notification.addChild(intervalDeterminedNotification);
@@ -134,6 +135,7 @@ public class OptionBuilder {
 	}
 	
 	private static void createNotificationOptions(OptionDialog notification) {
+		notification.addOptionRow(OptionTitle.ClearAll, OptionRowType.DEFAULT);
 		notification.addOptionRow(OptionTitle.sound, OptionRowType.CHECK_BOX);
 		notification.addOptionRow(OptionTitle.vibrate, OptionRowType.CHECK_BOX);
 //		notification.addOptionRow(OptionTitle.IntervalDeterminedNotification, OptionRowType.NONE);
