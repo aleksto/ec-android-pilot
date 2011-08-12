@@ -50,6 +50,7 @@ public class SendSectionWarningsListener implements OnClickListener {
 		
 		for (SectionWarning sectionWarning : dailyMorningReport.getWarnings()) {
 			try{
+			
 				Log.d("tieto", "Show Section: " + sectionWarning.getSectionTitle() + ": " + showSection.get(sectionWarning.getSectionTitle()));
 				if(showSection.get(sectionWarning.getSectionTitle()) == SectionBoxState.Checked){
 					//Adding section title to each section

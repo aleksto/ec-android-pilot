@@ -158,6 +158,18 @@ public class ChooseSectionsToSendDialog extends Dialog {
 		
 		//Init
 		CheckBox checkBox = new CheckBox(dailyMorningReport);
+		
+		//If opened in DailyMorningReport class, check them as selected
+			for (String openSection : dailyMorningReport.getSectionBuilder().getOpenSections()) {
+				if(openSection == sectionTitle){
+					Log.d("tieto", "PUT: " + openSection + " to SHOW SECTIONS");
+					showSection.put(openSection, SectionBoxState.Checked);
+					checkBox.setChecked(true);
+					
+				}
+			
+		}
+		
 		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				Log.d("tieto", "CHECKING");

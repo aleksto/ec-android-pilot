@@ -1,6 +1,7 @@
 package com.tieto.ec.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -14,7 +15,7 @@ import com.tieto.ec.logic.FileManager;
 import com.tieto.ec.logic.UpdateTimeConverter;
 
 public class ServiceThread implements Runnable{
-
+	
 	private Timer timer;
 	private Thread thread;
 	private long updateInterval;
@@ -51,13 +52,54 @@ public class ServiceThread implements Runnable{
 			updateInterval = -1;
 			e.printStackTrace();
 		}
-
 		Log.d("tieto", "Service Started with update interval:" + updateTime);
 
+		
+		ArrayList<String> notificationDays = loadNotificationDays();
+		
 		//Thread
 		if(updateInterval > 0){
 			thread = new Thread(this);			
 		}
+	}
+
+	private ArrayList<String> loadNotificationDays() {
+		try {
+			String monday = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.Monday);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			String monday = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.Monday);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			String monday = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.Monday);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			String monday = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.Monday);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			String monday = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.Monday);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			String monday = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.Monday);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			String monday = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.Monday);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -81,6 +123,7 @@ public class ServiceThread implements Runnable{
 	public void run() {
 		valueChecker = new ValueChecker(context, username, password, url, namespace);
 		timer = new Timer();
-		timer.scheduleAtFixedRate(valueChecker, updateInterval, updateInterval);		
+		timer.scheduleAtFixedRate(valueChecker, updateInterval, updateInterval);
+
 	}
 }

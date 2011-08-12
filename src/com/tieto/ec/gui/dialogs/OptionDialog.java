@@ -154,6 +154,7 @@ public class OptionDialog extends Dialog {
 	 * @param child
 	 */
 	public void addChild(OptionDialog child){
+		addOptionRow(child.title, OptionRowType.NONE);
 		childs.add(child);
 		child.parent = this;
 		child.path = this.path + "." + child.title;

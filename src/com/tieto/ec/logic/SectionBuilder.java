@@ -29,6 +29,7 @@ import com.ec.prod.android.pilot.model.TableSection;
 import com.ec.prod.android.pilot.model.TextData;
 import com.ec.prod.android.pilot.model.TextElement;
 import com.ec.prod.android.pilot.model.TextSection;
+import com.tieto.R;
 import com.tieto.ec.activities.DailyMorningReport;
 import com.tieto.ec.enums.ColorType;
 import com.tieto.ec.enums.OptionTitle;
@@ -106,7 +107,7 @@ public class SectionBuilder {
 		dmr.getTable().setPadding(10, 10, 10, 0);
 		
 		//Status
-		status.setBackgroundResource(android.R.drawable.radiobutton_on_background);
+		status.setBackgroundResource(R.drawable.expander_ic_maximized);
 		status.setLayoutParams(new LayoutParams(50, 50));
 		
 		//TitleRow
