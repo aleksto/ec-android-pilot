@@ -178,6 +178,7 @@ public class OptionRow extends RelativeLayout{
 			setDefault = false;
 			nextState = new XEditTextDialog(optionDialog.getContext(), optionDialog.getPath(), optionsTitle);
 			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
+			break;
 		case Time_Button:
 			
 			String readValue;
