@@ -29,7 +29,6 @@ public class InitiateWarningText {
 		}else if(sectionWarning.getWarnings().get(0) instanceof CellWarning){
 			initTableText(sectionWarning);
 		}
-
 	}
 
 	/**
