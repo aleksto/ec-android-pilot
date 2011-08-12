@@ -33,12 +33,12 @@ import com.tieto.ec.listeners.dmr.DmrOptionsButtonListener;
 import com.tieto.ec.listeners.dmr.DmrWarningButtonListener;
 import com.tieto.ec.listeners.dmr.SendWarningsByMailListener;
 import com.tieto.ec.logic.DateConverter;
+import com.tieto.ec.logic.DateConverter.Type;
 import com.tieto.ec.logic.DateIntervalCalculator;
 import com.tieto.ec.logic.FileManager;
 import com.tieto.ec.logic.SectionBuilder;
 import com.tieto.ec.logic.SectionSaver;
 import com.tieto.ec.logic.WarningChecker;
-import com.tieto.ec.logic.DateConverter.Type;
 import com.tieto.ec.model.SectionWarning;
 import com.tieto.ec.service.EcService;
 

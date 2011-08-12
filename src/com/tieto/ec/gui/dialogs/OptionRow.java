@@ -168,7 +168,7 @@ public class OptionRow extends RelativeLayout{
 		
 		case DEFAULT:
 			//Listener
-			goBack = false;
+			goBack = true;
 			setDefault = true;
 			setOnClickListener(new DialogActionListener(optionDialog, goBack, optionsTitle, nextState, setDefault));
 			break;
