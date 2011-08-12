@@ -174,5 +174,10 @@ public enum OptionTitle {
 		public String toString() {
 			return "Vibrate";
 		}
-	},
+	}, ClearAll{
+		@Override
+		public String toString() {
+			return "Clear All";
+		}
+	}
 }

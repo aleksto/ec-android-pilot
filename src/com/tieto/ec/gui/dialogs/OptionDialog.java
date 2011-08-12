@@ -1,5 +1,6 @@
 package com.tieto.ec.gui.dialogs;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -292,17 +293,26 @@ public class OptionDialog extends Dialog {
 			if(optionRow.getOptionRowType() == OptionRowType.CHOOSE_BUTTON){
 				FileManager.deletePath(getContext(), path);
 			}
-			else if(optionRow.getOptionRowType() == OptionRowType.CHECK_BOX){
-				FileManager.deletePath(getContext(), path + "." + optionRow.getTitle());
-			}
-			else if(optionRow.getOptionRowType() == OptionRowType.EDIT_BUTTON){
-				FileManager.deletePath(getContext(), path + "." + optionRow.getTitle());
-			}
-			else if(optionRow.getOptionRowType() == OptionRowType.DATE_BUTTON){
-				FileManager.deletePath(getContext(), path + "." + optionRow.getTitle());
-			}
 			else if(optionRow.getOptionRowType() == OptionRowType.NONE){
 				setDefaultValues(dialog.getChild(optionRow.getTitle()), path + "." + optionRow.getTitle());
+			}
+			else if(optionRow.getOptionRowType() == OptionRowType.X_EDIT_BUTTON){
+				try {
+					int size = Integer.valueOf(FileManager.readPath(getContext(), path + "." + "numberOfValues"));
+					
+					for (int i = 0; i < size; i++) {
+						FileManager.deletePath(getContext(), path + "." + i);
+					}
+					
+					FileManager.deletePath(getContext(), path + "." + "numberOfValues");
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else{
+				FileManager.deletePath(getContext(), path + "." + optionRow.getTitle());
 			}
 		}
 	}
