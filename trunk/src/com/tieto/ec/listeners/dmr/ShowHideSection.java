@@ -2,7 +2,7 @@ package com.tieto.ec.listeners.dmr;
 
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.TranslateAnimation;
+import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -18,7 +18,7 @@ public class ShowHideSection implements OnClickListener{
 	private boolean showing;
 	private final View status;
 	private final SectionBuilder sectionBuilder;
-	private TranslateAnimation scaleIn, scaleOut;
+	private AlphaAnimation scaleIn, scaleOut;
 	private View removed;
 	
 	/**
@@ -66,15 +66,9 @@ public class ShowHideSection implements OnClickListener{
 	
 	private void setAnimation(View view, boolean in){
 		if (in) {
-			scaleIn = new TranslateAnimation(0, 0, 0, 0, 0, -500, 0, 0);
+			scaleIn = new AlphaAnimation(0, 1);
 			scaleIn.setDuration(500);
-//			scaleOut.setAnimationListener(new AnimationListener(table, removed, true, getIdx()+1));
 			view.setAnimation(scaleIn);
-		}else{
-			scaleOut = new TranslateAnimation(0, 0, 0, 0, 0, 0, 0, 500);
-			scaleOut.setDuration(500);
-//			scaleOut.setAnimationListener(new AnimationListener(table, removed, false, getIdx()+1));
-			view.setAnimation(scaleOut);
 		}
 	}
 	

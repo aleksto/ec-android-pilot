@@ -3,6 +3,8 @@ package com.tieto.ec.logic;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.util.Log;
+
 import com.ec.prod.android.pilot.model.Resolution;
 
 /**
@@ -42,10 +44,10 @@ public class DateConverter {
 			return date;
 		case TIME:
 			//00:00:00Z
-			int hour = Integer.valueOf(string.substring(0, 4));
-			int min = Integer.valueOf(string.substring(5, 7));
-			int sec = Integer.valueOf(string.substring(8, 10));
-			return new Date(1, 1, 1, hour, min, sec);
+			Log.d("tieto", string);
+			int hour = Integer.valueOf(string.substring(0, 2));
+			int min = Integer.valueOf(string.substring(3, 5));
+			return new Date(1, 1, 1, hour, min, 0);
 		}
 		return null;
 	}
