@@ -15,6 +15,7 @@ import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.enums.TimeType;
 import com.tieto.ec.logic.DateConverter;
 import com.tieto.ec.logic.FileManager;
+import com.tieto.ec.logic.NextDateFinder;
 import com.tieto.ec.logic.UpdateTimeConverter;
 import com.tieto.ec.logic.DateConverter.Type;
 
@@ -29,6 +30,7 @@ public class ServiceThread implements Runnable{
 	private final String password;
 	private final String url;
 	private final String namespace;
+	private ArrayList<Date> timeDeterminedNotificationDates;
 
 	/**
 	 * Start a new {@link Thread} and a new {@link Timer}, 
@@ -57,13 +59,8 @@ public class ServiceThread implements Runnable{
 			e.printStackTrace();
 		}
 		Log.d("tieto", "Service Started with update interval:" + updateTime);
-
-		
-		
-		ArrayList<Date> timeDeterminedNotificationDates = getTimeDeterminedNotificationDates();
-		
-		
-		
+	
+		timeDeterminedNotificationDates = getTimeDeterminedNotificationDates();
 		
 		
 		//Thread
@@ -74,36 +71,33 @@ public class ServiceThread implements Runnable{
 
 	private ArrayList<Date> getTimeDeterminedNotificationDates() {
 		ArrayList<Date> notificationDates = new ArrayList<Date>();
-		ArrayList<String> notificationDays = loadNotificationDays();
+		ArrayList<Days> notificationDays = loadNotificationDays();
 		
-		String notificationTime = "";
+		String notificationTimeString = "";
 		try {
-			notificationTime = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.SetTime);
+			notificationTimeString = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.SetTime);
+			Date notificationTime = DateConverter.parse(notificationTimeString, Type.TIME);
+
+			for (Days notificationDay : notificationDays) {
+				Log.d("tieto", "DAYS TO BE ADDED: " + notificationDay.toString());
+				Log.d("tieto", "DATE TO BE ADDED: " + notificationTime+"");
+
+				
+				notificationDates.add(NextDateFinder.findNextDate(notificationDay, notificationTime));
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
-		Date date = DateConverter.parse(notificationTime, Type.TIME);
-
-		for (String days : notificationDays) {
-			Log.d("tieto", "DAYS TO BE ADDED: " + days);
-			Log.d("tieto", "DATE TO BE ADDED: " + date+"");
-
-			//Date date = new Date(year, month, day, hour, minute)
-		}
-	
-		
-		
+		}	
 		return notificationDates;
 	}
 
-	private ArrayList<String> loadNotificationDays() {
-		ArrayList<String> notificationDays = new ArrayList<String>();
+	private ArrayList<Days> loadNotificationDays() {
+		ArrayList<Days> notificationDays = new ArrayList<Days>();
 		for (Days day : Days.values()) {
 			try {
 				String isChecked = FileManager.readPath(context, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + day);
 				if(Boolean.valueOf(isChecked)){
-					notificationDays.add(day.toString());
+					notificationDays.add(day);
 				}
 						
 					
@@ -136,6 +130,10 @@ public class ServiceThread implements Runnable{
 		valueChecker = new ValueChecker(context, username, password, url, namespace);
 		timer = new Timer();
 		timer.scheduleAtFixedRate(valueChecker, updateInterval, updateInterval);
+		
+		for (Date notificationDate : timeDeterminedNotificationDates) {
+			timer.schedule(valueChecker, notificationDate, UpdateTimeConverter.parse(TimeType.min1.toString()));
+		}
 
 	}
 }

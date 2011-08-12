@@ -53,6 +53,9 @@ public class UpdateTimeConverter {
 		else if(time.equalsIgnoreCase(TimeType.sec20.toString())){
 			return 20*1000;
 		}
+		else if(time.equalsIgnoreCase(TimeType.min1.toString())){
+			return 60*1000;
+		}
 		else{
 			return -1;
 		}
