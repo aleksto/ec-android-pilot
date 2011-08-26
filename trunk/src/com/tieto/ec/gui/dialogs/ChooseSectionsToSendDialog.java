@@ -27,7 +27,7 @@ import com.tieto.ec.model.SectionWarning;
 public class ChooseSectionsToSendDialog extends Dialog {
 
 	public enum SectionBoxState{
-		Checked
+		Checked, unChecked
 	}
 	
 	private DailyMorningReport dailyMorningReport;
@@ -172,15 +172,13 @@ public class ChooseSectionsToSendDialog extends Dialog {
 		
 		checkBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				Log.d("tieto", "CHECKING");
 				if(isChecked){
-					Log.d("tieto", "CHECKING: TRUE");
 					showSection.put(sectionTitle, SectionBoxState.Checked);
-					Log.d("tieto", "Checked: " + sectionTitle + ": " + showSection.get(sectionTitle));
+				}else{
+					showSection.put(sectionTitle, SectionBoxState.unChecked);
 				}
-//				else if(!isChecked)
-//					Log.d("tieto", "CHECKING: FALSE");
-//					showSection.put(sectionTitle, SectionBoxState.NotChecked);
+				
+				Log.d("tieto", sectionTitle + ": " + showSection.get(sectionTitle));
 			}
 		});
 		

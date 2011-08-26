@@ -26,11 +26,13 @@ import com.ec.prod.android.pilot.service.ViewService;
 import com.tieto.R;
 import com.tieto.ec.enums.OptionTitle;
 import com.tieto.ec.enums.Webservice;
+import com.tieto.ec.gui.dialogs.InfoDialog;
 import com.tieto.ec.gui.dialogs.LoadingDialog;
 import com.tieto.ec.gui.dmr.ButtonRow;
 import com.tieto.ec.gui.dmr.DateRow;
 import com.tieto.ec.listeners.dmr.DmrOptionsButtonListener;
 import com.tieto.ec.listeners.dmr.DmrWarningButtonListener;
+import com.tieto.ec.listeners.dmr.SendGraphsListener;
 import com.tieto.ec.listeners.dmr.SendWarningsByMailListener;
 import com.tieto.ec.logic.DateConverter;
 import com.tieto.ec.logic.DateConverter.Type;
@@ -77,97 +79,103 @@ public class DailyMorningReport extends Activity{
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		//Super
-		super.onCreate(savedInstanceState);
-		
-		//Log
-		Log.d("tieto", "onCreate");
-		
-		//EXTRAS
-		Bundle extras = getIntent().getExtras();
-		username = extras.getString(Webservice.username.toString());
-		password = extras.getString(Webservice.password.toString());
-		namespace = extras.getString(Webservice.namespace.toString());
-		url = extras.getString(Webservice.url.toString());
-		
-		//Optionally extras
-		if (extras.containsKey("toDate")) {
-			toDate = DateConverter.parse(extras.getString("toDate"), Type.DATE);
-		}else{
-			toDate = new Date(System.currentTimeMillis());
-			toDate.setDate(toDate.getDate()-1);
-		}
-		if(extras.containsKey("resolution")){
-			resolution = extras.getInt("resolution");
-		}else{
-			try {
-				this.resolution = Integer.valueOf(FileManager.readPath(this, "DMR Report.Resolution"));
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				Log.d("tieto", "Setting default resolution");
-				this.resolution = Resolution.DAILY;
-				FileManager.writePath(this, "DMR Report.Resolution", Resolution.DAILY+"");
-				e.printStackTrace();
+		try{
+			//Super
+			super.onCreate(savedInstanceState);
+
+			//Log
+			Log.d("tieto", "onCreate");
+
+			//EXTRAS
+			Bundle extras = getIntent().getExtras();
+			username = extras.getString(Webservice.username.toString());
+			password = extras.getString(Webservice.password.toString());
+			namespace = extras.getString(Webservice.namespace.toString());
+			url = extras.getString(Webservice.url.toString());
+
+			//Optionally extras
+			if (extras.containsKey("toDate")) {
+				toDate = DateConverter.parse(extras.getString("toDate"), Type.DATE);
+			}else{
+				toDate = new Date(System.currentTimeMillis());
+				toDate.setDate(toDate.getDate()-1);
 			}
+			if(extras.containsKey("resolution")){
+				resolution = extras.getInt("resolution");
+			}else{
+				try {
+					this.resolution = Integer.valueOf(FileManager.readPath(this, "DMR Report.Resolution"));
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					Log.d("tieto", "Setting default resolution");
+					this.resolution = Resolution.DAILY;
+					FileManager.writePath(this, "DMR Report.Resolution", Resolution.DAILY+"");
+					e.printStackTrace();
+				}
+			}
+
+			//Exit service
+			serviceIntent = new Intent(this, EcService.class);
+			serviceIntent.putExtra(Webservice.username.toString(), username);
+			serviceIntent.putExtra(Webservice.password.toString(), password);
+			serviceIntent.putExtra(Webservice.namespace.toString(), namespace);
+			serviceIntent.putExtra(Webservice.url.toString(), url);	
+			if(serviceIntent != null){
+				stopService(serviceIntent);
+			}
+
+
+
+			//Init 
+			if(url.equalsIgnoreCase("debug")){
+				Log.d("tieto", "Starting report with example view service");
+				webservice = new ExampleViewService();
+			}else{
+				Log.d("tieto", "Starting report with webservice");
+				webservice = new DMRViewServiceUnmarshalled(username, password, namespace, url);
+			}
+
+			table = new TableLayout(this);
+			sectionBuilder = new SectionBuilder(this);
+			saveManager = new SectionSaver(this);
+			dateRow = new DateRow(this, resolution);
+			warningChecker = new WarningChecker(saveManager, resolution);
+			scroll = new ScrollView(this);
+			main = new TableLayout(this);
+			buttonRow = new ButtonRow(this);
+			progressDialog = new LoadingDialog(this);
+
+
+			//Getting sections
+			sections = webservice.getSections();
+
+			//Starting first screen dialog
+			setToDate(toDate);
+
+			//Sections Builder
+			sectionBuilder.updateColors();
+
+			//This
+			setContentView(main);
+
+			//Scroll
+			scroll.addView(table);
+
+			//Animation
+			animation = new TranslateAnimation(0, 0, 0, 0, 0, -50, 0, 0);
+			animation.setDuration(1000);
+			dateRow.setAnimation(animation);
+
+			//Main
+			main.addView(dateRow);
+			main.addView(scroll);
+			main.setBackgroundColor(backgroundColor);
+
+		}catch (Exception e) {
+			InfoDialog.showInfoDialog(this, e.getMessage());
+			onDestroy();
 		}
-		
-		//Exit service
-		serviceIntent = new Intent(this, EcService.class);
-		serviceIntent.putExtra(Webservice.username.toString(), username);
-		serviceIntent.putExtra(Webservice.password.toString(), password);
-		serviceIntent.putExtra(Webservice.namespace.toString(), namespace);
-		serviceIntent.putExtra(Webservice.url.toString(), url);	
-		if(serviceIntent != null){
-			stopService(serviceIntent);
-		}
-
-
-		
-		//Init 
-		if(url.equalsIgnoreCase("debug")){
-			Log.d("tieto", "Starting report with example view service");
-			webservice = new ExampleViewService();
-		}else{
-			Log.d("tieto", "Starting report with webservice");
-			webservice = new DMRViewServiceUnmarshalled(username, password, namespace, url);
-		}
-
-		table = new TableLayout(this);
-		sectionBuilder = new SectionBuilder(this);
-		saveManager = new SectionSaver(this);
-		dateRow = new DateRow(this, resolution);
-		warningChecker = new WarningChecker(saveManager, resolution);
-		scroll = new ScrollView(this);
-		main = new TableLayout(this);
-		buttonRow = new ButtonRow(this);
-		progressDialog = new LoadingDialog(this);
-		
-
-		//Getting sections
-		sections = webservice.getSections();
-		
-		//Starting first screen dialog
-		setToDate(toDate);
-		
-		//Sections Builder
-		sectionBuilder.updateColors();
-
-		//This
-		setContentView(main);
-
-		//Scroll
-		scroll.addView(table);
-
-		//Animation
-		animation = new TranslateAnimation(0, 0, 0, 0, 0, -50, 0, 0);
-		animation.setDuration(1000);
-		dateRow.setAnimation(animation);
-		
-		//Main
-		main.addView(dateRow);
-		main.addView(scroll);
-		main.setBackgroundColor(backgroundColor);
 	}
 
 	/**
@@ -179,7 +187,7 @@ public class DailyMorningReport extends Activity{
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = new MenuInflater(this);
 		inflater.inflate(R.menu.dmr_menu, menu);
-		
+
 		MenuItem optionButton = menu.findItem(R.id.dmr_options);
 		optionButton.setOnMenuItemClickListener(new DmrOptionsButtonListener(this));
 		optionButton.setIcon(android.R.drawable.ic_menu_manage);
@@ -187,14 +195,18 @@ public class DailyMorningReport extends Activity{
 		MenuItem warningsButton = menu.findItem(R.id.dmr_status);
 		warningsButton.setOnMenuItemClickListener(new DmrWarningButtonListener(this));
 		warningsButton.setIcon(android.R.drawable.ic_dialog_alert);
-		
+
 		MenuItem sendButton = menu.findItem(R.id.dmr_send_warnings);
 		sendButton.setOnMenuItemClickListener(new SendWarningsByMailListener(this));
 		sendButton.setIcon(android.R.drawable.ic_menu_send);
 		
+		MenuItem sendGraphsButton = menu.findItem(R.id.dmr_send_graps);
+		sendGraphsButton.setOnMenuItemClickListener(new SendGraphsListener(this));
+		sendGraphsButton.setIcon(android.R.drawable.ic_menu_share);
+
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	/**
 	 * This runs when the user presses the back button on the phone,
 	 * This hides the {@link ButtonRow} if visible, else it exits the application
@@ -203,7 +215,7 @@ public class DailyMorningReport extends Activity{
 	public void onBackPressed() {
 		//Log
 		Log.d("tieto", "onBackPressed");
-		
+
 		if(main.getChildAt(1) == buttonRow){
 			toogleSubButtonRow();
 		}else{
@@ -224,7 +236,7 @@ public class DailyMorningReport extends Activity{
 		this.toDate = date;
 		this.fromDate = DateIntervalCalculator.calcFromDate(toDate, resolution);
 		refresh(true);
-		
+
 		//WarningChecker
 		refreshWarningDialog();
 	}
@@ -237,7 +249,7 @@ public class DailyMorningReport extends Activity{
 		if(warnings.size() > 0){
 			warningDialog = warningChecker.createWarningDialog(this, warnings);
 		}
-		
+
 		//Checking if the user want to automatically display warning dialog
 		try {
 			if(Boolean.valueOf(FileManager.readPath(this, OptionTitle.Options + "." + OptionTitle.DisplayWarnings))){
@@ -257,7 +269,7 @@ public class DailyMorningReport extends Activity{
 	public Date getToDate(){
 		return toDate;
 	}
-	
+
 	/**
 	 * Sets the from date {@link Date} for the report
 	 * @param fromDate
@@ -265,7 +277,7 @@ public class DailyMorningReport extends Activity{
 	public void setFromDate(Date fromDate) {
 		this.fromDate = fromDate;
 	}
-	
+
 	/**
 	 * @return The from date {@link Date} for this report
 	 */
@@ -277,7 +289,7 @@ public class DailyMorningReport extends Activity{
 	 * Restarts the background service, used when user sets new update interval on the service
 	 */
 	public void restartService() {
-//		stopService(serviceIntent);
+		//		stopService(serviceIntent);
 		startService(serviceIntent);
 	}
 
@@ -432,7 +444,7 @@ public class DailyMorningReport extends Activity{
 		refresh(true);
 		dateRow.updateTitle(resolution);
 	}
-	
+
 	/**
 	 * @return The {@link Resolution} for the report
 	 */
@@ -461,6 +473,6 @@ public class DailyMorningReport extends Activity{
 	public SectionBuilder getSectionBuilder() {
 		return sectionBuilder;
 	}
-	
-	
+
+
 }

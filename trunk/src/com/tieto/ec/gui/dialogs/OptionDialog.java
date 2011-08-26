@@ -9,7 +9,6 @@ import java.util.TreeMap;
 import android.R;
 import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -223,8 +222,6 @@ public class OptionDialog extends Dialog {
 		}else{
 			optionRowTypes.put("0" + count + "." + text, optionRowType);	
 		}
-		
-		Log.d("tieto", "Putting row 00" + count + "." + text + " into dialog " + getTitle());
 		count++;
 	}
 	

@@ -53,18 +53,13 @@ public class ServiceThread implements Runnable{
 			updateInterval = UpdateTimeConverter.parse(updateTime);
 		} catch (IOException e) {
 			FileManager.writePath(service, OptionTitle.Options + "." + OptionTitle.NotificationOptions, TimeType.off+"");
-			updateInterval = 1000000000;
+			updateInterval = -1;
 			e.printStackTrace();
 		}
-		Log.d("tieto", "Service Started with update interval:" + updateTime);
 	
 		timeDeterminedNotificationDates = getTimeDeterminedNotificationDates();
-		Log.d("tieto", "SIZE OF DATES IS " + timeDeterminedNotificationDates.size());
 		
-		//Thread
-//		if(updateInterval > 0){
-			thread = new Thread(this);			
-//		}
+		thread = new Thread(this);		
 	}
 
 	private ArrayList<Date> getTimeDeterminedNotificationDates() {
@@ -76,13 +71,8 @@ public class ServiceThread implements Runnable{
 			notificationTimeString = FileManager.readPath(service, OptionTitle.Options + "." + OptionTitle.NotificationOptions + "." + OptionTitle.TimeDeterminedNotification + "." + OptionTitle.SetTime);
 			Date notificationTime = DateConverter.parse(notificationTimeString, Type.TIME);
 
-			for (Days notificationDay : notificationDays) {
-				Log.d("tieto", "DAYS TO BE ADDED: " + notificationDay.toString());
-				Log.d("tieto", "DATE TO BE ADDED: " + notificationTime+"");
-
-				
+			for (Days notificationDay : notificationDays) {				
 				notificationDates.add(NextDateFinder.findNextDate(notificationDay, notificationTime));
-				Log.d("tieto", "ADDING DATE " + NextDateFinder.findNextDate(notificationDay, notificationTime) + " TO LIST");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -119,19 +109,18 @@ public class ServiceThread implements Runnable{
 	 * and sets the {@link TimerTask} to {@link ValueChecker}
 	 */
 	public void run() {
-		Log.d("tieto", "UPDATEINTERVAL: " + updateInterval);
 		Timer timer = new Timer();
 		ValueChecker valueChecker = new ValueChecker(service, username, password, url, namespace);
 		
 		if(updateInterval != -1){			
-			Log.d("tieto", "NOTITICATION DATE IS SET TO--------------------" + updateInterval);
+			Log.d("tieto", "NOTITICATION STARTED WITH INTERVALL: " + updateInterval);
 			timer = new Timer();
 			timer.scheduleAtFixedRate(valueChecker, updateInterval, updateInterval);
 			service.addTimer(timer);	
 		}
 		
 		for (Date notificationDate : timeDeterminedNotificationDates) {
-			Log.d("tieto", "NOTITICATION DATE IS SET TO--------------------" + notificationDate+"");
+			Log.d("tieto", "NOTITICATION DATE IS SET TO: " + notificationDate+"");
 			timer = new Timer();
 			valueChecker = new ValueChecker(service, username, password, url, namespace);
 			timer.schedule(valueChecker, notificationDate, 7*24*60*60*1000);

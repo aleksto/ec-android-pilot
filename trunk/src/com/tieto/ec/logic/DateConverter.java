@@ -44,7 +44,6 @@ public class DateConverter {
 			return date;
 		case TIME:
 			//00:00:00Z
-			Log.d("tieto", string);
 			int hour = Integer.valueOf(string.substring(0, 2));
 			int min = Integer.valueOf(string.substring(3, 5));
 			return new Date(1, 1, 1, hour, min, 0);
