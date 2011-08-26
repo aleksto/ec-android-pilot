@@ -3,6 +3,8 @@ package com.tieto.ec.logic;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.util.Log;
+
 import com.tieto.ec.enums.Days;
 
 public class NextDateFinder {
@@ -47,12 +49,13 @@ public class NextDateFinder {
 		int offset = 0;
 		//The Date class automatically sets sunday as "Start of the week", so when toDate is sunday
 		//an offset of 6 days is needed
-		if(cal.get(Calendar.DAY_OF_WEEK) == 0)
-			offset = -6;
+		if(cal.get(Calendar.DAY_OF_WEEK) == 0){
+			offset = -6;			
+		}
 		
-		if(cal.get(Calendar.HOUR) > time.getHours()){
+		if(cal.get(Calendar.HOUR_OF_DAY) > time.getHours()){
 			cal.set(Calendar.DATE, cal.get(Calendar.DATE)+1);
-		}else if(cal.get(Calendar.HOUR) ==  time.getHours() && cal.get(Calendar.MINUTE) >= time.getMinutes()){
+		}else if(cal.get(Calendar.HOUR_OF_DAY) ==  time.getHours() && cal.get(Calendar.MINUTE) >= time.getMinutes()){
 			cal.set(Calendar.DATE, cal.get(Calendar.DATE)+1);
 		}
 		
